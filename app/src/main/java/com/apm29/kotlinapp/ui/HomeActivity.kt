@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Toast
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
+import com.apm29.kotlinapp.base.BasePresenter
+import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.network.Network
 import com.apm29.network.api.Home
 import com.apm29.network.api.Init
@@ -15,7 +17,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity<HomePresenter>() {
     override fun  getPresenter(): HomePresenter = HomePresenter(this)
 
     private var subscribe: Disposable? = null

@@ -5,8 +5,7 @@ package com.apm29.kotlinapp.base;
  */
 
 public class BasePresenter {
-    private BaseUI ui;
-
+    protected BaseUI ui;
     public BasePresenter(BaseUI ui) {
         this.ui = ui;
     }

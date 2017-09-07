@@ -7,13 +7,30 @@
     android:id="@+id/rl_base_container"
     tools:context=".base.BaseActivity">
     <FrameLayout
+        android:visibility="gone"
         android:id="@+id/fl_empty_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <TextView
+            android:id="@+id/tv_base_empty"
+            android:text="error"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher_round"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </FrameLayout>
+    <RelativeLayout
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:id="@+id/rl_loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_base_loading"
+            android:text="loading..."
+            android:drawablePadding="6dp"
+            android:layout_centerInParent="true"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </RelativeLayout>
