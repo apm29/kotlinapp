@@ -8,19 +8,23 @@
     tools:context=".base.BaseActivity">
     <FrameLayout
         android:visibility="gone"
+        tools:visibility="visible"
         android:id="@+id/fl_empty_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:padding="12dp"
+            android:background="@color/colorPrimaryDark"
+            android:drawableTop="@android:drawable/ic_dialog_info"
+            android:textColor="#fff"
             android:id="@+id/tv_base_empty"
-            android:text="error"
+            android:text="empty"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </FrameLayout>
     <RelativeLayout
         android:visibility="gone"
-        tools:visibility="visible"
         android:id="@+id/rl_loading_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

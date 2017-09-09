@@ -37,6 +37,7 @@ abstract class  BaseActivity< T:BasePresenter> : AppCompatActivity(),BaseUI {
     }
 
     override fun startLoading() {
+        flEmptyContainer.visibility=View.GONE
         rlBaseLoadingContainer.visibility=View.VISIBLE
         val tvLoading=findViewById(R.id.tv_base_loading)
         val rotateAnimation = RotateAnimation(
@@ -50,6 +51,13 @@ abstract class  BaseActivity< T:BasePresenter> : AppCompatActivity(),BaseUI {
     }
 
     override fun stopLoading() {
+        flEmptyContainer.visibility=View.GONE
         rlBaseLoadingContainer.visibility=View.GONE
+    }
+
+    override fun onEmpty() {
+        flEmptyContainer.visibility=View.VISIBLE
+        rlBaseLoadingContainer.visibility=View.GONE
+        rlBaseContainer.visibility=View.GONE
     }
 }

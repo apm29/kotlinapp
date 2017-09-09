@@ -115,6 +115,7 @@ class LoginPresenter(ui: BaseUI?) : BasePresenter(ui) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
+                            AccountCache.saveUserInfo(ui as Context,it.data)
                             ui.onNewData(it.data)
                         },
                         {

@@ -9,4 +9,5 @@ public interface BaseUI {
     void stopLoading();
     void onError(String error);
     <N> void onNewData(N data);
+    void onEmpty();
 }
