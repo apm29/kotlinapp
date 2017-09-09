@@ -56,6 +56,7 @@ class SubscriptionPresenter(ui: BaseUI?) : BasePresenter(ui){
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {ui.onNewData(it.data)},
+
                         {
                             ui.stopLoading()
                             ui.onError(it.toString())
