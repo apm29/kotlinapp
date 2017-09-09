@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.apm29.kotlinapp.R
 
-abstract class  BaseActivity< out T:BasePresenter> : AppCompatActivity(),BaseUI {
+abstract class  BaseActivity< T:BasePresenter> : AppCompatActivity(),BaseUI {
 
     protected val flEmptyContainer: FrameLayout by lazy {
         findViewById(R.id.fl_empty_container) as FrameLayout
@@ -20,7 +20,7 @@ abstract class  BaseActivity< out T:BasePresenter> : AppCompatActivity(),BaseUI 
         findViewById(R.id.rl_loading_container) as RelativeLayout
     }
 
-    private lateinit var mPresenter: T
+    protected lateinit var mPresenter: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ abstract class  BaseActivity< out T:BasePresenter> : AppCompatActivity(),BaseUI 
         super.setContentView(layoutInflater.inflate(layoutResID,rlBaseContainer,true))
     }
 
-    fun startLoading() {
+    override fun startLoading() {
         rlBaseLoadingContainer.visibility=View.VISIBLE
         val tvLoading=findViewById(R.id.tv_base_loading)
         val rotateAnimation = RotateAnimation(
@@ -46,6 +46,10 @@ abstract class  BaseActivity< out T:BasePresenter> : AppCompatActivity(),BaseUI 
         )
         rotateAnimation.duration=300
         rotateAnimation.repeatCount=RotateAnimation.INFINITE
-        tvLoading.startAnimation(rotateAnimation)
+        tvLoading?.startAnimation(rotateAnimation)
+    }
+
+    override fun stopLoading() {
+        rlBaseLoadingContainer.visibility=View.GONE
     }
 }

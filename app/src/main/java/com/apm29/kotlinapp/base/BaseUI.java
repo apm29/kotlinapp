@@ -5,5 +5,8 @@ package com.apm29.kotlinapp.base;
  */
 
 public interface BaseUI {
-
+    void startLoading();
+    void stopLoading();
+    void onError(String error);
+    <N> void onNewData(N data);
 }

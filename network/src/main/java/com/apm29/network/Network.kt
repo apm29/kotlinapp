@@ -14,18 +14,17 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by apm29 on 2017/9/5.
  */
 class Network {
-    companion object Service {
+    companion object  {
         /**控制debug模式**/
         private val DEBUG = true
 
 
         var versionCode = 0
         /**main url**/
-        private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
+        val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
         private val mainService: Retrofit by lazy {
             return@lazy retrofit(main)
         }
-
         private fun retrofit(baseUrl: String): Retrofit {
             return Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -33,15 +32,14 @@ class Network {
                     .baseUrl(baseUrl)
                     .client(OkHttpClient.Builder().
                             //设置拦截器
-                            addInterceptor {
+                            addInterceptor { chain ->
                                 //返回新请求
-                                createNewRequest(it)
+                                createNewRequest(chain!!)
                             }
-                            .build())
+                            .build()
+                    )
                     .build()
         }
-
-
         fun mainService(context: Context): Retrofit {
             if (versionCode <= 0) {
                 versionCode = getVersion(context)
@@ -54,9 +52,9 @@ class Network {
     }
 
 }
-
+@Throws(Exception::class)
 //为http拦截器添加公共的参数
-private fun createNewRequest(chain: Interceptor.Chain): Response? {
+private fun createNewRequest(chain: Interceptor.Chain): Response {
     //原req
     val oldRequest = chain.request()
     //新url builder
@@ -73,7 +71,5 @@ private fun createNewRequest(chain: Interceptor.Chain): Response? {
             .method(oldRequest.method(), oldRequest.body())
             .url(url.build())
             .build()
-    return chain.proceed(
-            newRequest
-    )
+    return chain.proceed(newRequest)
 }
