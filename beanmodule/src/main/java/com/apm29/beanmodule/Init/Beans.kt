@@ -91,7 +91,7 @@ data class CerCompanyInfo(
 		var staff_type: Int,// 0
 		var isCertified: Int,// 11
 		var staffStatus: Int// 0
-)
+):Serializable
 
 data class SubscriptionInfo(
 		var categoryid: Int,// 18

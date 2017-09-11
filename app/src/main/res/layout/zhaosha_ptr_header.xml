@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:layout_height="50dp">
+    <ImageView
+        android:layout_gravity="center_vertical"
+        android:padding="12dp"
+        android:id="@+id/ptr_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+
+        android:padding="12dp"
+        android:id="@+id/ptr_rotate"
+        android:src="@drawable/ptr_rotate_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_marginRight="7dp"
+        android:id="@+id/ptr_hint"
+        android:text="加载中"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/ptr_timer"
+        android:text=" 2017/02/15"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+</LinearLayout>

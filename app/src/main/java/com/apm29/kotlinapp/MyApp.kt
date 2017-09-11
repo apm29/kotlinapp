@@ -29,20 +29,21 @@ class MyApp: Application(){
 
                     override fun onActivityStarted(activity: Activity?) {
                         if (count==0){
-                            AccountCache.getUserInfo(this@MyApp)!=null
-                            AccountCache.userInfo=AccountCache.getUserInfo(this@MyApp)
+                            val userInfo = AccountCache.getUserInfo(this@MyApp)
+                            AccountCache.userInfo=userInfo
                         }
                         count++
                     }
 
                     override fun onActivityDestroyed(activity: Activity?) {
+                        count--
                     }
 
                     override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
                     }
 
                     override fun onActivityStopped(activity: Activity?) {
-                        count--
+
                     }
 
                     override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {

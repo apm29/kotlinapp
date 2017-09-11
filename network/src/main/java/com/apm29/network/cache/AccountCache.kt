@@ -10,14 +10,14 @@ import com.apm29.beanmodule.Init.UserInfo
 class AccountCache {
     companion object {
         var userInfo: UserInfo? = null
-        private val USERINFO = "USERINFO"
+        private val USER_INFO = "USER_INFO"
 
         fun saveUserInfo(context: Context, userInfo: UserInfo?) {
             if (userInfo != null) {
                 //内存缓存
                 this.userInfo = userInfo
                 //文件
-                ACache.get(context).put(USERINFO, userInfo)
+                ACache.get(context).put(USER_INFO, userInfo)
             }
         }
 
@@ -26,7 +26,7 @@ class AccountCache {
                 return this.userInfo
             } else {
                 val mCache = ACache.get(context)
-                AccountCache.userInfo = mCache.getAsObject(USERINFO) as UserInfo?
+                AccountCache.userInfo = mCache.getAsObject(USER_INFO) as UserInfo?
                 return AccountCache.userInfo
             }
         }
