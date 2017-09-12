@@ -2,6 +2,7 @@ package com.apm29.kotlinapp.ui
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -15,6 +16,10 @@ import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
 import com.apm29.network.Network
 import com.apm29.network.api.Home
 import com.apm29.network.api.Init
+import com.app.hubert.library.Controller
+import com.app.hubert.library.HighLight
+import com.app.hubert.library.NewbieGuide
+import com.app.hubert.library.OnGuideChangedListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -46,12 +51,48 @@ class HomeActivity : BaseActivity<HomePresenter>() {
         setContentView(R.layout.activity_home_layout)
         subscribe = mPresenter.loadNetData()
 
-        findViewById(R.id.btn_login).setOnClickListener {
+        val btnLogin = findViewById(R.id.btn_login)
+        btnLogin.setOnClickListener {
             LoginActivity.starter(this)
         }
-        findViewById(R.id.btn_subscribe_mine).setOnClickListener {
+        val btnSubscribe = findViewById(R.id.btn_subscribe_mine)
+        btnSubscribe.setOnClickListener {
             SubscriptionManagerActivity.starter(this)
         }
+        //引导图
+        val list = arrayListOf<HighLight>()
+        val element = HighLight(btnSubscribe, HighLight.Type.ROUND_RECTANGLE)
+        element.round=30
+        list.add(element)
+        val controller1 = NewbieGuide.with(this)
+                .addHighLight(btnLogin, HighLight.Type.ROUND_RECTANGLE, 10)
+                .setBackgroundColor(Color.parseColor("#88000000"))
+                .setLabel("login")
+                .setEveryWhereCancelable(true)
+                .setLayoutRes(R.layout.activity_home_guide_layout)
+                .alwaysShow(true)
+                .build()
+        val controller2 = NewbieGuide.with(this)
+                .addHighLight(list)
+                .setBackgroundColor(Color.parseColor("#88000000"))
+                .setLabel("subscribe")
+                .setEveryWhereCancelable(true)
+                .setLayoutRes(R.layout.activity_home_guide_layout)
+                .alwaysShow(true)
+                .setOnGuideChangedListener(
+                        object :OnGuideChangedListener{
+                            override fun onRemoved(p0: Controller?) {
+                                controller1.show()
+                            }
+
+                            override fun onShowed(p0: Controller?) {
+                            }
+
+                        }
+                )
+                .build()
+
+        controller2.show()
     }
 
     override fun onDestroy() {

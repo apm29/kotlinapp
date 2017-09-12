@@ -1,1 +1,1 @@
-include ':app', ':network', ':beanmodule'
+include ':app', ':network', ':beanmodule', ':guideview'
