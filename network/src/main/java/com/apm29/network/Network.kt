@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class Network {
     companion object  {
         /**控制debug模式**/
-        private val DEBUG = true
+        private val DEBUG = false
 
 
         var versionCode = 0

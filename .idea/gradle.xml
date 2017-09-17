@@ -9,10 +9,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/accountmodule" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/beanmodule" />
             <option value="$PROJECT_DIR$/guideview" />
             <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/testapp" />
+            <option value="$PROJECT_DIR$/updatemodule" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

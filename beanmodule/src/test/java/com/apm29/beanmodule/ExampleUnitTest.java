@@ -19,22 +19,22 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
 
-        ArrayList<Meta> list=new ArrayList<>();
-        list.add(new Meta(200,"success"));
-        list.add(new Meta(200,"success"));
-        list.add(new Meta(200,"success"));
-        list.add(new Meta(200,"success"));
-        list.add(new Meta(100,"fail"));
-        list.add(new Meta(200,"success"));
-        list.add(new Meta(200,"success"));
-        list.add(new Meta(200,"success"));
-        Iterator<Meta> iterator = list.iterator();
-        while (iterator.hasNext()){
-            Meta bean = iterator.next();
-            if (bean.getCode()==100){
-                iterator.remove();
-            }
-        }
-        System.out.println(list);
+//        ArrayList<Meta> list=new ArrayList<>();
+//        list.add(new Meta(200,"success"));
+//        list.add(new Meta(200,"success"));
+//        list.add(new Meta(200,"success"));
+//        list.add(new Meta(200,"success"));
+//        list.add(new Meta(100,"fail"));
+//        list.add(new Meta(200,"success"));
+//        list.add(new Meta(200,"success"));
+//        list.add(new Meta(200,"success"));
+//        Iterator<Meta> iterator = list.iterator();
+//        while (iterator.hasNext()){
+//            Meta bean = iterator.next();
+//            if (bean.getCode()==100){
+//                iterator.remove();
+//            }
+//        }
+//        System.out.println(list);
     }
 }
