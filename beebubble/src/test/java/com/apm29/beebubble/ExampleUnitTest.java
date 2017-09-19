@@ -13,5 +13,6 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+        System.out.println(Math.atan2(1,-1)*180/Math.PI);
     }
 }

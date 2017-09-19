@@ -22,6 +22,7 @@ import static android.R.attr.padding;
 
 public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar {
 
+    public static final double PI = Math.PI;
     private VelocityTracker mTracker;
     private int xSpeed;
     private int lastXSpeed;
@@ -60,7 +61,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
         mPaddingVertical = 10;
         vLimit = 900;
 
-        offsetV = 48;
+        offsetV = 100;
         bubbleRadius = 40;
     }
 
@@ -163,9 +164,9 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
             float cy = y - offsetV;
             canvas.drawCircle(cx, cy, bubbleRadius, bubblePaint);
 
-            findPath(cx, cy, x, y);
+            //findPath(cx, cy, x, y);
             bubblePaint.setStyle(Paint.Style.FILL);
-            canvas.drawPath(bezier, textPaint);
+            canvas.drawPath(bezier, bubblePaint);
             canvas.drawText(getProgress() + "", cx - textSize / 2, cy + textSize / 2 - 2, textPaint);
 
         } else {
@@ -177,12 +178,14 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
     Path bezier;
 
     private void findPath(float cx, float cy, float x, float y) {
-        double beta = Math.atan2(cx - x, cy - y);
+        System.out.println("cx = [" + cx + "], cy = [" + cy + "], x = [" + x + "], y = [" + y + "]");
+        double beta = Math.atan2(x - cx, y - cy);
+
 
         double dist = (Math.sqrt((cx - x) * (cx - x) + (cy - y) * (cy - y)));
         double mew = Math.asin((bubbleRadius - indicatorRadius) / (dist));
-        double alpha = beta>0?(beta-mew):(beta+mew);
-        System.out.println("alpha:" + alpha * 180 / Math.PI);
+        //当bubble在右边
+
         System.out.println("beta:" + beta * 180 / Math.PI);
         System.out.println("mew:" + mew * 180 / Math.PI);
         if (bezier == null) {
@@ -191,32 +194,34 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
             bezier.reset();
         }
         bezier.moveTo(x, y);
+
+
         /**
          * 计算 bubble 1
          */
-        float b1x = (float) (cx + Math.cos(alpha) * bubbleRadius);
-        float b1y = (float) (cy + Math.sin(alpha) * bubbleRadius);
+        float b1x = (float) (cx + Math.cos(beta + Math.PI / 2 - mew) * bubbleRadius);
+        float b1y = (float) (cy + Math.sin(beta + Math.PI / 2 - mew) * bubbleRadius);
         System.out.println("b1x:" + b1x + "b1y" + b1y);
 
         /**
          * b2
          */
-        float b2x = cx + (cx - b1x);
-        float b2y = cy + (cy - b1y);
+        float b2x = (float) (cx + Math.cos(beta - Math.PI / 2 + mew) * bubbleRadius);
+        float b2y = (float) (cy + Math.sin(beta - Math.PI / 2 + mew) * bubbleRadius);
         System.out.println("b2x:" + b2x + "b2y" + b2y);
 
         /**
          * i1
          */
-        float i1x = (float) (x + Math.cos(alpha) * indicatorRadius);
-        float i1y = (float) (y + Math.sin(alpha) * indicatorRadius);
+        float i1x = (float) (x + Math.cos(beta + Math.PI / 2 - mew) * indicatorRadius);
+        float i1y = (float) (y + Math.sin(beta + Math.PI / 2 - mew) * indicatorRadius);
         System.out.println("i1x:" + i1x + "i1y" + i1y);
 
         /**
          * i2
          */
-        float i2x = 2 * x - i1x;
-        float i2y = 2 * y - i1y;
+        float i2x = (float) (x + Math.cos(beta - Math.PI / 2 + mew) * indicatorRadius);
+        float i2y = (float) (y + Math.sin(beta - Math.PI / 2 + mew) * indicatorRadius);
         System.out.println("i2x:" + i2x + "i2y" + i2y);
         /**
          * 中间点
@@ -231,10 +236,11 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
         /**
          * i1---b1---b2----i2
          */
+        bezier.lineTo(x,y);
         bezier.lineTo(i1x, i1y);
         //bezier.quadTo(xc/2+ib1x/2,yc/2+ib1y/2,b1x,b1y);
         bezier.lineTo(b1x, b1y);
-
+        bezier.lineTo(cx,cy);
         bezier.lineTo(b2x, b2y);
 //        bezier.quadTo(xc/2+ib2x/2,yc/2+ib2y/2,i2x,i2y);
         bezier.lineTo(i2x, i2y);
