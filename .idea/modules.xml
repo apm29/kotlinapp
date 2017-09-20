@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/beanmodule/beanmodule.iml" filepath="$PROJECT_DIR$/beanmodule/beanmodule.iml" />
       <module fileurl="file://$PROJECT_DIR$/beebubble/beebubble.iml" filepath="$PROJECT_DIR$/beebubble/beebubble.iml" />
-      <module fileurl="file://$PROJECT_DIR$/beebubble/beebubble.iml" filepath="$PROJECT_DIR$/beebubble/beebubble.iml" />
       <module fileurl="file://$PROJECT_DIR$/guideview/guideview.iml" filepath="$PROJECT_DIR$/guideview/guideview.iml" />
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
       <module fileurl="file://$PROJECT_DIR$/testapp/testapp.iml" filepath="$PROJECT_DIR$/testapp/testapp.iml" />
