@@ -41,6 +41,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
     private ValueAnimator descendAnim;
     private String bubbleText;
     private Rect rect;
+    private Paint linePaint;
 
     /**
      * 设置气泡字符
@@ -62,11 +63,14 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
 
     private void init() {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.RED);
+        textPaint.setColor(Color.parseColor("#ffffff"));
         textSize = toPx(16);
         textPaint.setTextSize(textSize);
         bubblePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bubblePaint.setColor(Color.WHITE);
+        bubblePaint.setColor(Color.parseColor("#51a155"));
+        linePaint =new Paint(Paint.ANTI_ALIAS_FLAG);
+        linePaint.setColor(Color.parseColor("#99ccf166"));
+        linePaint.setStrokeWidth(15);
         /**
          * 默认参数
          */
@@ -227,8 +231,11 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
         /**
          * 绘制背景
          */
-        canvas.drawColor(Color.parseColor("#883333aa"));
-        canvas.drawLine(mPaddingHorizontal, y, x, y, bubblePaint);
+        canvas.drawColor(Color.parseColor("#2b2b2b"));
+        /**
+         * 绘制进度
+         */
+        canvas.drawLine(mPaddingHorizontal, y, x, y, linePaint);
         //移动indicator中
         if (inTouch) {
             System.out.println("inTouch");
@@ -247,7 +254,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
              * cx cy bubble的中心
              */
             //水平偏移速度的20%
-            float cx = x - vv * 0.2f;
+            float cx = x - vv * 0.4f;
             //高度上升offsetV
             float cy = y - offsetV;
             canvas.drawCircle(cx, cy, bubbleRadius, bubblePaint);
@@ -263,7 +270,8 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
             } else {
                 text = bubbleText;
             }
-            canvas.drawText(text + "", cx - getTextXOffset(), cy + getTextYOffset(), textPaint);
+            textPaint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(text + "", cx+getTextXOffset(), cy+getTextYOffset() , textPaint);
         } else {
             if (offsetV <= 0) {
 //                System.out.println("outOfTouch");
@@ -275,14 +283,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
 
 
     public float getTextXOffset() {
-        if (TextUtils.isEmpty(bubbleText)) {
-            return textSize * (getProgress() + "").length() / 2 - textSize / 2 - 1;
-        }
-        if (rect == null)
-            rect = new Rect();
-        textPaint.getTextBounds(bubbleText, 0, bubbleText.length(), rect);
-        //return textSize * bubbleText.length() / 2 - textSize / 2 - 1;
-        return rect.width()/2;
+        return 0;
     }
 
     public float getTextYOffset() {
