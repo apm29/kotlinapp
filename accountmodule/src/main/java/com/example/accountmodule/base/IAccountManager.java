@@ -4,7 +4,7 @@ package com.example.accountmodule.base;
  * Created by yingjiawei on 2017/9/16.
  */
 
-public interface IAccountManager<T> {
+public interface IAccountManager {
     enum AccountBehavior{
         /**
          * 用户行为：登陆 找回密码 登出 修改密码 注册
@@ -23,7 +23,6 @@ public interface IAccountManager<T> {
      * @param responseType
      * @return
      */
-    IAccountManager setResponseType(T responseType);
 
     /**
      * 设置行为
@@ -36,6 +35,6 @@ public interface IAccountManager<T> {
     /**
      * 相当于构建完成方法,进行开始account行为
      */
-    T setup();
+    <T> T setup(Class<T> tClass);
 
 }
