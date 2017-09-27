@@ -23,13 +23,9 @@
     <com.apm29.beebubble.BeeBubbleSeeker
         android:background="#00ffffff"
         android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+         />
 </android.support.constraint.ConstraintLayout>

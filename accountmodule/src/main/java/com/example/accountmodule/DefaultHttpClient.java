@@ -1,6 +1,7 @@
 package com.example.accountmodule;
 
-import IHttpClient;
+
+import com.example.accountmodule.base.IHttpClient;
 
 /**
  * Created by yingjiawei on 2017/9/16.
@@ -9,4 +10,13 @@ import IHttpClient;
 public class DefaultHttpClient implements IHttpClient {
 
 
+    @Override
+    public IHttpClient setBaseUrl(String url) {
+        return null;
+    }
+
+    @Override
+    public IHttpClient addParameter(String... param) {
+        return null;
+    }
 }

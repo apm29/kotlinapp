@@ -1,5 +1,7 @@
 package com.example.accountmodule.base;
 
+import com.example.accountmodule.AccountError;
+
 /**
  * Created by yingjiawei on 2017/9/16.
  */

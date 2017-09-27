@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/src/debug/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\Users\Zhaosha_Android\Desktop\kotlin\ktapp\zsktapp\updatemodule\src\main\shaders"/></dataSet><dataSet config="debug"><source path="C:\Users\Zhaosha_Android\Desktop\kotlin\ktapp\zsktapp\updatemodule\src\debug\shaders"/></dataSet></merger>

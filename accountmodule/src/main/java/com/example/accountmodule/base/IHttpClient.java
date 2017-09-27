@@ -12,7 +12,7 @@ public interface IHttpClient {
     /**
      * 传入参数
      */
-    IHttpClient addParameter(String param..);
+    IHttpClient addParameter(String... param);
 
     /**
      *

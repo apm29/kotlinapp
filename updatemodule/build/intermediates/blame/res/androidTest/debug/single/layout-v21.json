@@ -1,18 +1,18 @@
 [
     {
-        "merged": "/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_action.xml",
-        "source": "/Users/yingjiawei/.android/build-cache/7ccd0095de6d03e324d4372fc552e273502fb3e6/output/res/layout-v21/notification_action.xml"
+        "merged": "C:\\Users\\Zhaosha_Android\\Desktop\\kotlin\\ktapp\\zsktapp\\updatemodule\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_template_icon_group.xml",
+        "source": "C:\\Android-sdk\\sdk\\.android\\build-cache\\7526502ec31fb32a8cf12f1e6c8ae966f825da06\\output\\res\\layout-v21\\notification_template_icon_group.xml"
     },
     {
-        "merged": "/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_template_icon_group.xml",
-        "source": "/Users/yingjiawei/.android/build-cache/7ccd0095de6d03e324d4372fc552e273502fb3e6/output/res/layout-v21/notification_template_icon_group.xml"
+        "merged": "C:\\Users\\Zhaosha_Android\\Desktop\\kotlin\\ktapp\\zsktapp\\updatemodule\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_action_tombstone.xml",
+        "source": "C:\\Android-sdk\\sdk\\.android\\build-cache\\7526502ec31fb32a8cf12f1e6c8ae966f825da06\\output\\res\\layout-v21\\notification_action_tombstone.xml"
     },
     {
-        "merged": "/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_action_tombstone.xml",
-        "source": "/Users/yingjiawei/.android/build-cache/7ccd0095de6d03e324d4372fc552e273502fb3e6/output/res/layout-v21/notification_action_tombstone.xml"
+        "merged": "C:\\Users\\Zhaosha_Android\\Desktop\\kotlin\\ktapp\\zsktapp\\updatemodule\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_action.xml",
+        "source": "C:\\Android-sdk\\sdk\\.android\\build-cache\\7526502ec31fb32a8cf12f1e6c8ae966f825da06\\output\\res\\layout-v21\\notification_action.xml"
     },
     {
-        "merged": "/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/build/intermediates/res/merged/androidTest/debug/layout-v21/notification_template_custom_big.xml",
-        "source": "/Users/yingjiawei/.android/build-cache/7ccd0095de6d03e324d4372fc552e273502fb3e6/output/res/layout-v21/notification_template_custom_big.xml"
+        "merged": "C:\\Users\\Zhaosha_Android\\Desktop\\kotlin\\ktapp\\zsktapp\\updatemodule\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout-v21\\notification_template_custom_big.xml",
+        "source": "C:\\Android-sdk\\sdk\\.android\\build-cache\\7526502ec31fb32a8cf12f1e6c8ae966f825da06\\output\\res\\layout-v21\\notification_template_custom_big.xml"
     }
 ]

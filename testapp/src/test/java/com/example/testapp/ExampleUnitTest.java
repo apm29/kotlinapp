@@ -13,5 +13,10 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
+        int t1=0b1000;
+        int t2=0b0100;
+        int t3=0b0010;
+        int t4=t1|t2;
+        System.out.println(t4&t3);
     }
 }

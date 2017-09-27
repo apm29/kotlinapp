@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -23,6 +24,7 @@ import android.view.animation.OvershootInterpolator;
 public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar {
 
     public static final double PI = Math.PI;
+    public static final int DECELERATE_SPEED = 10;
     private boolean inTouch = false;//控制是否显示bubble
     private VelocityTracker mTracker;
     private int xSpeed;
@@ -42,6 +44,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
     private String bubbleText;
     private Rect rect;
     private Paint linePaint;
+    private RadialGradient shader;
 
     /**
      * 设置气泡字符
@@ -112,10 +115,26 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
                 invalidate();
             }
         });
-
+        //减速
+        //decelerateHandler.sendEmptyMessage(0);
 
     }
 
+//    Handler decelerateHandler =new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if (xSpeed>=0){
+//                xSpeed-=DECELERATE_SPEED;
+//                if (xSpeed<0)xSpeed=0;
+//            }else if (xSpeed<=0){
+//                xSpeed+= DECELERATE_SPEED;
+//                if (xSpeed>0)xSpeed=0;
+//            }
+//            invalidate();
+//            removeCallbacksAndMessages(null);
+//            decelerateHandler.sendEmptyMessageDelayed(0,10);
+//        }
+//    };
     /**
      * 设置bubble飘起高度
      *
@@ -133,6 +152,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(getMeasuredWidth(),offsetVLimit+indicatorRadius+bubbleRadius+2*mPaddingVertical);
     }
 
     @Override
@@ -148,6 +168,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
                 break;
             case MotionEvent.ACTION_MOVE:
 //                System.out.println("ACTION_MOVE");
+                System.out.println("speed:event");
                 mTracker.addMovement(event);
                 getSpeed();
                 break;
@@ -200,10 +221,19 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
             mTracker = null;
         }
     }
-
+    int xLastSpeed=0;
     private void getSpeed() {
-        mTracker.computeCurrentVelocity(200);
-        xSpeed = (int) mTracker.getXVelocity();
+        if (mTracker==null)return;
+        mTracker.computeCurrentVelocity(140);
+        xLastSpeed=xSpeed;
+//
+//        if (xLastSpeed-xSpeed<100&&xLastSpeed-xSpeed>-100&&xLastSpeed!=0){
+//            decelerateHandler.sendEmptyMessageDelayed(0,20);
+//        }else {
+//            xSpeed = (int) mTracker.getXVelocity();
+//        }
+        xSpeed= (int) mTracker.getXVelocity();
+        System.out.println("speed:"+xSpeed);
     }
 
     @Override
@@ -220,6 +250,7 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
 
     @Override
     protected void onDraw(Canvas canvas) {
+        getSpeed();
         //进度
         float ratio = getProgress() * 1.0f / getMax();
         //去除半径和padding
@@ -254,15 +285,17 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
              * cx cy bubble的中心
              */
             //水平偏移速度的20%
-            float cx = x - vv * 0.4f;
+            float cx = x - vv * 0.18f;
             //高度上升offsetV
             float cy = y - offsetV;
-            canvas.drawCircle(cx, cy, bubbleRadius, bubblePaint);
 
             findPath(cx, cy, x, y);
             bubblePaint.setStyle(Paint.Style.FILL);
             //绘制平滑曲线
             canvas.drawPath(bezier, bubblePaint);
+            //绘制气泡
+            bubblePaint.setShader(shader);
+            canvas.drawCircle(cx, cy, bubbleRadius, bubblePaint);
             //绘制气泡文字
             String text;
             if (TextUtils.isEmpty(bubbleText)) {
@@ -376,6 +409,5 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
             bezier.close();
         }
     }
-
 
 }
