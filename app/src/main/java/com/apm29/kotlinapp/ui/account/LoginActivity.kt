@@ -14,7 +14,7 @@ import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
 import com.apm29.kotlinapp.base.BaseUI
-import com.apm29.network.Network
+import com.apm29.network.ApiCall
 import com.apm29.network.api.Login
 import com.apm29.network.cache.AccountCache
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -85,7 +85,7 @@ class LoginActivity : BaseActivity<LoginPresenter>() {
 
 class LoginPresenter(ui: BaseUI?) : BasePresenter(ui) {
     fun login(mobile: String, password: String): Disposable? {
-        return Network.mainService(ui as Context)
+        return ApiCall.mainService(ui as Context)
                 .create(Login::class.java)
                 .login(mobile, password, 0)
                 .subscribeOn(Schedulers.io())
@@ -108,7 +108,7 @@ class LoginPresenter(ui: BaseUI?) : BasePresenter(ui) {
     }
 
     fun initUserInfo(userID: Int): Disposable? {
-        return Network.mainService(ui as Context)
+        return ApiCall.mainService(ui as Context)
                 .create(Login::class.java)
                 .initUserInfo(userID)
                 .subscribeOn(Schedulers.io())
