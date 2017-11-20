@@ -20,9 +20,10 @@ public class DefaultHttpClient implements IHttpClient {
     }
 
     @Override
-    public IHttpClient addParameter(String key,String value) {
-
+    public IHttpClient addParameter(String... param) {
         return this;
     }
+
+
 
 }

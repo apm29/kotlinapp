@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/beebubble/beebubble.iml" filepath="$PROJECT_DIR$/beebubble/beebubble.iml" />
       <module fileurl="file://$PROJECT_DIR$/guideview/guideview.iml" filepath="$PROJECT_DIR$/guideview/guideview.iml" />
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
       <module fileurl="file://$PROJECT_DIR$/testapp/testapp.iml" filepath="$PROJECT_DIR$/testapp/testapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/updatemodule/updatemodule.iml" filepath="$PROJECT_DIR$/updatemodule/updatemodule.iml" />
       <module fileurl="file://$PROJECT_DIR$/zsktapp.iml" filepath="$PROJECT_DIR$/zsktapp.iml" />

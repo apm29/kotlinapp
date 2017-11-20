@@ -5,7 +5,7 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-3.3" />
+        <option name="gradleHome" value="/Applications/Android Studio.app/Contents/gradle/gradle-3.3" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/beebubble" />
             <option value="$PROJECT_DIR$/guideview" />
             <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/test" />
             <option value="$PROJECT_DIR$/testapp" />
             <option value="$PROJECT_DIR$/updatemodule" />
           </set>

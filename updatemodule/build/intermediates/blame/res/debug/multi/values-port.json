@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\Zhaosha_Android\\Desktop\\kotlin\\ktapp\\zsktapp\\updatemodule\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-port\\values-port.xml",
+        "outputFile": "/Users/yingjiawei/StudioProjects/zsktapp/updatemodule/build/intermediates/incremental/mergeDebugResources/merged.dir/values-port/values-port.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 106
                 },
                 "from": {
-                    "file": "C:\\Android-sdk\\sdk\\.android\\build-cache\\7526502ec31fb32a8cf12f1e6c8ae966f825da06\\output\\res\\values-port\\values-port.xml",
+                    "file": "/Users/yingjiawei/.android/build-cache/7ccd0095de6d03e324d4372fc552e273502fb3e6/output/res/values-port/values-port.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,

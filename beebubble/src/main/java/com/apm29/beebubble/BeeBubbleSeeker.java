@@ -2,6 +2,7 @@ package com.apm29.beebubble;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -61,10 +62,11 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
 
     public BeeBubbleSeeker(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
+        TypedArray typedArray=context.obtainStyledAttributes(attrs,R.styleable.ConstraintSet);
     }
 
-    private void init() {
+    private void init( AttributeSet attrs) {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.parseColor("#ffffff"));
         textSize = toPx(16);
