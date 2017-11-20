@@ -9,7 +9,7 @@ import com.apm29.kotlinapp.base.BaseListActivity
 import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.base.ListPresenter
 import com.apm29.kotlinapp.ui.account.LoginActivity
-import com.apm29.network.Network
+import com.apm29.network.ApiCall
 import com.apm29.network.api.Subscription
 import com.apm29.network.cache.AccountCache
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,7 +44,7 @@ class SubscriptionPresenter(ui: BaseUI?) : ListPresenter(ui){
     }
 
     fun fetchMySubscription() : Disposable{
-       return Network.mainService(ui as Context)
+       return ApiCall.mainService(ui as Context)
                 .create(Subscription::class.java)
                 .fetchMySubscription(AccountCache.userInfo!!.userID)
                 .subscribeOn(Schedulers.io())

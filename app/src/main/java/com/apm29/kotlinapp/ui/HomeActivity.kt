@@ -13,7 +13,7 @@ import com.apm29.kotlinapp.base.BasePresenter
 import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.ui.account.LoginActivity
 import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
-import com.apm29.network.Network
+import com.apm29.network.ApiCall
 import com.apm29.network.api.Home
 import com.apm29.network.api.Init
 import com.app.hubert.library.Controller
@@ -103,7 +103,7 @@ class HomeActivity : BaseActivity<HomePresenter>() {
 
 class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
     fun loadNetData(): Disposable {
-        return Network.mainService(ui as Context)
+        return ApiCall.mainService(ui as Context)
                 .create(Home::class.java)
                 .initHomeViewData()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -138,7 +138,7 @@ class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
 
     }
     fun fetchIndustry(): Disposable {
-        return Network.mainService((ui as Activity))
+        return ApiCall.mainService((ui as Activity))
                 .create(Init::class.java)
                 .fetchIndustryCategory()
                 .observeOn(AndroidSchedulers.mainThread())
