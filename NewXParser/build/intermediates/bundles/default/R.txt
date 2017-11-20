@@ -1,3 +1,0 @@
-int integer holder_key 0x7f020000
-int integer holder_parser_key 0x7f020001
-int integer holder_position 0x7f020002
