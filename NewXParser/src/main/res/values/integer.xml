@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="integer" name="holder_key"/>
+    <item type="integer" name="holder_position"/>
+    <item type="integer" name="holder_parser_key"/>
+    
+</resources>

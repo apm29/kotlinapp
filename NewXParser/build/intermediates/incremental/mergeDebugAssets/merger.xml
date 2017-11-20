@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/yingjiawei/StudioProjects/DingLC_from_stone/NewXParser/src/main/assets"/><source path="/Users/yingjiawei/StudioProjects/DingLC_from_stone/NewXParser/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/Users/yingjiawei/StudioProjects/DingLC_from_stone/NewXParser/src/debug/assets"/></dataSet></merger>

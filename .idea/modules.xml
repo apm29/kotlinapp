@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/NewXParser/NewXParser.iml" filepath="$PROJECT_DIR$/NewXParser/NewXParser.iml" />
       <module fileurl="file://$PROJECT_DIR$/accountmodule/accountmodule.iml" filepath="$PROJECT_DIR$/accountmodule/accountmodule.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/beanmodule/beanmodule.iml" filepath="$PROJECT_DIR$/beanmodule/beanmodule.iml" />

@@ -1,1 +1,1 @@
-include ':app', ':network', ':beanmodule', ':guideview', ':accountmodule', ':updatemodule', ':testapp', ':beebubble', ':test'
+include ':app', ':network', ':beanmodule', ':guideview', ':accountmodule', ':updatemodule', ':testapp', ':beebubble', ':test', ':NewXParser'

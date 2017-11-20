@@ -5,10 +5,11 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="/Applications/Android Studio.app/Contents/gradle/gradle-3.3" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-3.3" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/NewXParser" />
             <option value="$PROJECT_DIR$/accountmodule" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/beanmodule" />
