@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.apm29.beanmodule.Init.HomeViewData
@@ -16,6 +17,7 @@ import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
 import com.apm29.network.ApiCall
 import com.apm29.network.api.Home
 import com.apm29.network.api.Init
+import com.apm29.network.cache.AccountCache
 import com.app.hubert.library.Controller
 import com.app.hubert.library.HighLight
 import com.app.hubert.library.NewbieGuide
@@ -27,18 +29,16 @@ import io.reactivex.schedulers.Schedulers
 
 class HomeActivity : BaseActivity<HomePresenter>() {
     override fun <N : Any?> onNewData(data: N) {
-        if (data is HomeViewData){
+        if (data is HomeViewData) {
             val tvHello = findViewById(R.id.tv_hello) as TextView
-            tvHello.text=data.toString()
+            tvHello.text = data.toString()
         }
-
-
     }
 
     override fun onError(error: String) {
         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
         val tvHello = findViewById(R.id.tv_hello) as TextView
-        tvHello.text=error
+        tvHello.text = error
     }
 
     override fun getPresenter(): HomePresenter = HomePresenter(this)
@@ -53,16 +53,23 @@ class HomeActivity : BaseActivity<HomePresenter>() {
 
         val btnLogin = findViewById(R.id.btn_login)
         btnLogin.setOnClickListener {
-            LoginActivity.starter(this)
+            if (AccountCache.getUserInfo(this) != null)
+                LoginActivity.starter(this)
+            else
+                Toast.makeText(this,"已经登录",Toast.LENGTH_SHORT).show()
         }
         val btnSubscribe = findViewById(R.id.btn_subscribe_mine)
         btnSubscribe.setOnClickListener {
             SubscriptionManagerActivity.starter(this)
         }
+        showGuide(btnSubscribe, btnLogin)
+    }
+
+    private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
         //引导图
         val list = arrayListOf<HighLight>()
         val element = HighLight(btnSubscribe, HighLight.Type.ROUND_RECTANGLE)
-        element.round=30
+        element.round = 30
         list.add(element)
         val controller1 = NewbieGuide.with(this)
                 .addHighLight(btnLogin, HighLight.Type.ROUND_RECTANGLE, 10)
@@ -80,7 +87,7 @@ class HomeActivity : BaseActivity<HomePresenter>() {
                 .setLayoutRes(R.layout.activity_home_guide_layout)
                 .alwaysShow(true)
                 .setOnGuideChangedListener(
-                        object :OnGuideChangedListener{
+                        object : OnGuideChangedListener {
                             override fun onRemoved(p0: Controller?) {
                                 controller1.show()
                             }
@@ -118,11 +125,11 @@ class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
                 }
                 .subscribe(
                         {
-                            println("result:"+it)
+                            println("result:" + it)
                             ui.onNewData(it.data)
                         },
                         {
-                            println("error:"+it)
+                            println("error:" + it)
                             ui.stopLoading()
                             ui.onError(it.message)
                         },
@@ -137,6 +144,7 @@ class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
                 )
 
     }
+
     fun fetchIndustry(): Disposable {
         return ApiCall.mainService((ui as Activity))
                 .create(Init::class.java)

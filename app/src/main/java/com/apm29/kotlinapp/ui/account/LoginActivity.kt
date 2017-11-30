@@ -32,13 +32,16 @@ class LoginActivity : BaseActivity<LoginPresenter>() {
     var disposableInit: Disposable? = null
     var disposableLogin: Disposable? = null
     override fun <N : Any?> onNewData(data: N) {
-        if (data is LoginResult && data.accessToken != null) {
-
-            Toast.makeText(this, " login success ! ", Toast.LENGTH_SHORT).show()
-            disposableInit = mPresenter.initUserInfo(data.data.userID)
+        if (data is LoginResult) {
+            if (data.accessToken != null) {
+                Toast.makeText(this, " login success ! ", Toast.LENGTH_SHORT).show()
+                disposableInit = mPresenter.initUserInfo(data.data.userID)
+            }else{
+                onError(data.meta.desc)
+            }
         } else if (data is UserInfo) {
             AccountCache.saveUserInfo(this, data)
-            Toast.makeText(this, " login success ! ", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, " init user info success ! ", Toast.LENGTH_SHORT).show()
             finish()
         }
     }
@@ -115,7 +118,7 @@ class LoginPresenter(ui: BaseUI?) : BasePresenter(ui) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
-                            AccountCache.saveUserInfo(ui as Context,it.data)
+                            AccountCache.saveUserInfo(ui as Context, it.data)
                             ui.onNewData(it.data)
                         },
                         {
