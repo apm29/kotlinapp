@@ -7,9 +7,12 @@ import com.apm29.network.okhttpsetup.SetCookieCache
 import com.apm29.network.okhttpsetup.SharedPrefsCookiePersistor
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.net.HttpCookie
+import java.net.URLDecoder
 import java.util.concurrent.TimeUnit
 
 
@@ -25,7 +28,7 @@ class ApiCall {
         var useCache: Boolean = false          //是否使用缓存
         val CACHE_SIZE: Long = 5 * 1024 * 1024    //默认缓存上限
         val TIME_OUT: Long = 5000             //默认超时时间ms
-        val DEBUG: Boolean = BuildConfig.DEBUG
+        val DEBUG: Boolean = false
     }
 
     companion object {
@@ -53,11 +56,13 @@ class ApiCall {
                     .build()
         }
 
-        private fun getOkHttpClient(context: Context): OkHttpClient? {
+        private fun getOkHttpClient(context: Context): OkHttpClient {
             //file
             val file: File = Environment.getDownloadCacheDirectory()
             val size: Long = Config.CACHE_SIZE
             val cookieJar: CookieJar = PersistentCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
+            val  logInterceptor= HttpLoggingInterceptor();
+            logInterceptor.level=HttpLoggingInterceptor.Level.BODY
             return OkHttpClient.Builder()
                     .connectTimeout(Config.TIME_OUT, TimeUnit.MILLISECONDS)
                     .cookieJar(if (Config.useCache) CookieJar.NO_COOKIES else cookieJar)
@@ -67,10 +72,13 @@ class ApiCall {
                         //返回新请求
                         createNewRequest(chain!!)
                     }
+                    .addInterceptor { chain->
+                        logInterceptor.intercept(chain)
+                    }
                     .addNetworkInterceptor { chain ->
                         //处理返回的chain
                         processRawResult(chain)
-                        chain.proceed(chain.request())
+                        //chain.proceed(chain.request())
                     }
                     .build()
         }
@@ -78,8 +86,12 @@ class ApiCall {
         /**
          * 后处理
          */
-        private fun processRawResult(chain: Interceptor.Chain) {
+        private fun processRawResult(chain: Interceptor.Chain): Response? {
             // TODO
+            val response = chain.proceed(chain.request())
+            println("response = ${response}")
+
+            return response
         }
 
         /**
