@@ -53,7 +53,7 @@ class HomeActivity : BaseActivity<HomePresenter>() {
 
         val btnLogin = findViewById(R.id.btn_login)
         btnLogin.setOnClickListener {
-            if (AccountCache.getUserInfo(this) != null)
+            if (AccountCache.getUserInfo(this) == null)
                 LoginActivity.starter(this)
             else
                 Toast.makeText(this,"已经登录",Toast.LENGTH_SHORT).show()
