@@ -15,8 +15,7 @@ import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.ui.account.LoginActivity
 import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
 import com.apm29.network.ApiCall
-import com.apm29.network.api.Home
-import com.apm29.network.api.Init
+import com.apm29.network.api.API
 import com.apm29.network.cache.AccountCache
 import com.app.hubert.library.Controller
 import com.app.hubert.library.HighLight
@@ -56,7 +55,7 @@ class HomeActivity : BaseActivity<HomePresenter>() {
             if (AccountCache.getUserInfo(this) == null)
                 LoginActivity.starter(this)
             else
-                Toast.makeText(this,"已经登录",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "已经登录", Toast.LENGTH_SHORT).show()
         }
         val btnSubscribe = findViewById(R.id.btn_subscribe_mine)
         btnSubscribe.setOnClickListener {
@@ -111,7 +110,7 @@ class HomeActivity : BaseActivity<HomePresenter>() {
 class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
     fun loadNetData(): Disposable {
         return ApiCall.mainService(ui as Context)
-                .create(Home::class.java)
+                .create(API.Home::class.java)
                 .initHomeViewData()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -147,7 +146,7 @@ class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
 
     fun fetchIndustry(): Disposable {
         return ApiCall.mainService((ui as Activity))
-                .create(Init::class.java)
+                .create(API.Init::class.java)
                 .fetchIndustryCategory()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

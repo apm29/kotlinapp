@@ -25,7 +25,6 @@
             android:name=".ui.account.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".ui.subscription.SubscriptionManagerActivity" />
-        <activity android:name=".base.BaseListActivity"></activity>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.apm29.network
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import com.apm29.network.okhttpsetup.PersistentCookieJar
 import com.apm29.network.okhttpsetup.SetCookieCache
 import com.apm29.network.okhttpsetup.SharedPrefsCookiePersistor
@@ -11,7 +12,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
-import java.net.HttpCookie
 import java.net.URLDecoder
 import java.util.concurrent.TimeUnit
 
@@ -40,6 +40,7 @@ class ApiCall {
          */
         /**main url**/
         private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
+        private val stlc = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
         /**
          * 获取版本号
          */
@@ -47,7 +48,7 @@ class ApiCall {
                 context.packageManager.getPackageInfo(context.packageName, 0).versionCode
 
         private fun retrofit(baseUrl: String, context: Context): Retrofit {
-            versionCode= getVersion(context)
+            versionCode = getVersion(context)
             return Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
@@ -61,19 +62,26 @@ class ApiCall {
             val file: File = Environment.getDownloadCacheDirectory()
             val size: Long = Config.CACHE_SIZE
             val cookieJar: CookieJar = PersistentCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
-            val  logInterceptor= HttpLoggingInterceptor();
-            logInterceptor.level=HttpLoggingInterceptor.Level.BODY
+            val logInterceptor = HttpLoggingInterceptor {
+                try {
+                    val text = URLDecoder.decode(it, "utf-8")
+                    Log.d("OkHttp-->", text)
+                } catch (e: Exception) {
+                    Log.d("OkHttp-->", it)
+                }
+            }
+            logInterceptor.level = HttpLoggingInterceptor.Level.BODY
             return OkHttpClient.Builder()
                     .connectTimeout(Config.TIME_OUT, TimeUnit.MILLISECONDS)
                     .cookieJar(if (Config.useCache) CookieJar.NO_COOKIES else cookieJar)
                     .cache(Cache(file, size))
                     //设置拦截器
                     .addInterceptor { chain ->
-                        //返回新请求
-                        createNewRequest(chain!!)
+                        //添加公共headers
+                        addPublicHeader(chain)
                     }
-                    .addInterceptor { chain->
-                        logInterceptor.intercept(chain)
+                    .addInterceptor { chain ->
+                        logInterceptor.intercept(chain)//logger
                     }
                     .addNetworkInterceptor { chain ->
                         //处理返回的chain
@@ -99,9 +107,14 @@ class ApiCall {
          */
         fun mainService(context: Context): Retrofit = retrofit(main, context)
 
+        /**
+         * stlc api
+         */
+        fun stoneApi(context: Context): Retrofit = retrofit(stlc, context)
+
         @Throws(Exception::class)
 //为http拦截器添加公共的参数
-        private fun createNewRequest(chain: Interceptor.Chain): Response {
+        private fun addPublicHeader(chain: Interceptor.Chain): Response {
             //原req
             val oldRequest = chain.request()
             //新url builder
@@ -121,7 +134,6 @@ class ApiCall {
             return chain.proceed(newRequest)
         }
     }
-
 
 
 }

@@ -10,7 +10,6 @@ import io.reactivex.disposables.Disposable
 /**
  * Created by apm29 on 2017/9/5.
  */
-
 class Test {
     fun foo() {
         //创建一个上游 Observable：
