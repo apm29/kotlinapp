@@ -11,13 +11,16 @@ import android.net.NetworkInfo;
 public class NetworkUtils {
     /**
      * 检查有没有网络
+     *
      * @param context
      * @return
      */
     public static boolean checkNetwork(Context context) {
         if (context != null) {
             ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            NetworkInfo mNetworkInfo=null;
+            if (mConnectivityManager != null)
+                mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
             if (mNetworkInfo != null) {
                 return mNetworkInfo.isAvailable() && mNetworkInfo.isConnected();
             }
