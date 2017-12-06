@@ -37,6 +37,12 @@ class SubscriptionManagerActivity : BaseListActivity<SubscriptionInfo,Subscripti
         return SubscriptionPresenter(this)
     }
 
+    override fun stopLoading() {
+        super.stopLoading()
+        completeRefresh()
+    }
+
+
 }
 class SubscriptionPresenter(ui: BaseUI?) : ListPresenter(ui){
     override fun loadData(): Disposable {

@@ -28,7 +28,7 @@ abstract class BaseListActivity<DATA_TYPE, P : ListPresenter> : BaseActivity<P>(
     private val mRecyclerView: RecyclerView by lazy {
         return@lazy findViewById(R.id.recycler_view) as RecyclerView
     }
-    private val mRefreshLayout: PtrCustomLayout by lazy {
+    protected val mRefreshLayout: PtrCustomLayout by lazy {
         return@lazy findViewById(R.id.refresh_layout) as PtrCustomLayout
     }
 
@@ -38,9 +38,12 @@ abstract class BaseListActivity<DATA_TYPE, P : ListPresenter> : BaseActivity<P>(
         mAdapter?.emptyView = textView
         mRefreshLayout.refreshComplete()
     }
+    protected fun completeRefresh() {
+        mRefreshLayout.refreshComplete()
+    }
 
     override fun <N : Any?> onNewData(data: N) {
-        if (data is List<*>)
+        if (data is MutableList<*>)
             try {
                 setListData(data = data as MutableList<DATA_TYPE>)
             } catch (e: Exception) {
@@ -48,9 +51,9 @@ abstract class BaseListActivity<DATA_TYPE, P : ListPresenter> : BaseActivity<P>(
             }
     }
 
-    var mAdapter: BaseAdapter? = null
-    var mData: List<DATA_TYPE>? = null
-    var mDisLoadData: Disposable? = null
+    protected var mAdapter: BaseAdapter? = null
+    protected var mData: List<DATA_TYPE>? = null
+    protected var mDisLoadData: Disposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_list_layout)
