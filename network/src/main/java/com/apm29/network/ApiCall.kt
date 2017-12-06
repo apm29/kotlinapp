@@ -35,12 +35,16 @@ class ApiCall {
         /**控制debug模式**/
         private val DEBUG = Config.DEBUG
         var versionCode = 0
+
+        var mainRetro: Retrofit? = null
+        var stoneRetro: Retrofit? = null
         /**
          * 各类主机地址
          */
         /**main url**/
         private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
         private val stlc = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
+
         /**
          * 获取版本号
          */
@@ -49,12 +53,22 @@ class ApiCall {
 
         private fun retrofit(baseUrl: String, context: Context): Retrofit {
             versionCode = getVersion(context)
-            return Retrofit.Builder()
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(baseUrl)
-                    .client(getOkHttpClient(context))
-                    .build()
+            when (baseUrl) {
+
+                main ->if (mainRetro==null) mainRetro = Retrofit.Builder()
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .baseUrl(baseUrl)
+                        .client(getOkHttpClient(context))
+                        .build()
+                stlc -> if (stoneRetro==null)stoneRetro = Retrofit.Builder()
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .baseUrl(baseUrl)
+                        .client(getOkHttpClient(context))
+                        .build()
+            }
+            return mainRetro!!
         }
 
         private fun getOkHttpClient(context: Context): OkHttpClient {
