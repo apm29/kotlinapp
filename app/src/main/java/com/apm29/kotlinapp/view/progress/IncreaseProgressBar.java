@@ -131,6 +131,10 @@ public class IncreaseProgressBar extends View {
             textRect.right = w - paddingRight;
             textRect.left = w - mTextWidth - paddingRight;
         }
+        if (textRect.left<0){
+            textRect.left=paddingLeft;
+            textRect.right=paddingRight+mTextWidth;
+        }
         System.out.println("mProgress = " + mProgress);
 
         canvas.drawText(mProgress + "%", textRect.centerX(), textRect.centerY(), mTextPaint);
