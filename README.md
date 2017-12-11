@@ -7,4 +7,4 @@ zs app in kotlin
 
 ### 文字显示的progressBar
 
-![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/increasedProgressBar.gif?raw=true)
+![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/increasedProgressBar.gif?raw=false)
