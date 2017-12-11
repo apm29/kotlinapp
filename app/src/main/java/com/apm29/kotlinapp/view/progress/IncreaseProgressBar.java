@@ -1,6 +1,7 @@
 package com.apm29.kotlinapp.view.progress;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,9 +11,13 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.apm29.kotlinapp.R;
+
+
 /**
  * Created by yingjiawei on 2017/12/11.
  */
+
 
 public class IncreaseProgressBar extends View {
     private int mProgress = 50;
@@ -44,17 +49,25 @@ public class IncreaseProgressBar extends View {
 
     public IncreaseProgressBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context, attrs, defStyleAttr);
     }
 
-    private void init() {
+    private void init(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.IncreaseProgressBar);
+        int mainColor = typedArray.getColor(R.styleable.IncreaseProgressBar_progressMainColor, Color.RED);
+        int secColor = typedArray.getColor(R.styleable.IncreaseProgressBar_progressSecondaryColor, Color.GRAY);
+        int textColor = typedArray.getColor(R.styleable.IncreaseProgressBar_progressTextColor, Color.RED);
+        int textSize = typedArray.getInt(R.styleable.IncreaseProgressBar_progressTextSize, 12);
+        int progress = typedArray.getInt(R.styleable.IncreaseProgressBar_progressInt, 0);
+        typedArray.recycle();
+        mProgress = progress;
         mRedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mRedPaint.setColor(Color.RED);
+        mRedPaint.setColor(mainColor);
         mGrayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mGrayPaint.setColor(Color.GRAY);
+        mGrayPaint.setColor(secColor);
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(Color.BLACK);
-        mTextPaint.setTextSize(toPX(20));
+        mTextPaint.setColor(textColor);
+        mTextPaint.setTextSize(toPX(textSize));
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         redRect = new RectF();
@@ -72,10 +85,22 @@ public class IncreaseProgressBar extends View {
 
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int mode = MeasureSpec.getMode(heightMeasureSpec);
+        int size = MeasureSpec.getSize(heightMeasureSpec);
+
+        //包裹内容
+        int measuredHeight = mTextHeight + mProgressHeight + getPaddingBottom() + getPaddingTop();
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), measuredHeight);
+        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
     public void setProgress(int progress) {
         if (progress >= 100) progress = 100;
         start = 0;
-        mTextWidth = (int) mTextPaint.measureText(mProgress+"%");
+        mTextWidth = (int) mTextPaint.measureText(mProgress + "%");
+
         final int finalProgress = progress;
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(new Runnable() {
@@ -84,14 +109,14 @@ public class IncreaseProgressBar extends View {
                 start++;
                 if (start <= finalProgress) {
                     mProgress = start;
-                    handler.postDelayed(this,5);
+                    handler.postDelayed(this, 5);
                     invalidate();
-                }else {
+                } else {
                     handler.removeCallbacksAndMessages(null);
-                    start=0;
+                    start = 0;
                 }
             }
-        },5);
+        }, 5);
     }
 
     @Override
@@ -107,14 +132,15 @@ public class IncreaseProgressBar extends View {
 
 
     }
-    private Handler handler=new Handler();
+
+    private Handler handler = new Handler();
 
     @Override
     protected void onDraw(Canvas canvas) {
         grayRect.bottom = redRect.bottom = h - paddingBottom;
         redRect.left = paddingLeft;
         textRect.bottom = paddingTop + mTextHeight;
-        grayRect.top = redRect.top = h-paddingBottom - mProgressHeight;
+        grayRect.top = redRect.top = h - paddingBottom - mProgressHeight;
         grayRect.left = redRect.right = (w - paddingLeft - paddingRight) * mProgress / 100 + paddingLeft;
         grayRect.right = w - paddingRight;
 
@@ -131,12 +157,13 @@ public class IncreaseProgressBar extends View {
             textRect.right = w - paddingRight;
             textRect.left = w - mTextWidth - paddingRight;
         }
-        if (textRect.left<0){
-            textRect.left=paddingLeft;
-            textRect.right=paddingRight+mTextWidth;
+        if (textRect.left < 0) {
+            textRect.left = paddingLeft;
+            textRect.right = paddingRight + mTextWidth;
         }
         System.out.println("mProgress = " + mProgress);
 
         canvas.drawText(mProgress + "%", textRect.centerX(), textRect.centerY(), mTextPaint);
     }
 }
+

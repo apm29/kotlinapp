@@ -8,4 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <declare-styleable name="IncreaseProgressBar">
+        <attr name="progressTextSize" format="dimension"/>
+        <attr name="progressTextColor" format="color"/>
+        <attr name="progressMainColor" format="color"/>
+        <attr name="progressSecondaryColor" format="color"/>
+        <attr name="progressInt" format="integer"/>
+    </declare-styleable>
 </resources>
