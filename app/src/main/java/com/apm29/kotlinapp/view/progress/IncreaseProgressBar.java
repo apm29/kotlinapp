@@ -99,7 +99,7 @@ public class IncreaseProgressBar extends View {
     public void setProgress(int progress) {
         if (progress >= 100) progress = 100;
         start = 0;
-        mTextWidth = (int) mTextPaint.measureText(mProgress + "%");
+
 
         final int finalProgress = progress;
         handler.removeCallbacksAndMessages(null);
@@ -110,6 +110,7 @@ public class IncreaseProgressBar extends View {
                 if (start <= finalProgress) {
                     mProgress = start;
                     handler.postDelayed(this, 5);
+                    mTextWidth = (int) mTextPaint.measureText(mProgress + "%");
                     invalidate();
                 } else {
                     handler.removeCallbacksAndMessages(null);
