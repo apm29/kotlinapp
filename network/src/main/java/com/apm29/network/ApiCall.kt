@@ -28,7 +28,7 @@ class ApiCall {
         var useCache: Boolean = false          //是否使用缓存
         val CACHE_SIZE: Long = 5 * 1024 * 1024    //默认缓存上限
         val TIME_OUT: Long = 5000             //默认超时时间ms
-        val DEBUG: Boolean = false
+        val DEBUG: Boolean = BuildConfig.DEBUG
     }
 
     companion object {
@@ -43,7 +43,7 @@ class ApiCall {
          */
         /**main url**/
         private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
-        private val stlc = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
+        private val stone = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
 
         /**
          * 获取版本号
@@ -61,7 +61,7 @@ class ApiCall {
                         .baseUrl(baseUrl)
                         .client(getOkHttpClient(context))
                         .build()
-                stlc -> if (stoneRetro==null)stoneRetro = Retrofit.Builder()
+                stone -> if (stoneRetro==null)stoneRetro = Retrofit.Builder()
                         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                         .addConverterFactory(GsonConverterFactory.create())
                         .baseUrl(baseUrl)
@@ -122,9 +122,9 @@ class ApiCall {
         fun mainService(context: Context): Retrofit = retrofit(main, context)
 
         /**
-         * stlc api
+         * stone api
          */
-        fun stoneApi(context: Context): Retrofit = retrofit(stlc, context)
+        fun stoneApi(context: Context): Retrofit = retrofit(stone, context)
 
         @Throws(Exception::class)
 //为http拦截器添加公共的参数
