@@ -28,7 +28,7 @@ class ApiCall {
         var useCache: Boolean = false          //是否使用缓存
         val CACHE_SIZE: Long = 5 * 1024 * 1024    //默认缓存上限
         val TIME_OUT: Long = 5000             //默认超时时间ms
-        val DEBUG: Boolean = BuildConfig.DEBUG
+        val DEBUG: Boolean = false
     }
 
     companion object {

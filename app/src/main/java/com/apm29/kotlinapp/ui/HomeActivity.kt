@@ -54,8 +54,10 @@ class HomeActivity : BaseActivity<HomePresenter>() {
         btnLogin.setOnClickListener {
             if (AccountCache.getUserInfo(this) == null)
                 LoginActivity.starter(this)
-            else
+            else {
                 Toast.makeText(this, "已经登录", Toast.LENGTH_SHORT).show()
+                PagerActivity.starter(this)
+            }
         }
         val btnSubscribe = findViewById(R.id.btn_subscribe_mine)
         btnSubscribe.setOnClickListener {

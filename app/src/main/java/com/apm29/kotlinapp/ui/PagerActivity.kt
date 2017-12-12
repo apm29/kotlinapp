@@ -1,0 +1,59 @@
+package com.apm29.kotlinapp.ui
+
+import android.content.Context
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.support.design.widget.TabLayout
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.PagerAdapter
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import com.apm29.kotlinapp.R
+import com.apm29.kotlinapp.view.pager.LazyViewPager
+import com.apm29.kotlinapp.view.pager.PagerFragment
+
+class PagerActivity : AppCompatActivity() {
+
+    companion object {
+        fun starter(context: Context) {
+            context.startActivity(Intent(context,PagerActivity::class.java))
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_pager)
+        val pager = findViewById(R.id.pager) as LazyViewPager
+        val taber = findViewById(R.id.taber) as TabLayout
+        pager.offscreenPageLimit=3
+        pager.adapter=object : FragmentPagerAdapter(supportFragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                val pagerFragment = PagerFragment()
+                val bundle = Bundle()
+                bundle.putInt("data",position)
+                pagerFragment.arguments=bundle
+                return pagerFragment
+            }
+
+
+            override fun getCount(): Int {
+                return 4
+            }
+        }
+        taber.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                pager.currentItem=taber.selectedTabPosition
+            }
+        })
+    }
+}

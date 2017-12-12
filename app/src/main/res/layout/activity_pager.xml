@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.apm29.kotlinapp.ui.PagerActivity"
+    android:orientation="vertical">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/taber"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+        <android.support.design.widget.TabItem
+            android:text="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <android.support.design.widget.TabItem
+            android:text="2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <android.support.design.widget.TabItem
+            android:text="3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+        <android.support.design.widget.TabItem
+            android:text="4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </android.support.design.widget.TabLayout>
+    <com.apm29.kotlinapp.view.pager.LazyViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
