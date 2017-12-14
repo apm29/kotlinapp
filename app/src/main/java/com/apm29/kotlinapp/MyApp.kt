@@ -3,6 +3,7 @@ package com.apm29.kotlinapp
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import cn.jpush.android.api.JPushInterface
 import com.apm29.network.cache.AccountCache
 
 
@@ -54,6 +55,13 @@ class MyApp: Application(){
     }
 
     private fun init() {
+        /**
+         * jpush
+         */
+        JPushInterface.setDebugMode(true)
+        JPushInterface.init(this)
+        val registrationID = JPushInterface.getRegistrationID(this)
+        println("J_PUSH"+"registrationID = ${registrationID}")
         /**
          * 登录持久化
          */

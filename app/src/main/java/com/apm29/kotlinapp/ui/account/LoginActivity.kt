@@ -29,7 +29,6 @@ class LoginActivity : BaseActivity<LoginPresenter>() {
     override fun onError(error: String?) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
-
     var disposableInit: Disposable? = null
     var disposableLogin: Disposable? = null
     override fun <N : Any?> onNewData(data: N) {
@@ -82,7 +81,10 @@ class LoginActivity : BaseActivity<LoginPresenter>() {
 
     companion object {
         fun starter(context: Context) {
-            context.startActivity(Intent(context, LoginActivity::class.java))
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+            context.startActivity(intent)
         }
     }
 }
