@@ -2,16 +2,12 @@ package com.apm29.kotlinapp.ui
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.PagerAdapter
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
@@ -54,6 +50,19 @@ class PagerActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 pager.currentItem=taber.selectedTabPosition
             }
+        })
+        pager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                val tab = taber.getTabAt(position)
+                tab?.select()
+            }
+
         })
     }
 }
