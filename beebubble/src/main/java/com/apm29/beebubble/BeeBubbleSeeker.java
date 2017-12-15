@@ -158,6 +158,11 @@ public class BeeBubbleSeeker extends android.support.v7.widget.AppCompatSeekBar 
     }
 
     @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         getTracker(event);
         switch (event.getAction()) {

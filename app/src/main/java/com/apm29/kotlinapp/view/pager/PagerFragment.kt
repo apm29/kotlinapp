@@ -1,5 +1,7 @@
 package com.apm29.kotlinapp.view.pager
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -8,7 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.apm29.kotlinapp.R
-
+import kotlinx.android.synthetic.main.activity_pager.*
+import kotlinx.android.synthetic.main.pager.*
 /**
  * Created by yingjiawei on 2017/12/12.
  */
@@ -30,7 +33,7 @@ class PagerFragment : Fragment(){
     val handler:Handler=Handler()
     override fun onResume() {
         super.onResume()
-
+        tv.text="nimasi1"
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
