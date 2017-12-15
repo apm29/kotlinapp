@@ -8,7 +8,7 @@
     tools:context=".base.BaseActivity">
     <FrameLayout
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:id="@+id/fl_empty_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,16 +24,32 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
     <RelativeLayout
+        android:layout_centerInParent="true"
+        android:elevation="6dp"
         android:visibility="gone"
+        tools:visibility="visible"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="#662f2f2f"
         android:id="@+id/rl_loading_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/tv_base_loading"
-            android:text="loading..."
-            android:drawablePadding="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_base_loading"
+            android:padding="6dp"
             android:layout_centerInParent="true"
-            android:drawableTop="@mipmap/ic_launcher_round"
+            android:src="@mipmap/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="8dp"
+            android:textColor="#fff"
+            android:id="@+id/tv_base_loading"
+            android:layout_below="@id/iv_base_loading"
+            android:layout_centerHorizontal="true"
+            android:text="   loading...  "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>

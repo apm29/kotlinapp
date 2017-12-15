@@ -39,7 +39,7 @@ abstract class  BaseActivity< T:BasePresenter> : AppCompatActivity(),BaseUI {
     override fun startLoading() {
         flEmptyContainer.visibility=View.GONE
         rlBaseLoadingContainer.visibility=View.VISIBLE
-        val tvLoading=findViewById(R.id.tv_base_loading)
+        val tvLoading=findViewById(R.id.iv_base_loading)
         val rotateAnimation = RotateAnimation(
                 0f, 360f,
                 RotateAnimation.RELATIVE_TO_SELF,
