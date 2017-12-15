@@ -1,6 +1,7 @@
 package com.apm29.kotlinapp.base
 
 import android.os.Bundle
+import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.RotateAnimation
@@ -28,8 +29,15 @@ abstract class  BaseActivity< T:BasePresenter> : AppCompatActivity(),BaseUI {
         mPresenter=getPresenter()
 
         super.setContentView(R.layout.activity_base_layout)
-
+        //加入当前base布局
+        setContentView(getDefaultLayout())
+        onViewAdded()
     }
+
+    @LayoutRes abstract fun getDefaultLayout():  Int
+
+    abstract fun onViewAdded()
+
     abstract fun   getPresenter(): T
 
     override fun setContentView(layoutResID: Int) {

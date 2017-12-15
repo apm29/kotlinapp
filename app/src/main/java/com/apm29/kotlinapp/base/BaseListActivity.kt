@@ -19,9 +19,9 @@ import io.reactivex.disposables.Disposable
 
 
 
-abstract class BaseListActivity<DATA_TYPE, P : ListPresenter> : BaseActivity<P>() {
+abstract class BaseListActivity<DATA_TYPE, P : BaseListActivity.ListPresenter> : BaseActivity<P>() {
 
-    var page:Int=1;
+    var page:Int=1
     /**
      * UI References
      */
@@ -54,11 +54,14 @@ abstract class BaseListActivity<DATA_TYPE, P : ListPresenter> : BaseActivity<P>(
     protected var mAdapter: BaseAdapter? = null
     protected var mData: List<DATA_TYPE>? = null
     protected var mDisLoadData: Disposable? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base_list_layout)
+
+    override fun onViewAdded() {
         setUpList()
         mDisLoadData = mPresenter.loadData()
+    }
+
+    override fun getDefaultLayout(): Int {
+        return R.layout.activity_base_list_layout
     }
 
     protected fun setUpList() {
@@ -127,13 +130,17 @@ abstract class BaseListActivity<DATA_TYPE, P : ListPresenter> : BaseActivity<P>(
             convertView(helper, item)
         }
     }
+
+
+    abstract class ListPresenter(ui: BaseUI) : BasePresenter(ui) {
+        abstract fun loadData(): Disposable
+    }
+
+    class BaseHolder(view: View?) : BaseViewHolder(view) {
+
+    }
 }
 
-abstract class ListPresenter(ui: BaseUI?) : BasePresenter(ui) {
-    abstract fun loadData(): Disposable
-}
 
-class BaseHolder(view: View?) : BaseViewHolder(view) {
-}
 
 

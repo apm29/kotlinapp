@@ -69,3 +69,20 @@ class  MainTest{
 
     }
 }
+class Utils {
+    object INSTANCE{
+        var instance=Utils()
+    }
+    val time :String by lazy {
+        System.currentTimeMillis().toString()
+    }
+    @Test
+    fun test(): Unit {
+        println(INSTANCE.instance.time)
+        println(INSTANCE.instance.time)
+        println(INSTANCE.instance)
+        println(INSTANCE.instance)
+        assert("123".equals(time))
+
+    }
+}

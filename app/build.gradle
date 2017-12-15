@@ -21,9 +21,9 @@ android {
         }
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "com.apm29.kotlinapp",
+                JPUSH_PKGNAME: "com.apm29.kotlinapp",
                 JPUSH_APPKEY : "225a6c519e5b9f4fc7d1f435", //JPush上注册的包名对应的appkey.
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
     }
     buildTypes {

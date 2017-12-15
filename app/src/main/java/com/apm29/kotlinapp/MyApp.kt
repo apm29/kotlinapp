@@ -2,6 +2,7 @@ package com.apm29.kotlinapp
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.support.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
@@ -11,14 +12,19 @@ import com.apm29.network.cache.AccountCache
 /**
  * Created by apm29 on 2017/9/5.
  */
-class MyApp: MultiDexApplication(){
+class MyApp: Application(){
     override fun onCreate() {
         super.onCreate()
+        instance=this
         registerLifeCircle()
         init()
     }
     companion object {
         var count:Int=0
+        lateinit var instance:Context
+        fun getApplication(): Context {
+            return instance
+        }
     }
     private fun registerLifeCircle() {
         registerActivityLifecycleCallbacks(

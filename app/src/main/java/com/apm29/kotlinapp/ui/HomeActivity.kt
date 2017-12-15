@@ -3,7 +3,6 @@ package com.apm29.kotlinapp.ui
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -26,7 +25,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 
-class HomeActivity : BaseActivity<HomePresenter>() {
+class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     override fun <N : Any?> onNewData(data: N) {
         if (data is HomeViewData) {
             val tvHello = findViewById(R.id.tv_hello) as TextView
@@ -34,7 +33,7 @@ class HomeActivity : BaseActivity<HomePresenter>() {
         }
     }
 
-    override fun onError(error: String) {
+    override fun onError(error: String?) {
         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
         val tvHello = findViewById(R.id.tv_hello) as TextView
         tvHello.text = error
@@ -44,10 +43,11 @@ class HomeActivity : BaseActivity<HomePresenter>() {
 
     private var subscribe: Disposable? = null
 
+    override fun getDefaultLayout(): Int {
+        return R.layout.activity_home_layout
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_layout)
+    override fun onViewAdded() {
         subscribe = mPresenter.loadNetData()
 
         val btnLogin = findViewById(R.id.btn_login)
@@ -107,51 +107,51 @@ class HomeActivity : BaseActivity<HomePresenter>() {
         super.onDestroy()
         subscribe?.dispose()
     }
-}
-
-class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
-    fun loadNetData(): Disposable {
-        return ApiCall.mainService(ui as Context)
-                .create(API.Home::class.java)
-                .initHomeViewData()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .map {
-                    if (it.meta?.code != 200) {
-                        ui.onError(it.meta?.desc)
-                    }
-                    ui.stopLoading()
-                    println(it)
-                    return@map it
-                }
-                .subscribe(
-                        {
-                            println("result:" + it)
-                            ui.onNewData(it.data)
-                        },
-                        {
-                            println("error:" + it)
-                            ui.stopLoading()
-                            ui.onError(it.message)
-                        },
-                        {
-                            println("complete")
-                            ui.stopLoading()
-                        },
-                        {
-                            println("onSubScribed")
-                            ui.startLoading()
+    class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
+        fun loadNetData(): Disposable {
+            return ApiCall.mainService(ui as Context)
+                    .create(API.Home::class.java)
+                    .initHomeViewData()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .map {
+                        if (it.meta?.code != 200) {
+                            ui.onError(it.meta?.desc)
                         }
-                )
+                        ui.stopLoading()
+                        println(it)
+                        return@map it
+                    }
+                    .subscribe(
+                            {
+                                println("result:" + it)
+                                ui.onNewData(it.data)
+                            },
+                            {
+                                println("error:" + it)
+                                ui.stopLoading()
+                                ui.onError(it.message)
+                            },
+                            {
+                                println("complete")
+                                ui.stopLoading()
+                            },
+                            {
+                                println("onSubScribed")
+                                ui.startLoading()
+                            }
+                    )
 
-    }
+        }
 
-    fun fetchIndustry(): Disposable {
-        return ApiCall.mainService((ui as Activity))
-                .create(API.Init::class.java)
-                .fetchIndustryCategory()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe()
+        fun fetchIndustry(): Disposable {
+            return ApiCall.mainService((ui as Activity))
+                    .create(API.Init::class.java)
+                    .fetchIndustryCategory()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe()
+        }
     }
 }
+

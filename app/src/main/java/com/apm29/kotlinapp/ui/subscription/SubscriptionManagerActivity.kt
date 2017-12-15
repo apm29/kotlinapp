@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.Intent
 import com.apm29.beanmodule.Init.SubscriptionInfo
 import com.apm29.kotlinapp.R
-import com.apm29.kotlinapp.base.BaseHolder
 import com.apm29.kotlinapp.base.BaseListActivity
 import com.apm29.kotlinapp.base.BaseUI
-import com.apm29.kotlinapp.base.ListPresenter
 import com.apm29.kotlinapp.ui.account.LoginActivity
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
@@ -44,7 +42,7 @@ class SubscriptionManagerActivity : BaseListActivity<SubscriptionInfo,Subscripti
 
 
 }
-class SubscriptionPresenter(ui: BaseUI?) : ListPresenter(ui){
+class SubscriptionPresenter(ui: BaseUI) : BaseListActivity.ListPresenter(ui){
     override fun loadData(): Disposable {
        return  fetchMySubscription()
     }

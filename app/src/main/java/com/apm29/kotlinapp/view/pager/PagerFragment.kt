@@ -12,14 +12,15 @@ import android.widget.TextView
 import com.apm29.kotlinapp.R
 import kotlinx.android.synthetic.main.activity_pager.*
 import kotlinx.android.synthetic.main.pager.*
+
 /**
  * Created by yingjiawei on 2017/12/12.
  */
-class PagerFragment : Fragment(){
-    var  position:Int=-1
+class PagerFragment : Fragment() {
+    var position: Int = -1
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
-        println("create view"+position)
+        println("create view" + position)
         val inflate = LayoutInflater.from(container?.context).inflate(R.layout.pager, container, false)
         return inflate
     }
@@ -27,24 +28,24 @@ class PagerFragment : Fragment(){
     override fun onCreate(savedInstanceState: Bundle?) {
         position = arguments.getInt("data")
         super.onCreate(savedInstanceState)
-        println("create "+position)
+        println("create " + position)
     }
 
-    val handler:Handler=Handler()
+    val handler: Handler = Handler()
     override fun onResume() {
         super.onResume()
-        tv.text="nimasi1"
+        tv.text = "text set by ktAndroidExt"
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser)
-        handler.postDelayed(object :Runnable{
-            override fun run() {
-                println("new "+position)
-                val textView = view!!.findViewById(R.id.tv) as TextView?
-                textView?.setText("new data")
-            }
-        },1000)
+            handler.postDelayed({
+                println("new " + position)
+                val textView = view?.findViewById(R.id.tv) as TextView?
+                textView?.text = getString(R.string.string_pager_data)
+            }, 1000)
+        else
+            handler.removeCallbacksAndMessages(null)
     }
 }
