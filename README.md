@@ -35,6 +35,8 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
                    .setLayout(R.layout.activity_home_guide_layout)
                    .show()
 ~~~
+> 将Activity的状态栏和动作条统一设置，添加统一的下拉刷新控件SmartRefreshLayout，编译版本升到v26，添加leakCanary（未完成）
+
 ## BaseActivity Usage
 > * getPresenter返回对应P,与当前BaseUI绑定
 > * getDefaultLayout 返回加入的布局文件
