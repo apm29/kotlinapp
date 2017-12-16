@@ -13,9 +13,11 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 >新增了一套引导视图的库 NightVeil 1.0，主要使用NightVeil 、 DarkoLayout、Focus三个类，可以定义点击事件 和 显示类型
 > ### usage
 ~~~
-           val controller1 = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.CIRCLE))
+           val controller1
+                = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.CIRCLE))
 
-           NightVeil
+           val controller2
+                = NightVeil
                    .from(this)
                    .addFocus(Focus(btnSubscribe!!, object : Focus.HitFocusListener {
                        override fun onHit(focus: Focus): Boolean {
@@ -40,7 +42,7 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 ## BaseActivity Usage
 > * getPresenter返回对应P,与当前BaseUI绑定
 > * getDefaultLayout 返回加入的布局文件
-> * onViewAdded 初始化View操作
+> * setupViews 初始化View操作
 > * startLoading/stopLoading/onEmpty是可用被调用的方法,展示不同状态视图层
 
 

@@ -10,23 +10,27 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.apm29.guideview.NightVeil
 import com.apm29.kotlinapp.R
+import com.apm29.kotlinapp.base.BaseActivity
+import com.apm29.kotlinapp.base.BasePresenter
+import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
 import kotlinx.android.synthetic.main.activity_home_layout.*
 
-class PagerActivity : AppCompatActivity() {
-
-    companion object {
-        fun starter(context: Context) {
-            context.startActivity(Intent(context, PagerActivity::class.java))
-        }
+class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
+    override fun onError(error: String?) {
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pager)
-        val pager = findViewById(R.id.pager) as LazyViewPager
-        val taber = findViewById(R.id.taber) as TabLayout
+    override fun <N> onNewData(data: N) {
+    }
+
+    override fun getDefaultLayout(): Int {
+        return R.layout.activity_pager
+    }
+
+    override fun setupViews(savedInstanceState: Bundle?) {
+        val pager = findViewById<LazyViewPager>(R.id.pager)
+        val taber = findViewById<TabLayout>(R.id.taber)
         pager.offscreenPageLimit = 3
         pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
@@ -68,6 +72,17 @@ class PagerActivity : AppCompatActivity() {
             }
 
         })
-
     }
+
+    override fun getPresenter(): PagerPresenter {
+        return  PagerPresenter(this)
+    }
+
+    companion object {
+        fun starter(context: Context) {
+            context.startActivity(Intent(context, PagerActivity::class.java))
+        }
+    }
+
+    class PagerPresenter(baseUI: BaseUI):BasePresenter(baseUI)
 }

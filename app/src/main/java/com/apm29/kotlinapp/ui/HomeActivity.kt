@@ -78,7 +78,7 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
         //引导图
 
-        val controller1 = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.CIRCLE))
+        val controller1 = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.OVAL))
 
         NightVeil
                 .from(this)

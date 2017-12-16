@@ -1,5 +1,6 @@
 package com.apm29.kotlinapp.base
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.graphics.Color
@@ -7,10 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.transition.Explode
+import android.transition.Slide
+import android.view.*
 import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -22,7 +22,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout
 abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     var statusBarHeight = 0
     var actionBarHeight = 0
-    var drawStatusBar = false
+    open var drawStatusBar = false
     protected val flEmptyContainer: FrameLayout by lazy {
         findViewById<FrameLayout>(R.id.fl_empty_container)
     }
@@ -45,6 +45,13 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         super.onCreate(savedInstanceState)
         //绑定P
         mPresenter = getPresenter()
+//        //转场动画
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+//            window.enterTransition = Explode()
+//            window.reenterTransition = Slide(Gravity.LEFT)
+//            window.exitTransition = Slide(Gravity.LEFT)
+//            window.returnTransition = Slide(Gravity.RIGHT)
+//        }
         //根布局
         super.setContentView(R.layout.activity_base_layout)
         //加入当前base布局
@@ -95,7 +102,10 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
             setTranslucentStatus(true)
         }
 
+
         val tintManager = SystemBarTintManager(this)
+        statusBarHeight = tintManager.config.statusBarHeight
+        actionBarHeight = tintManager.config.actionBarHeight
         tintManager.setStatusBarTintEnabled(true)
         setStatusBarDarkMode(true, this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -109,13 +119,16 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View
                         .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             else //不绘制statusbar区域
-                window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
             tintManager.setStatusBarTintResource(R.color.color_status_bar)
+            if (!drawStatusBar){
+                rlBaseContainer.setPadding(0,statusBarHeight,0,0)
+            }
+
         }
 
-        statusBarHeight = tintManager.config.statusBarHeight
-        actionBarHeight = tintManager.config.actionBarHeight
+
     }
 
     @TargetApi(19)

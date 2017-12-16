@@ -59,7 +59,7 @@ data class IndustryChild(
 
 data class LoginResult(
 		var meta: Meta,
-		var accessToken: String,// fcf72b97d3c5c010d4a38f1871e9a7bd
+		var accessToken: String?,// fcf72b97d3c5c010d4a38f1871e9a7bd
 		var data: Data
 )
 
