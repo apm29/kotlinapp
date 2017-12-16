@@ -12,7 +12,7 @@ import com.apm29.network.cache.AccountCache
 /**
  * Created by apm29 on 2017/9/5.
  */
-class MyApp: Application(){
+class MyApp: MultiDexApplication(){
     override fun onCreate() {
         super.onCreate()
         instance=this

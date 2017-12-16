@@ -49,9 +49,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'in.srain.cube:ptr-load-more:1.0.6'
     compile 'com.github.huburt-Hu:NewbieGuide:v1.0.2'
-
-    compile 'cn.jiguang.sdk:jpush:3.1.0'  // 此处以JPush 3.0.9 版本为例。
-    compile 'cn.jiguang.sdk:jcore:1.1.8'  // 此处以JCore 1.1.7 版本为例。
+    compile 'cn.jiguang.sdk:jpush:3.1.0'
+    // 此处以JPush 3.0.9 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.8'
+    // 此处以JCore 1.1.7 版本为例。
+    implementation project(':guideview')
 }
 repositories {
     mavenCentral()

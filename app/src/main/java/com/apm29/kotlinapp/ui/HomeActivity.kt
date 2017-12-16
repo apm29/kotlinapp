@@ -3,10 +3,13 @@ package com.apm29.kotlinapp.ui
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.graphics.RectF
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.apm29.beanmodule.Init.HomeViewData
+import com.apm29.guideview.Focus
+import com.apm29.guideview.NightVeil
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
@@ -68,45 +71,33 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
 
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
         //引导图
-        val list = arrayListOf<HighLight>()
-        val element = HighLight(btnSubscribe, HighLight.Type.ROUND_RECTANGLE)
-        element.round = 30
-        list.add(element)
-        val controller1 = NewbieGuide.with(this)
-                .addHighLight(btnLogin, HighLight.Type.ROUND_RECTANGLE, 10)
-                .setBackgroundColor(Color.parseColor("#88000000"))
-                .setLabel("login")
-                .setEveryWhereCancelable(true)
-                .setLayoutRes(R.layout.activity_home_guide_layout)
-                .alwaysShow(true)
-                .build()
-        val controller2 = NewbieGuide.with(this)
-                .addHighLight(list)
-                .setBackgroundColor(Color.parseColor("#88000000"))
-                .setLabel("subscribe")
-                .setEveryWhereCancelable(true)
-                .setLayoutRes(R.layout.activity_home_guide_layout)
-                .alwaysShow(true)
-                .setOnGuideChangedListener(
-                        object : OnGuideChangedListener {
-                            override fun onRemoved(p0: Controller?) {
-                                controller1.show()
-                            }
 
-                            override fun onShowed(p0: Controller?) {
-                            }
+        val controller1 = NightVeil.from(this).addFocus(Focus(btnLogin!!, null, Focus.TYPE.CIRCLE))
 
-                        }
-                )
-                .build()
-
-        controller2.show()
+        NightVeil
+                .from(this)
+                .addFocus(Focus(btnSubscribe!!, object : Focus.HitFocusListener {
+                    override fun onHit(focus: Focus): Boolean {
+                        println("hit " + focus.view)
+                        focus.view?.performClick()
+                        focus.controller.remove()
+                        controller1.show()
+                        return true
+                    }
+                }))
+                .addFocus(Focus(
+                        RectF(300F,300F,600F,700F),
+                        radius = 40F
+                ))
+                .setLayout(R.layout.activity_home_guide_layout)
+                .show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         subscribe?.dispose()
     }
+
     class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
         fun loadNetData(): Disposable {
             return ApiCall.mainService(ui as Context)
