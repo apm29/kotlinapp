@@ -55,7 +55,7 @@ abstract class BaseListActivity<DATA_TYPE, P : BaseListActivity.ListPresenter> :
     protected var mData: List<DATA_TYPE>? = null
     protected var mDisLoadData: Disposable? = null
 
-    override fun onViewAdded() {
+    override fun setupViews(savedInstanceState: Bundle?) {
         setUpList()
         mDisLoadData = mPresenter.loadData()
     }

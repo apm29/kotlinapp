@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     android:id="@+id/rl_base_container"
     tools:context=".base.BaseActivity">
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/srl_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/rl_base_refresh_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </RelativeLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     <FrameLayout
         android:visibility="gone"
         tools:visibility="gone"

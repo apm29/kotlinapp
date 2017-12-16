@@ -2,6 +2,7 @@ package com.apm29.kotlinapp.ui.account
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -39,7 +40,7 @@ class LoginActivity : BaseActivity<LoginActivity.LoginPresenter>() {
         return R.layout.activity_login
     }
 
-    override fun onViewAdded() {
+    override fun setupViews(savedInstanceState: Bundle?) {
         // Set up the login form.
         mEmailView = findViewById(R.id.email) as AutoCompleteTextView
         mPasswordView = findViewById(R.id.password) as EditText

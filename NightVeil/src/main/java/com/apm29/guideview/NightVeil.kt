@@ -53,7 +53,7 @@ class NightVeil {
          */
         fun remove(controllerTag: String, currentActivity: Activity): Boolean {
             return controllersMap[currentActivity::class.java]?.find {
-                it.controllerTaggie == controllerTag
+                it.controllerTag == controllerTag
             }.let { it?.remove() } ?: false
         }
 
@@ -62,7 +62,7 @@ class NightVeil {
          */
         fun show(tag: String,currentActivity: Activity): Boolean {
             return controllersMap[currentActivity::class.java]?.find {
-                it.controllerTaggie == tag
+                it.controllerTag == tag
             }.let { it?.show() } ?: false
         }
 
@@ -118,7 +118,7 @@ class NightVeil {
     class Controller(val context: Activity) {
         var focusList: ArrayList<Focus> = ArrayList()
         var darko: DarkoLayout? = null
-        var controllerTaggie: String = ""
+        var controllerTag: String = ""
         @LayoutRes
         var layoutRes: Int = 0
         var cancelable: Boolean = false
@@ -133,11 +133,20 @@ class NightVeil {
 
         fun setLayout(@LayoutRes layout: Int): Controller {
             layoutRes = layout
+            darko = DarkoLayout(this, context, null)
+            if (layoutRes != 0) {
+                val params = RelativeLayout.LayoutParams(-1, -1)
+                params.topMargin = getStatusBarHeight(this.context)
+                params.bottomMargin = getNavigationBarHeight(this.context)
+                val inflate = LayoutInflater.from(context).inflate(layoutRes, darko, false)
+                inflate.layoutParams = params
+                darko?.addView(inflate)
+            }
             return this
         }
 
         fun setControllerTag(tag: String): Controller {
-            controllerTaggie = tag
+            controllerTag = tag
             return this
         }
 
@@ -163,17 +172,12 @@ class NightVeil {
 
         fun show(): Boolean {
             try {
-                darko = DarkoLayout(this, context, null)
-                if (layoutRes != 0) {
-                    val params = RelativeLayout.LayoutParams(-1, -1)
-                    params.topMargin = getStatusBarHeight(this.context)
-                    params.bottomMargin = getNavigationBarHeight(this.context)
-                    val inflate = LayoutInflater.from(context).inflate(layoutRes, darko, false)
-                    inflate.layoutParams = params
-                    darko?.addView(inflate)
+                if(darko==null){
+                    darko= DarkoLayout(this,context,null)
                 }
                 val viewGroup = context.window.decorView as FrameLayout
-                viewGroup.addView(darko, android.widget.FrameLayout.LayoutParams(-1, -1))
+                if (darko?.isAdded == false)
+                    viewGroup.addView(darko, android.widget.FrameLayout.LayoutParams(-1, -1))
                 (darko as DarkoLayout).isAdded = true
                 isShow = true
             } catch (e: Exception) {
@@ -191,6 +195,7 @@ class NightVeil {
                 return false
             }
             viewGroup.removeView(darko)
+            darko?.isAdded=false
             isShow = false
             unveilingListener?.onUnveiling(this)
             return true

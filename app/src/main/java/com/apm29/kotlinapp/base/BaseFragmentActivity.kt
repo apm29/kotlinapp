@@ -1,5 +1,6 @@
 package com.apm29.kotlinapp.base
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.apm29.kotlinapp.R
 
@@ -16,7 +17,7 @@ class BaseFragmentActivity : BaseActivity<BaseFragmentActivity.FragmentPresenter
         return  R.layout.activity_base_fragment
     }
 
-    override fun onViewAdded() {
+    override fun setupViews(savedInstanceState: Bundle?) {
     }
 
     override fun <N : Any?> onNewData(data: N) {

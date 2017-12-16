@@ -2,9 +2,10 @@ package com.apm29.kotlinapp.ui
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.graphics.RectF
+import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.apm29.beanmodule.Init.HomeViewData
@@ -19,6 +20,7 @@ import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
 import com.apm29.network.cache.AccountCache
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -28,14 +30,14 @@ import kotlinx.android.synthetic.main.activity_home_layout.*
 class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     override fun <N : Any?> onNewData(data: N) {
         if (data is HomeViewData) {
-            val tvHello = findViewById(R.id.tv_hello) as TextView
+            val tvHello = findViewById<TextView>(R.id.tv_hello)
             tvHello.text = data.toString()
         }
     }
 
     override fun onError(error: String?) {
         Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
-        val tvHello = findViewById(R.id.tv_hello) as TextView
+        val tvHello = findViewById<TextView>(R.id.tv_hello)
         tvHello.text = error
     }
 
@@ -47,10 +49,10 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
         return R.layout.activity_home_layout
     }
 
-    override fun onViewAdded() {
+    override fun setupViews(savedInstanceState: Bundle?) {
         subscribe = mPresenter.loadNetData()
 
-        val btnLogin = findViewById(R.id.btn_login)
+        val btnLogin = findViewById<Button>(R.id.btn_login)
         btnLogin.setOnClickListener {
             if (AccountCache.getUserInfo(this) == null)
                 LoginActivity.starter(this)
@@ -59,7 +61,7 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
                 PagerActivity.starter(this)
             }
         }
-        val btnSubscribe = findViewById(R.id.btn_subscribe_mine)
+        val btnSubscribe = findViewById<Button>(R.id.btn_subscribe_mine)
         btnSubscribe.setOnClickListener {
             SubscriptionManagerActivity.starter(this)
         }
@@ -67,6 +69,10 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
         tv_hello.setOnClickListener {
             NightVeil.show("btnLogin",this)
         }
+    }
+
+    override fun onStartPullLoad(srlRefreshLayout: SmartRefreshLayout) {
+       mPresenter.loadNetData()
     }
 
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
