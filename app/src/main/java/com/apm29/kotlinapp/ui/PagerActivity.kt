@@ -8,15 +8,17 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import com.apm29.guideview.NightVeil
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
+import kotlinx.android.synthetic.main.activity_home_layout.*
 
 class PagerActivity : AppCompatActivity() {
 
     companion object {
         fun starter(context: Context) {
-            context.startActivity(Intent(context,PagerActivity::class.java))
+            context.startActivity(Intent(context, PagerActivity::class.java))
         }
     }
 
@@ -25,13 +27,13 @@ class PagerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pager)
         val pager = findViewById(R.id.pager) as LazyViewPager
         val taber = findViewById(R.id.taber) as TabLayout
-        pager.offscreenPageLimit=3
-        pager.adapter=object : FragmentPagerAdapter(supportFragmentManager) {
+        pager.offscreenPageLimit = 3
+        pager.adapter = object : FragmentPagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment {
                 val pagerFragment = PagerFragment()
                 val bundle = Bundle()
-                bundle.putInt("data",position)
-                pagerFragment.arguments=bundle
+                bundle.putInt("data", position)
+                pagerFragment.arguments = bundle
                 return pagerFragment
             }
 
@@ -40,7 +42,7 @@ class PagerActivity : AppCompatActivity() {
                 return 4
             }
         }
-        taber.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+        taber.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
@@ -48,10 +50,10 @@ class PagerActivity : AppCompatActivity() {
             }
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                pager.currentItem=taber.selectedTabPosition
+                pager.currentItem = taber.selectedTabPosition
             }
         })
-        pager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -61,8 +63,11 @@ class PagerActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 val tab = taber.getTabAt(position)
                 tab?.select()
+                //这时不会show，因为NightVeil中controller和Activity有对应关系
+                NightVeil.show("btnLogin", this@PagerActivity)
             }
 
         })
+
     }
 }

@@ -2,7 +2,6 @@ package com.apm29.guideview
 
 import android.graphics.RectF
 import android.view.View
-import android.widget.TextView
 
 /**
  * Created by yingjiawei on 2017/12/16.
@@ -17,10 +16,11 @@ class Focus(var view: View?,
     var rectF: RectF
 
     init {
-        rectF= RectF()
+        rectF = RectF()
     }
-    constructor(rectF: RectF, hitFocusListener: HitFocusListener?=null, type: TYPE=TYPE.RECTANGULAR, radius: Float=0F) : this(null,hitFocusListener,type,radius) {
-        this.rectF=rectF
+
+    constructor(rectF: RectF, hitFocusListener: HitFocusListener? = null, type: TYPE = TYPE.RECTANGULAR, radius: Float = 0F) : this(null, hitFocusListener, type, radius) {
+        this.rectF = rectF
     }
 
 

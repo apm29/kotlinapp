@@ -1,16 +1,18 @@
 package com.apm29.guideview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.RelativeLayout
 
+@SuppressLint("ViewConstructor")
 /**
- * 背景layout
+ * 背景layout              Donnie Darko
  * Created by yingjiawei on 2017/12/16.
  */
-class DarkoLayout(controller:NightVeil.Controller, context: Context?, attrs: AttributeSet?): RelativeLayout(context, attrs){
+class DarkoLayout(private var controller:NightVeil.Controller, context: Context?, attrs: AttributeSet?): RelativeLayout(context, attrs){
 
     var visions: ArrayList<Focus>?= controller.focusList
     var isAdded=false
@@ -35,12 +37,15 @@ class DarkoLayout(controller:NightVeil.Controller, context: Context?, attrs: Att
                 }
             }
         }
+        if (controller.cancelable){//如果layout是可以随处点击取消的就不拦截事件，直接remove全部Darko布局，移除Veil
+            controller.remove()
+            return false
+        }
         return true
     }
     override fun dispatchDraw(canvas: Canvas?)  {
 
         canvas?.drawColor(background)
-        println("onDraw")
         visions?.forEach {
             it.getRectF()
             when(it.type){

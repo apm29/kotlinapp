@@ -19,13 +19,10 @@ import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
 import com.apm29.network.cache.AccountCache
-import com.app.hubert.library.Controller
-import com.app.hubert.library.HighLight
-import com.app.hubert.library.NewbieGuide
-import com.app.hubert.library.OnGuideChangedListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_home_layout.*
 
 
 class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
@@ -67,12 +64,15 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
             SubscriptionManagerActivity.starter(this)
         }
         showGuide(btnSubscribe, btnLogin)
+        tv_hello.setOnClickListener {
+            NightVeil.show("btnLogin",this)
+        }
     }
 
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
         //引导图
 
-        val controller1 = NightVeil.from(this).addFocus(Focus(btnLogin!!, null, Focus.TYPE.CIRCLE))
+        val controller1 = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.CIRCLE))
 
         NightVeil
                 .from(this)
@@ -89,6 +89,8 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
                         RectF(300F,300F,600F,700F),
                         radius = 40F
                 ))
+                .setBackgroundColorRes(R.color.design_snackbar_background_color)
+                .setCancelableAnyWhere(true)
                 .setLayout(R.layout.activity_home_guide_layout)
                 .show()
     }

@@ -1,12 +1,13 @@
 package com.apm29.kotlinapp
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.support.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
 import com.apm29.network.cache.AccountCache
+import com.squareup.leakcanary.LeakCanary
 
 
 /**
@@ -15,12 +16,24 @@ import com.apm29.network.cache.AccountCache
 class MyApp: MultiDexApplication(){
     override fun onCreate() {
         super.onCreate()
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return
+        }
+        try {
+            LeakCanary.install(this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+        }
         instance=this
         registerLifeCircle()
         init()
     }
     companion object {
         var count:Int=0
+        @SuppressLint("StaticFieldLeak")
         lateinit var instance:Context
         fun getApplication(): Context {
             return instance

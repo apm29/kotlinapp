@@ -39,7 +39,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:testOnly="false"
         tools:node="replace">
         <activity android:name=".ui.HomeActivity">
             <intent-filter>
