@@ -12,6 +12,7 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 * 12/16/2017
 >新增了一套引导视图的库 NightVeil 1.0，主要使用NightVeil 、 DarkoLayout、Focus三个类，可以定义点击事件 和 显示类型
 >新增了对自定义视图设置后的自定义操作的处理：addTransformer方法，可以定义Layout中包含的view的custom操作
+> 将Activity的状态栏和动作条统一设置，添加统一的下拉刷新控件SmartRefreshLayout，编译版本升到v26，添加leakCanary（未完成）
 ### NightVeil usage
 ~~~
     val controller1
@@ -60,7 +61,6 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 ## NightVeil 更新说明
 > * NightVeil版本1.2，优化点击事件时机，新增Focus的build方法，新增Controller的addTransformer方法
 > * NightVeil 版本1.3 存储结构优化，解决了退出应用后show相同tag的controller不显示的bug，修改了Controller的构造方法
-> 将Activity的状态栏和动作条统一设置，添加统一的下拉刷新控件SmartRefreshLayout，编译版本升到v26，添加leakCanary（未完成）
 
 ## BaseActivity Usage
 > * getPresenter返回对应P,与当前BaseUI绑定
@@ -76,3 +76,6 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 ### 带文字显示的progressBar，带进度增加动画
 
 ![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/increasedProgressBar.gif?raw=false)
+
+### NightVeil 演示，引导图，可加入动画，自定义点击拦截
+![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/NightVeil.gif?raw=false)
