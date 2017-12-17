@@ -1,13 +1,12 @@
 package com.apm29.kotlinapp.ui
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.apm29.beanmodule.Init.HomeViewData
 import com.apm29.guideview.Focus
 import com.apm29.guideview.NightVeil
@@ -78,7 +77,8 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
         //引导图
 
-        val controller1 = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.OVAL))
+        val controller1
+                = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.OVAL))
 
         NightVeil
                 .from(this)
@@ -90,14 +90,28 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
                         controller1.show()
                         return true
                     }
-                }))
+                },padding = 30))
                 .addFocus(Focus(
-                        RectF(300F,300F,600F,700F),
-                        radius = 40F
+                        RectF(400F,300F,600F,400F),
+                        radius = 20F
                 ))
+                .addFocus(Focus(R.id.iv_logo,type = Focus.TYPE.CIRCLE,padding = 20))
                 .setBackgroundColorRes(R.color.design_snackbar_background_color)
                 .setCancelableAnyWhere(true)
                 .setLayout(R.layout.activity_home_guide_layout)
+                .addTransformer {
+                    val logo = it.findViewById<ImageView>(R.id.iv_logo)
+                    val va=ValueAnimator.ofFloat(0F,200F)
+                    va.addUpdateListener {
+                        val transition = it.animatedValue as Float
+                        logo.x=300+transition
+                        logo.y=300+transition
+                    }
+                    va.duration = 2000
+                    va.repeatCount=20
+                    va.repeatMode=ValueAnimator.REVERSE
+                    va.start()
+                }
                 .show()
     }
 

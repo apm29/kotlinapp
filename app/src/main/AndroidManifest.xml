@@ -34,7 +34,7 @@
     <application
         android:name=".MyApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/veil_logo_small"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -73,7 +73,6 @@
                 <category android:name="com.apm29.kotlinapp" />
             </intent-filter>
         </activity>
-        <activity android:name=".base.BaseFragmentActivity" />
 
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->

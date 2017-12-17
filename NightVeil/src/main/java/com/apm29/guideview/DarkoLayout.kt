@@ -25,29 +25,41 @@ class DarkoLayout(private var controller:NightVeil.Controller, context: Context?
         this.mPaint.maskFilter = BlurMaskFilter(10.0f, BlurMaskFilter.Blur.INNER)
         this.setLayerType(1, null as Paint?)
         isClickable=true
-
-    }
-
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        visions?.forEach {
-            if (ev!=null&&ev.x >it.rectF.left&&ev.x <it.rectF.right&&ev.y>it.rectF.top&&ev.y<it.rectF.bottom) {
-                val onHit = it.hitFocusListener?.onHit(it)
-                if (onHit==true||it.hitFocusListener==null){
+        this.setOnClickListener{
+            val view = it
+            visions?.forEach {
+                if (view===it.view&& it.hitFocusListener?.onHit(it) == true){
                     it.controller.remove()
                 }
+                if (it.hitFocusListener==null)
+                    it.controller.remove()
+            }
+            if (controller.cancelable){//如果layout是可以随处点击取消的就不拦截事件，直接remove全部Darko布局，移除Veil
+                controller.remove()
             }
         }
-        if (controller.cancelable){//如果layout是可以随处点击取消的就不拦截事件，直接remove全部Darko布局，移除Veil
-            controller.remove()
-            return false
-        }
-        return true
     }
+
+//    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+//        visions?.forEach {
+//            if (ev!=null&&ev.x >it.rectF.left&&ev.x <it.rectF.right&&ev.y>it.rectF.top&&ev.y<it.rectF.bottom) {
+//                val onHit = it.hitFocusListener?.onHit(it)
+//                if (onHit==true||it.hitFocusListener==null){
+//                    it.controller.remove()
+//                }
+//            }
+//        }
+//        if (controller.cancelable){//如果layout是可以随处点击取消的就不拦截事件，直接remove全部Darko布局，移除Veil
+//            controller.remove()
+//            return false
+//        }
+//        return true
+//    }
     override fun dispatchDraw(canvas: Canvas?)  {
 
         canvas?.drawColor(background)
         visions?.forEach {
-            it.getRectF()
+            it.getRectF(context)
             when(it.type){
 
                 Focus.TYPE.RECTANGULAR->canvas?.drawRoundRect(it.rectF,it.radius,it.radius,mPaint)

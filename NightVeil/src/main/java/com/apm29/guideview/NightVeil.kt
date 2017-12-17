@@ -9,10 +9,7 @@ import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.annotation.LayoutRes
 import android.util.Log
-import android.view.KeyCharacterMap
-import android.view.LayoutInflater
-import android.view.ViewConfiguration
-import android.view.ViewGroup
+import android.view.*
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 
@@ -170,6 +167,16 @@ class NightVeil {
             return this
         }
 
+        /**
+         * 在setLayout之后调用，为视图添加一些自定义操作，比如动画
+         * transform携带的View为DarkoLayout，其中的子View为setLayout后填充的自定义View
+         */
+        fun addTransformer(transformer:(View)->Unit) :Controller{
+            darko?.let {
+                transformer.invoke(it)
+            }?:throw IllegalAccessError("addTransformer方法调用时机在setLayout调用之后")
+            return this
+        }
         fun show(): Boolean {
             try {
                 if(darko==null){
