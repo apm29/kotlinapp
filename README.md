@@ -78,4 +78,4 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 ![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/increasedProgressBar.gif?raw=false)
 
 ### NightVeil 演示，引导图，可加入动画，自定义点击拦截
-![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/NightVeil.gif?raw=false)
+ ![Alt text](https://github.com/apm29/zsktapp/blob/master/pictures/NightVeil2.gif?raw=false)

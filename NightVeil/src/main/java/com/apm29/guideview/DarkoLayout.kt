@@ -80,6 +80,7 @@ class DarkoLayout(private var controller:NightVeil.Controller, context: Context?
 
         }
         super.dispatchDraw(canvas)
+        invalidate()
     }
 
     private fun getRadius(rectF: RectF): Float {
