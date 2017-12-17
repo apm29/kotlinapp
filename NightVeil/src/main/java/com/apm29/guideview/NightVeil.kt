@@ -22,17 +22,22 @@ class NightVeil {
 
 
     companion object {
-        private var controllersMap: HashMap<Class<out Activity>, ArrayList<Controller>> = HashMap()
+        private var controllersMap: HashMap<Class<out Activity>, HashMap<String,Controller>> = HashMap()
         /**
          * 构造controller的方法
          */
-        fun from(context: Activity): Controller {
+        fun from(tag:String,context: Activity): Controller {
 
-            return Controller(context).also {
-                val arrayList = controllersMap[context::class.java] ?: ArrayList()
-                controllersMap.put(context::class.java,arrayList)
-                arrayList.add(it)
+            return Controller(tag,context).also {
+                val map = controllersMap[context::class.java] ?: HashMap()
+                controllersMap.put(context::class.java, map)
+                map.put(it.controllerTag,it)
+
             }
+        }
+
+        fun removeAll(): Unit {
+            controllersMap=HashMap()
         }
 
         /**
@@ -40,27 +45,25 @@ class NightVeil {
          * @return 移除的个数
          */
         fun removeAllController(currentActivity: Activity): Int {
-            return controllersMap[currentActivity::class.java]?.filter {
-                it.remove()
-            }?.count() ?: 0
+            val i = controllersMap[currentActivity::class.java]
+            return i?.keys?.filter { i[it]?.remove() == true }?.count()?:0
         }
 
         /**
          * 移除单个controller图层
          */
         fun remove(controllerTag: String, currentActivity: Activity): Boolean {
-            return controllersMap[currentActivity::class.java]?.find {
-                it.controllerTag == controllerTag
-            }.let { it?.remove() } ?: false
+            return controllersMap[currentActivity::class.java]?.get(controllerTag).let { it?.remove() } ?: false
         }
 
         /**
          * 显示单个
          */
-        fun show(tag: String,currentActivity: Activity): Boolean {
-            return controllersMap[currentActivity::class.java]?.find {
-                it.controllerTag == tag
-            }.let { it?.show() } ?: false
+        fun show(tag: String, currentActivity: Activity): Boolean {
+//            return controllersMap[currentActivity::class.java]?.find {
+//                it.controllerTag == tag
+//            }.let { it?.show() } ?: false
+            return controllersMap[currentActivity::class.java]?.get (tag)?.show()?:false
         }
 
         fun getScreenHeight(context: Context): Int {
@@ -112,10 +115,14 @@ class NightVeil {
     }
 
 
-    class Controller(val context: Activity) {
+    class Controller(var controllerTag: String,val context: Activity) :Comparable<Controller>{
+        override fun compareTo(other: Controller): Int {
+            if (this.controllerTag==other.controllerTag)return 0
+            return 1
+        }
+
         var focusList: ArrayList<Focus> = ArrayList()
         var darko: DarkoLayout? = null
-        var controllerTag: String = ""
         @LayoutRes
         var layoutRes: Int = 0
         var cancelable: Boolean = false
@@ -142,18 +149,26 @@ class NightVeil {
             return this
         }
 
-        fun setControllerTag(tag: String): Controller {
-            controllerTag = tag
-            return this
+        override fun hashCode(): Int {
+            return 100
         }
+
+        override fun equals(other: Any?): Boolean {
+            return this.controllerTag.equals((other as Controller).controllerTag)
+        }
+//        fun setControllerTag(tag: String): Controller {
+//            controllerTag = tag
+//            return this
+//        }
 
 
         fun setBackgroundColor(@ColorInt color: Int): Controller {
             backgroundColor = color
             return this
         }
+
         fun setBackgroundColorRes(@ColorRes color: Int): Controller {
-            this.backgroundColor=context.resources.getColor(color)
+            this.backgroundColor = context.resources.getColor(color)
             return this
         }
 
@@ -171,22 +186,27 @@ class NightVeil {
          * 在setLayout之后调用，为视图添加一些自定义操作，比如动画
          * transform携带的View为DarkoLayout，其中的子View为setLayout后填充的自定义View
          */
-        fun addTransformer(transformer:(View)->Unit) :Controller{
+        fun addTransformer(transformer: (View) -> Unit): Controller {
             darko?.let {
                 transformer.invoke(it)
-            }?:throw IllegalAccessError("addTransformer方法调用时机在setLayout调用之后")
+            } ?: throw IllegalAccessError("addTransformer方法调用时机在setLayout调用之后")
             return this
         }
+
         fun show(): Boolean {
+            isShow = false
             try {
-                if(darko==null){
-                    darko= DarkoLayout(this,context,null)
-                }
+                if (darko == null) {
+                    darko = DarkoLayout(this, context, null)
+                } else
+                    darko?.setController(this)
                 val viewGroup = context.window.decorView as FrameLayout
-                if (darko?.isAdded == false)
+                if (darko?.isAdded == false) {
+                    viewGroup.removeView(darko)
                     viewGroup.addView(darko, android.widget.FrameLayout.LayoutParams(-1, -1))
-                (darko as DarkoLayout).isAdded = true
-                isShow = true
+                    (darko as DarkoLayout).isAdded = true
+                    isShow = true
+                }
             } catch (e: Exception) {
                 isShow = false
             }
@@ -202,7 +222,7 @@ class NightVeil {
                 return false
             }
             viewGroup.removeView(darko)
-            darko?.isAdded=false
+            darko?.isAdded = false
             isShow = false
             unveilingListener?.onUnveiling(this)
             return true

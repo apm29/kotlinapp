@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.RectF
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.*
 import com.apm29.beanmodule.Init.HomeViewData
@@ -40,6 +41,10 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
         tvHello.text = error
     }
 
+    override fun startLoading() {
+        //do nothing
+    }
+
     override fun getPresenter(): HomePresenter = HomePresenter(this)
 
     private var subscribe: Disposable? = null
@@ -66,7 +71,7 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
         }
         showGuide(btnSubscribe, btnLogin)
         tv_hello.setOnClickListener {
-            NightVeil.show("btnLogin",this)
+            println("NightVeil shown"+NightVeil.show("btnLogin", this))
         }
     }
 
@@ -76,36 +81,41 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
 
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
         //引导图
-
+        //println("NightVeil："+NightVeil.removeAllController(this))
         val controller1
-                = NightVeil.from(this).setControllerTag("btnLogin").addFocus(Focus(btnLogin!!, null, Focus.TYPE.OVAL))
+                = NightVeil.from("btnLogin",this).addFocus(Focus(btnLogin!!, null, Focus.TYPE.OVAL))
 
         NightVeil
-                .from(this)
+                .from("btnSubscribe",this)
                 .addFocus(Focus(btnSubscribe!!, object : Focus.HitFocusListener {
                     override fun onHit(focus: Focus): Boolean {
-                        println("hit " + focus.view)
                         focus.view?.performClick()
-                        focus.controller.remove()
                         controller1.show()
-                        return true
+                        focus.remoeSelf()
+                        return false
                     }
-                },padding = 30))
+                }))
                 .addFocus(Focus(
                         RectF(400F,300F,600F,400F),
                         radius = 20F
                 ))
                 .addFocus(Focus(R.id.iv_logo,type = Focus.TYPE.CIRCLE,padding = 20))
-                .setBackgroundColorRes(R.color.design_snackbar_background_color)
-                .setCancelableAnyWhere(true)
+                .setBackgroundColorRes(R.color.guide_bg_color)
                 .setLayout(R.layout.activity_home_guide_layout)
                 .addTransformer {
+                    val container=it.findViewById<ConstraintLayout>(R.id.cl_container)
                     val logo = it.findViewById<ImageView>(R.id.iv_logo)
+                    val tv = it.findViewById<TextView>(R.id.tv_guide)
+                    val arrow = it.findViewById<ImageView>(R.id.arrow)
                     val va=ValueAnimator.ofFloat(0F,200F)
                     va.addUpdateListener {
                         val transition = it.animatedValue as Float
                         logo.x=300+transition
                         logo.y=300+transition
+                        arrow.x=logo.x-logo.measuredWidth-20
+                        arrow.y=logo.y
+                        tv.x=arrow.x-tv.measuredWidth-20
+                        tv.y=logo.y+(logo.measuredHeight-tv.measuredHeight)/2
                     }
                     va.duration = 2000
                     va.repeatCount=20

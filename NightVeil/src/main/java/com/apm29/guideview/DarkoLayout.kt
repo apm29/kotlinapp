@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.widget.RelativeLayout
 
 @SuppressLint("ViewConstructor")
@@ -25,21 +26,30 @@ class DarkoLayout(private var controller:NightVeil.Controller, context: Context?
         this.mPaint.maskFilter = BlurMaskFilter(10.0f, BlurMaskFilter.Blur.INNER)
         this.setLayerType(1, null as Paint?)
         isClickable=true
-        this.setOnClickListener{
-            val view = it
-            visions?.forEach {
-                if (view===it.view&& it.hitFocusListener?.onHit(it) == true){
-                    it.controller.remove()
+        this.setOnTouchListener { v, ev ->
+            println("NightVeil "+"ev = ${ev.x}")
+            println("NightVeil "+"ev = ${ev.y}")
+            if (ev.action==MotionEvent.ACTION_UP) {
+                visions?.forEach {
+                    println("NightVeil "+"rectF = ${it.rectF}")
+                    if (ev != null && ev.x > it.rectF.left && ev.x < it.rectF.right && ev.y > it.rectF.top && ev.y < it.rectF.bottom) {
+                        if (it.hitFocusListener?.onHit(it) == true || it.hitFocusListener == null) {
+                            it.controller.remove()
+                        }
+                    }
                 }
-                if (it.hitFocusListener==null)
-                    it.controller.remove()
+                if (controller.cancelable) {//如果layout是可以随处点击取消的就不拦截事件，直接remove全部Darko布局，移除Veil
+                    controller.remove()
+                    return@setOnTouchListener true
+                }
             }
-            if (controller.cancelable){//如果layout是可以随处点击取消的就不拦截事件，直接remove全部Darko布局，移除Veil
-                controller.remove()
-            }
+            return@setOnTouchListener true
         }
     }
 
+    override fun performClick(): Boolean {
+        return super.performClick()
+    }
 //    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
 //        visions?.forEach {
 //            if (ev!=null&&ev.x >it.rectF.left&&ev.x <it.rectF.right&&ev.y>it.rectF.top&&ev.y<it.rectF.bottom) {
@@ -74,5 +84,9 @@ class DarkoLayout(private var controller:NightVeil.Controller, context: Context?
 
     private fun getRadius(rectF: RectF): Float {
         return Math.min(rectF.height(),rectF.width())/2
+    }
+
+    fun setController(controller: NightVeil.Controller) {
+        this.controller=controller
     }
 }

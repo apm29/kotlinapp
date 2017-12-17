@@ -21,6 +21,8 @@ class Focus(var view: View?,
 ) {
 
 
+    private var singleRemoved: Boolean=false
+
     var rectF: RectF
 
     init {
@@ -33,13 +35,16 @@ class Focus(var view: View?,
 
     private var viewId: Int=0
 
+
     constructor(@IdRes viewId: Int, hitFocusListener: HitFocusListener? = null, type: TYPE = TYPE.RECTANGULAR, radius: Float = 0F,padding: Int=0) : this(null, hitFocusListener, type, radius,padding) {
         this.viewId=viewId
         if(view!=null)throw IllegalAccessError("每个Focus只能有一个对应的View、viewID")
     }
-
-
     fun getRectF(context: Context): Focus {
+        if (singleRemoved){
+            rectF= RectF()
+            return  this
+        }
         val location = IntArray(2)
         if (view != null) {
             this.view!!.getLocationOnScreen(location)
@@ -60,6 +65,7 @@ class Focus(var view: View?,
         }
         return this
     }
+
     fun setHitFocusListener(hitFocusListener: HitFocusListener?):Focus{
         this.hitFocusListener=hitFocusListener
         return  this
@@ -68,6 +74,10 @@ class Focus(var view: View?,
     fun addTransformer(t: (Focus) -> Unit): Focus {
         t.invoke(this)
         return this
+    }
+
+    fun remoeSelf() {
+        this.singleRemoved =true
     }
     /**
      * 点击监听
