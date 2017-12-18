@@ -19,17 +19,18 @@
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     <FrameLayout
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:id="@+id/fl_empty_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
             android:padding="12dp"
-            android:background="@color/colorPrimaryDark"
             android:drawableTop="@android:drawable/ic_dialog_info"
-            android:textColor="#fff"
+            android:textColor="#2f2f2f"
+            android:drawablePadding="12dp"
+            android:gravity="center"
             android:id="@+id/tv_base_empty"
-            android:text="empty"
+            android:text="暂无数据,点击加载"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

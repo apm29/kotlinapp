@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
+import com.apm29.kotlinapp.utils.toPx
 import com.apm29.network.cache.AccountCache
 import com.squareup.leakcanary.LeakCanary
 

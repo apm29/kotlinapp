@@ -24,7 +24,7 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
                        override fun onHit(focus: Focus): Boolean {
                            focus.view?.performClick()
                            controller1.show()
-                           focus.remoeSelf()
+                           focus.removeSelf()
                            return false
                        }
                    }))

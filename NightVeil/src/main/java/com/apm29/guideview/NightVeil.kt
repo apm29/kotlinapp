@@ -18,7 +18,7 @@ import android.widget.RelativeLayout
  * 管理着activity对应的controller
  * Created by yingjiawei on 2017/12/16.
  */
-class NightVeil {
+class NightVeil private constructor(){
 
 
     companion object {
@@ -36,17 +36,25 @@ class NightVeil {
             }
         }
 
+        /**
+         * 使用完毕后调用此方法
+         */
         fun removeAll(): Unit {
             controllersMap=HashMap()
+            var a="123"
+            a.plus(1)
         }
 
         /**
-         * 移除所有图层
+         * 移除所有图层的controller,Activity对应的map重置
+         * 最好在使用完毕后调用此方法
          * @return 移除的个数
          */
         fun removeAllController(currentActivity: Activity): Int {
             val i = controllersMap[currentActivity::class.java]
-            return i?.keys?.filter { i[it]?.remove() == true }?.count()?:0
+            val count = i?.keys?.filter { i[it]?.remove() == true }?.count() ?: 0
+            controllersMap[currentActivity::class.java]=HashMap()
+            return count
         }
 
         /**

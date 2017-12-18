@@ -1,6 +1,7 @@
 package com.apm29.kotlinapp
 
 import org.junit.Test
+import java.text.DecimalFormat
 
 /**
  * Created by yingjiawei on 2017/9/16.
@@ -8,7 +9,8 @@ import org.junit.Test
 class KtTest{
     @Test
     fun main() {
-        println("start test")
+       val arr = arrayOfNulls<Int?>(2)
+        println("arr = ${arr[0]}+${arr[1]}")
     }
 }
 class Task {

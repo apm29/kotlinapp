@@ -76,7 +76,7 @@ class Focus(var view: View?,
         return this
     }
 
-    fun remoeSelf() {
+    fun removeSelf() {
         this.singleRemoved =true
     }
     /**

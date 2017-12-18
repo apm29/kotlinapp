@@ -2,17 +2,22 @@ package com.apm29.kotlinapp.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.RectF
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.ViewGroup
+import com.apm29.guideview.Focus
 import com.apm29.guideview.NightVeil
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
 import com.apm29.kotlinapp.base.BaseUI
+import com.apm29.kotlinapp.utils.showToast
 import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
 import kotlinx.android.synthetic.main.activity_home_layout.*
@@ -58,6 +63,7 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
             }
         })
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            var showCount = 1
             override fun onPageScrollStateChanged(state: Int) {
             }
 
@@ -67,15 +73,47 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
             override fun onPageSelected(position: Int) {
                 val tab = taber.getTabAt(position)
                 tab?.select()
-                //这时不会show，因为NightVeil中controller和Activity有对应关系
-                NightVeil.show("btnLogin", this@PagerActivity)
+                if (position < taber.tabCount - 1 && showCount < taber.tabCount - 1) {
+                    NightVeil.from("pager-" + (position+1), this@PagerActivity)
+                            .setBackgroundColor(Color.parseColor("#772f2f2f"))
+                            .addFocus(Focus((taber.getChildAt(0) as ViewGroup).getChildAt(position + 1), object : Focus.HitFocusListener {
+                                override fun onHit(focus: Focus): Boolean {
+                                    focus.view?.performClick()
+                                    return true
+                                }
+                            }))
+                            .setUnveilingListener(object : NightVeil.UnveilingListener {
+                                override fun onUnveiling(controller: NightVeil.Controller) {
+                                    showToast("click position :" + controller.controllerTag )
+                                }
+                            })
+                            .show()
+                    showCount++
+                } else {
+                    NightVeil.removeAllController(this@PagerActivity)
+                }
             }
 
         })
+        NightVeil.from("pager-1", this@PagerActivity)
+                .setBackgroundColor(Color.parseColor("#772f2f2f"))
+                .addFocus(Focus((taber.getChildAt(0) as ViewGroup).getChildAt(1), object : Focus.HitFocusListener {
+                    override fun onHit(focus: Focus): Boolean {
+                        focus.view?.performClick()
+                        return true
+                    }
+                }))
+                .setUnveilingListener(object : NightVeil.UnveilingListener {
+                    override fun onUnveiling(controller: NightVeil.Controller) {
+                        showToast("click position :" + controller.controllerTag )
+                    }
+                })
+                .show()
+
     }
 
     override fun getPresenter(): PagerPresenter {
-        return  PagerPresenter(this)
+        return PagerPresenter(this)
     }
 
     companion object {
@@ -84,5 +122,5 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
         }
     }
 
-    class PagerPresenter(baseUI: BaseUI):BasePresenter(baseUI)
+    class PagerPresenter(baseUI: BaseUI) : BasePresenter(baseUI)
 }

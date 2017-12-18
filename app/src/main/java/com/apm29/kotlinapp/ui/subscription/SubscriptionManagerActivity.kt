@@ -14,19 +14,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class SubscriptionManagerActivity : BaseListActivity<SubscriptionInfo,SubscriptionPresenter>() {
-    override fun getResID(): Int =R.layout.item_subscription_manager_list_layout
+class SubscriptionManagerActivity : BaseListActivity<SubscriptionInfo, SubscriptionManagerActivity.SubscriptionPresenter>() {
+    override fun getResID(): Int = R.layout.item_subscription_manager_list_layout
 
     override fun convertView(helper: BaseHolder?, item: SubscriptionInfo) {
-        helper?.setText(R.id.tv_name,item.toString())
+        helper?.setText(R.id.tv_name, item.toString())
     }
 
     companion object {
         fun starter(context: Context) {
-            if (AccountCache.userInfo==null){
+            if (AccountCache.userInfo == null) {
                 LoginActivity.starter(context)
-            }else{
-                context.startActivity(Intent(context,SubscriptionManagerActivity::class.java))
+            } else {
+                context.startActivity(Intent(context, SubscriptionManagerActivity::class.java))
             }
         }
     }
@@ -35,36 +35,31 @@ class SubscriptionManagerActivity : BaseListActivity<SubscriptionInfo,Subscripti
         return SubscriptionPresenter(this)
     }
 
-    override fun stopLoading() {
-        super.stopLoading()
-        completeRefresh()
-    }
+    class SubscriptionPresenter(ui: BaseUI) : BaseListActivity.ListPresenter(ui) {
+        override fun loadData(): Disposable {
+            return fetchMySubscription()
+        }
 
-
-}
-class SubscriptionPresenter(ui: BaseUI) : BaseListActivity.ListPresenter(ui){
-    override fun loadData(): Disposable {
-       return  fetchMySubscription()
-    }
-
-    fun fetchMySubscription() : Disposable{
-       return ApiCall.mainService(ui as Context)
-                .create(API.Subscription::class.java)
-                .fetchMySubscription(AccountCache.userInfo!!.userID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {ui.onNewData(it.data)},
-                        {
-                            ui.stopLoading()
-                            ui.onError(it.toString())
-                        },
-                        {
-                            ui.stopLoading()
-                        },
-                        {
-                            ui.startLoading()
-                        }
-                )
+        private fun fetchMySubscription(): Disposable {
+            return ApiCall.mainService(ui as Context)
+                    .create(API.Subscription::class.java)
+                    .fetchMySubscription(AccountCache.userInfo!!.userID)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { ui.onNewData(it.data) },
+                            {
+                                ui.stopLoading()
+                                ui.onError(it.toString())
+                            },
+                            {
+                                //ui.stopLoading()
+                            },
+                            {
+                                ui.startLoading()
+                            }
+                    )
+        }
     }
 }
+

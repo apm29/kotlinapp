@@ -1,6 +1,8 @@
 package com.example.test
 
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.properties.Delegates
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -48,15 +50,21 @@ class  MainTest{
 
     @Test
     fun main() {
-        assert(getString()!="")
-
-        propD= arrayListOf("12","21","mm")
-        println(propD)
-        Singer(object :Sing{
-            override fun sing() {
-                println("sing by delegate")
-            }
-        }).sing()
+//        assert(getString()!="")
+//
+//        propD= arrayListOf("12","21","mm")
+//        println(propD)
+//        Singer(object :Sing{
+//            override fun sing() {
+//                println("sing by delegate")
+//            }
+//        }).sing()
+        var sdf =SimpleDateFormat("yyyy-MM-dd")
+        println("addTime "+sdf.format(Date(1513217824000)))
+        println("modifyTime "+sdf.format(Date(1513217824000)))
+        println("orderTime "+sdf.format(Date(1513217824000)))
+        println("showTime "+sdf.format(Date(1513217824000)))
+        println("sortTime "+sdf.format(Date(1513785600000)))
 
     }
 

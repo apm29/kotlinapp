@@ -1,9 +1,5 @@
 package com.apm29.kotlinapp.base
 
-import `in`.srain.cube.views.ptr.PtrDefaultHandler
-import `in`.srain.cube.views.ptr.PtrDefaultHandler2
-import `in`.srain.cube.views.ptr.PtrFrameLayout
-import `in`.srain.cube.views.ptr.PtrHandler2
 import `in`.srain.cube.views.ptr.header.StoreHouseHeader
 import android.os.Bundle
 import android.support.annotation.LayoutRes
@@ -12,7 +8,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import com.apm29.kotlinapp.R
-import com.apm29.kotlinapp.view.ptr.PtrCustomLayout
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import io.reactivex.disposables.Disposable
@@ -26,29 +21,30 @@ abstract class BaseListActivity<DATA_TYPE, P : BaseListActivity.ListPresenter> :
      * UI References
      */
     private val mRecyclerView: RecyclerView by lazy {
-        return@lazy findViewById(R.id.recycler_view) as RecyclerView
-    }
-    protected val mRefreshLayout: PtrCustomLayout by lazy {
-        return@lazy findViewById(R.id.refresh_layout) as PtrCustomLayout
+        return@lazy findViewById<RecyclerView>(R.id.recycler_view)
     }
 
     override fun onError(error: String?) {
         val textView = TextView(this)
         textView.text = error
         mAdapter?.emptyView = textView
-        mRefreshLayout.refreshComplete()
+        completeRefresh()
     }
     protected fun completeRefresh() {
-        mRefreshLayout.refreshComplete()
+        baseRefreshLayout.finishRefresh(300)
+        baseRefreshLayout.finishLoadmore(300)
     }
 
     override fun <N : Any?> onNewData(data: N) {
-        if (data is MutableList<*>)
+        if (data is MutableList<*>) {
             try {
                 setListData(data = data as MutableList<DATA_TYPE>)
             } catch (e: Exception) {
                 onError("data cast failed, data type doesn't match")
             }
+        } else if (data==null ){
+            onEmpty()
+        }
     }
 
     protected var mAdapter: BaseAdapter? = null
@@ -74,34 +70,17 @@ abstract class BaseListActivity<DATA_TYPE, P : BaseListActivity.ListPresenter> :
             mAdapter?.isUpFetching = true
             mPresenter.loadData()
         }
-
-
-        val footer = StoreHouseHeader(this)
-        footer.setTextColor(R.color.colorAccent)
-        footer.initWithStringArray(R.array.storehouse)
-        mRefreshLayout.setFooterView(footer)
-        mRefreshLayout.addPtrUIHandler(footer)
-        mRefreshLayout.setPtrHandler(object : PtrHandler2{
-            override fun onLoadMoreBegin(frame: PtrFrameLayout?) {
-                page+=1
-                mPresenter.loadData()
-            }
-
-            override fun onRefreshBegin(frame: PtrFrameLayout?) {
-                page=1
-                mPresenter.loadData()
-            }
-
-
-            override fun checkCanDoRefresh(frame: PtrFrameLayout?, content: View?, header: View?): Boolean {
-                return PtrDefaultHandler.checkContentCanBePulledDown(frame,content,header)
-            }
-
-            override fun checkCanDoLoadMore(frame: PtrFrameLayout?, content: View?, footer: View?): Boolean {
-                return PtrDefaultHandler2.checkContentCanBePulledUp(frame,content,footer)
-            }
-
-        })
+        baseRefreshLayout.setOnRefreshListener {
+            page=1
+            mPresenter.loadData()
+        }
+        baseRefreshLayout.setOnLoadmoreListener {
+            page++
+            mPresenter.loadData()
+        }
+        findViewById<TextView>(R.id.tv_base_empty).setOnClickListener {
+            mPresenter.loadData()
+        }
     }
 
 
@@ -110,8 +89,11 @@ abstract class BaseListActivity<DATA_TYPE, P : BaseListActivity.ListPresenter> :
             mAdapter = BaseAdapter(getResID(), data = data)
             mRecyclerView.adapter = mAdapter
         }
+        if(data.size==0){
+            onEmpty()
+        }
         mAdapter?.setNewData(data)
-        mRefreshLayout.refreshComplete()
+        completeRefresh()
     }
 
     protected abstract fun getResID(): Int
@@ -136,9 +118,7 @@ abstract class BaseListActivity<DATA_TYPE, P : BaseListActivity.ListPresenter> :
         abstract fun loadData(): Disposable
     }
 
-    class BaseHolder(view: View?) : BaseViewHolder(view) {
-
-    }
+    open class BaseHolder(view: View?) : BaseViewHolder(view)
 }
 
 

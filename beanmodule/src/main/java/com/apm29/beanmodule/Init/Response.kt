@@ -15,10 +15,10 @@ class Response<DATA>{
     var data:DATA?=null
 
 
-    class Meta{
-        var count:Int?=null
-        var code:Int?=null
+    data class Meta(
+        var count:Int?=null,
+        var code:Int?=null,
         var desc:String?=null
-    }
+    )
 
 }

@@ -41,9 +41,6 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
         tvHello.text = error
     }
 
-    override fun startLoading() {
-        //do nothing
-    }
 
     override fun getPresenter(): HomePresenter = HomePresenter(this)
 
@@ -91,7 +88,7 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
                     override fun onHit(focus: Focus): Boolean {
                         focus.view?.performClick()
                         controller1.show()
-                        focus.remoeSelf()
+                        focus.removeSelf()
                         return false
                     }
                 }))

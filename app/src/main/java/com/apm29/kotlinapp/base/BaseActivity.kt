@@ -6,10 +6,9 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import android.transition.Explode
-import android.transition.Slide
 import android.view.*
 import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
@@ -23,20 +22,25 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     var statusBarHeight = 0
     var actionBarHeight = 0
     open var drawStatusBar = false
-    protected val flEmptyContainer: FrameLayout by lazy {
+    protected val baseEmptyContainer: FrameLayout by lazy {
         findViewById<FrameLayout>(R.id.fl_empty_container)
     }
-    protected val rlBaseContainer: RelativeLayout by lazy {
+    protected val baseContainer: RelativeLayout by lazy {
         findViewById<RelativeLayout>(R.id.rl_base_container)
     }
-    protected val rlBaseLoadingContainer: RelativeLayout by lazy {
+    protected val baseLoadingContainer: RelativeLayout by lazy {
         findViewById<RelativeLayout>(R.id.rl_loading_container)
     }
-    protected val rlBaseRefreshContainer: RelativeLayout by lazy {
+    protected val baseRefreshContainer: RelativeLayout by lazy {
         findViewById<RelativeLayout>(R.id.rl_base_refresh_container)
     }
-    protected val srlRefreshLayout: SmartRefreshLayout by lazy {
+    protected val baseRefreshLayout: SmartRefreshLayout by lazy {
         findViewById<SmartRefreshLayout>(R.id.srl_refresh_layout)
+    }
+    protected  var handler=Handler()
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 
     protected lateinit var mPresenter: T
@@ -65,8 +69,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     }
 
     override fun setContentView(layoutResID: Int) {
-        layoutInflater.inflate(layoutResID, rlBaseRefreshContainer, true)
-        super.setContentView(rlBaseContainer)
+        layoutInflater.inflate(layoutResID, baseRefreshContainer, true)
+        super.setContentView(baseContainer)
     }
 
     open protected fun setupActionBar(savedInstanceState: Bundle?) {
@@ -74,7 +78,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         initSystemBar()
     }
 
-    /**
+    @SuppressLint("PrivateApi")
+            /**
      * 为miui设置状态栏颜色
      * @param darkmode 是否黑色
      * @param activity 当前Activity
@@ -122,8 +127,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
             tintManager.setStatusBarTintResource(R.color.color_status_bar)
-            if (!drawStatusBar){
-                rlBaseContainer.setPadding(0,statusBarHeight,0,0)
+            if (!drawStatusBar) {
+                baseContainer.setPadding(0, statusBarHeight, 0, 0)
             }
 
         }
@@ -145,18 +150,22 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     }
 
     open protected fun setupRefresh(savedInstanceState: Bundle?) {
-        srlRefreshLayout.isEnableRefresh = enableRefresh()
-        srlRefreshLayout.setOnRefreshListener {
-            onStartPullLoad(srlRefreshLayout)
+        baseRefreshLayout.isEnableRefresh = enableRefresh()
+        baseRefreshLayout.isEnableLoadmore = enableLoadMore()
+        baseRefreshLayout.setOnRefreshListener {
+            onStartPullLoad(baseRefreshLayout)
         }
     }
 
     open protected fun enableRefresh(): Boolean {
         return true
     }
+    open protected fun enableLoadMore(): Boolean {
+        return false
+    }
 
     open protected fun onStartPullLoad(srlRefreshLayout: SmartRefreshLayout) {
-        this.srlRefreshLayout.finishRefresh(200, true)
+        this.baseRefreshLayout.finishRefresh(200, true)
     }
 
     @LayoutRes abstract fun getDefaultLayout(): Int
@@ -166,30 +175,61 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     abstract fun getPresenter(): T
 
 
+    private val tvLoading: ImageView? by lazy {
+        val imageView = findViewById<ImageView>(R.id.iv_base_loading)
+        return@lazy imageView
+    }
+
     override fun startLoading() {
-        flEmptyContainer.visibility = View.GONE
-        rlBaseLoadingContainer.visibility = View.VISIBLE
-        val tvLoading = findViewById<ImageView>(R.id.iv_base_loading)
-        val rotateAnimation = RotateAnimation(
-                0f, 360f,
-                RotateAnimation.RELATIVE_TO_SELF,
-                0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f
-        )
-        rotateAnimation.duration = 300
-        rotateAnimation.repeatCount = RotateAnimation.INFINITE
-        tvLoading?.startAnimation(rotateAnimation)
+        if (!enableRefresh()) {
+            baseEmptyContainer.visibility = View.GONE
+            baseLoadingContainer.visibility = View.VISIBLE
+            val rotateAnimation = RotateAnimation(
+                    0f, 360f,
+                    RotateAnimation.RELATIVE_TO_SELF,
+                    0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f
+            )
+            rotateAnimation.duration = 300
+            rotateAnimation.repeatCount = RotateAnimation.INFINITE
+            tvLoading?.startAnimation(rotateAnimation)
+        }else{
+            baseRefreshContainer.visibility = View.VISIBLE
+            baseEmptyContainer.visibility=View.GONE
+            baseLoadingContainer.visibility = View.GONE
+            baseRefreshLayout.autoRefresh(300)
+        }
     }
 
     override fun stopLoading() {
-        flEmptyContainer.visibility = View.GONE
-        rlBaseLoadingContainer.visibility = View.GONE
-        srlRefreshLayout.finishRefresh(true)
+        if (enableRefresh()) {
+            handler.postDelayed({
+                baseEmptyContainer.visibility = View.GONE
+                baseLoadingContainer.visibility = View.GONE
+                baseRefreshLayout.finishRefresh(300)
+                baseRefreshLayout.finishLoadmore(300)
+            },300)
+        } else {
+            baseRefreshContainer.visibility = View.VISIBLE
+            baseEmptyContainer.visibility=View.GONE
+            baseLoadingContainer.visibility = View.GONE
+            baseRefreshLayout.finishRefresh(300)
+            baseRefreshLayout.finishLoadmore(300)
+        }
     }
 
     override fun onEmpty() {
-        flEmptyContainer.visibility = View.VISIBLE
-        rlBaseLoadingContainer.visibility = View.GONE
-        rlBaseContainer.visibility = View.GONE
-        srlRefreshLayout.finishRefresh(false)
+        if (!enableRefresh()) {
+            baseEmptyContainer.visibility = View.VISIBLE
+            baseLoadingContainer.visibility = View.GONE
+            baseRefreshLayout.visibility = View.GONE
+            baseRefreshLayout.finishRefresh(300)
+            baseRefreshLayout.finishLoadmore(300)
+        }else{
+            baseRefreshContainer.visibility = View.VISIBLE
+            baseEmptyContainer.visibility=View.GONE
+            baseLoadingContainer.visibility = View.GONE
+            baseRefreshLayout.finishRefresh(300)
+            baseRefreshLayout.finishLoadmore(300)
+        }
     }
 }
