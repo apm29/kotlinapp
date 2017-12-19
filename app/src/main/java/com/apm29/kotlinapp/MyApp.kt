@@ -8,13 +8,14 @@ import android.support.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
 import com.apm29.kotlinapp.utils.toPx
 import com.apm29.network.cache.AccountCache
+import com.facebook.stetho.Stetho
 import com.squareup.leakcanary.LeakCanary
 
 
 /**
  * Created by apm29 on 2017/9/5.
  */
-class MyApp: MultiDexApplication(){
+class MyApp : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -28,21 +29,24 @@ class MyApp: MultiDexApplication(){
             e.printStackTrace()
 
         }
-        instance=this
+        instance = this
         registerLifeCircle()
         init()
     }
+
     companion object {
-        var count:Int=0
+        var count: Int = 0
         @SuppressLint("StaticFieldLeak")
-        lateinit var instance:Context
+        lateinit var instance: Context
+
         fun getApplication(): Context {
             return instance
         }
     }
+
     private fun registerLifeCircle() {
         registerActivityLifecycleCallbacks(
-                object :ActivityLifecycleCallbacks{
+                object : ActivityLifecycleCallbacks {
                     override fun onActivityPaused(activity: Activity?) {
                     }
 
@@ -50,9 +54,9 @@ class MyApp: MultiDexApplication(){
                     }
 
                     override fun onActivityStarted(activity: Activity?) {
-                        if (count==0){
+                        if (count == 0) {
                             val userInfo = AccountCache.getUserInfo(this@MyApp)
-                            AccountCache.userInfo=userInfo
+                            AccountCache.userInfo = userInfo
                         }
                         count++
                     }
@@ -82,13 +86,20 @@ class MyApp: MultiDexApplication(){
         JPushInterface.setDebugMode(true)
         JPushInterface.init(this)
         val registrationID = JPushInterface.getRegistrationID(this)
-        println("J_PUSH"+"registrationID = ${registrationID}")
+        println("J_PUSH" + "registrationID = ${registrationID}")
         /**
          * 登录持久化
          */
         val userInfo = AccountCache.getUserInfo(this)
-        if ( userInfo !=null){
-           AccountCache.userInfo=userInfo
-       }
+        if (userInfo != null) {
+            AccountCache.userInfo = userInfo
+        }
+
+        /**
+         * stetho初始化
+         */
+        if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this)
+        }
     }
 }

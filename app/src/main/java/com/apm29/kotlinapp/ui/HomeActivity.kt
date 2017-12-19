@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.*
+import cn.jpush.android.api.JPushInterface
 import com.apm29.beanmodule.Init.HomeViewData
 import com.apm29.guideview.Focus
 import com.apm29.guideview.NightVeil
@@ -29,6 +30,7 @@ import kotlinx.android.synthetic.main.activity_home_layout.*
 
 class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     override fun <N : Any?> onNewData(data: N) {
+        println("JPUSH RegistrationID:"+JPushInterface.getRegistrationID(this))
         if (data is HomeViewData) {
             val tvHello = findViewById<TextView>(R.id.tv_hello)
             tvHello.text = data.toString()
