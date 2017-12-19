@@ -20,6 +20,7 @@ import com.apm29.kotlinapp.ui.account.LoginActivity
 import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
+import com.apm29.network.api.GankAPi
 import com.apm29.network.cache.AccountCache
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -170,6 +171,15 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
             return ApiCall.mainService((ui as Activity))
                     .create(API.Init::class.java)
                     .fetchIndustryCategory()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe()
+        }
+
+        fun getDailyContent():Disposable{
+            return  ApiCall.gankApi(ui as Context)
+                    .create(GankAPi::class.java)
+                    .getContent(2,1)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe()

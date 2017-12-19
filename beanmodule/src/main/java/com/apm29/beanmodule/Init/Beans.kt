@@ -105,3 +105,5 @@ data class Industryid(
 		var industryid: Int,// 494
 		var name: String// 金银丝
 )
+
+

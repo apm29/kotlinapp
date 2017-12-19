@@ -4,7 +4,8 @@ package com.apm29.beanmodule.Init
 /**
  * Created by apm29 on 2017/9/8.
  */
-class Response<DATA>{
+class RawResponse<DATA>{
+
     /**
      * meta
      */

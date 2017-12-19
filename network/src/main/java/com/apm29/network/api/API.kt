@@ -13,13 +13,13 @@ interface API{
         @GET("Home/initHomeViewData")
         fun  initHomeViewData(
 
-        ): Observable<Response<HomeViewData>>
+        ): Observable<RawResponse<HomeViewData>>
     }
     interface Init {
         @GET("init/fetchIndustryCategory")
         fun fetchIndustryCategory(
 
-        ):Observable<Response<IndustryInfo>>
+        ):Observable<RawResponse<IndustryInfo>>
     }
     interface Login{
         @FormUrlEncoded
@@ -33,10 +33,10 @@ interface API{
         @GET("User/initUserInfo")
         fun initUserInfo(
                 @Query("userID") userID:Int
-        ):Observable<Response<UserInfo>>
+        ):Observable<RawResponse<UserInfo>>
     }
     interface Subscription{
         @GET("Subscription/fetchMySubscriptions")
-        fun fetchMySubscription(@Query("userID")userID: Int):Observable<Response<List<SubscriptionInfo>>>
+        fun fetchMySubscription(@Query("userID")userID: Int):Observable<RawResponse<List<SubscriptionInfo>>>
     }
 }

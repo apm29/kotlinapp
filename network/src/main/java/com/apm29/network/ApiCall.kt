@@ -44,7 +44,7 @@ class ApiCall {
         /**main url**/
         private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
         private val stone = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
-
+        private val gank="http://gank.io/api/"
         /**
          * 获取版本号
          */
@@ -126,6 +126,12 @@ class ApiCall {
          */
         fun stoneApi(context: Context): Retrofit = retrofit(stone, context)
 
+        /**
+         * gank.id/api
+         */
+        fun gankApi(context: Context): Retrofit {
+            return retrofit(gank,context)
+        }
         @Throws(Exception::class)
 //为http拦截器添加公共的参数
         private fun addPublicHeader(chain: Interceptor.Chain): Response {
