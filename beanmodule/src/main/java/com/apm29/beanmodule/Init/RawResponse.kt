@@ -22,4 +22,9 @@ class RawResponse<DATA>{
         var desc:String?=null
     )
 
+    /**
+     * gank
+     */
+    var error :Boolean=true
+    var results:DATA?=null
 }

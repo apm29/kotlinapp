@@ -9,7 +9,9 @@ import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.*
 import cn.jpush.android.api.JPushInterface
+import com.apm29.beanmodule.Init.HistoryContent
 import com.apm29.beanmodule.Init.HomeViewData
+import com.apm29.beanmodule.Init.ResultsItem
 import com.apm29.guideview.Focus
 import com.apm29.guideview.NightVeil
 import com.apm29.kotlinapp.R
@@ -31,9 +33,12 @@ import kotlinx.android.synthetic.main.activity_home_layout.*
 
 class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     override fun <N : Any?> onNewData(data: N) {
+        val tvHello = findViewById<TextView>(R.id.tv_hello)
         println("JPUSH RegistrationID:"+JPushInterface.getRegistrationID(this))
         if (data is HomeViewData) {
-            val tvHello = findViewById<TextView>(R.id.tv_hello)
+            tvHello.text = data.toString()
+        }
+        if(data is List<*>){
             tvHello.text = data.toString()
         }
     }
@@ -54,7 +59,7 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     }
 
     override fun setupViews(savedInstanceState: Bundle?) {
-        subscribe = mPresenter.loadNetData()
+        subscribe = mPresenter.getDailyContent()
 
         val btnLogin = findViewById<Button>(R.id.btn_login)
         btnLogin.setOnClickListener {
@@ -76,7 +81,7 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
     }
 
     override fun onStartPullLoad(srlRefreshLayout: SmartRefreshLayout) {
-       mPresenter.loadNetData()
+       mPresenter.getDailyContent()
     }
 
     private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
@@ -182,7 +187,33 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
                     .getContent(2,1)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe()
+                    .map {
+
+                        if (!it.error){
+                            return@map it.results
+                        }else{
+                            return@map null
+                        }
+                    }
+                    .subscribe(
+                            {
+                                println("result:" + it)
+                                ui.onNewData(it)
+                            },
+                            {
+                                println("error:" + it)
+                                ui.stopLoading()
+                                ui.onError(it.message)
+                            },
+                            {
+                                println("complete")
+                                ui.stopLoading()
+                            },
+                            {
+                                println("onSubScribed")
+                                ui.startLoading()
+                            }
+                    )
         }
     }
 }

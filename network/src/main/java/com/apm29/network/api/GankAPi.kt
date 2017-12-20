@@ -11,5 +11,5 @@ import retrofit2.http.Path
  */
 interface GankAPi {
     @GET("history/content/{page}/{pageSize}")
-    fun getContent(@Path("page") page: Int, @Path("pageSize") pageSize: Int): Observable<RawResponse<HistoryContent>>
+    fun getContent(@Path("page") page: Int, @Path("pageSize") pageSize: Int): Observable<HistoryContent>
 }

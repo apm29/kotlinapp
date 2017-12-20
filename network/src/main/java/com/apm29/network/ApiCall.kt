@@ -38,13 +38,14 @@ class ApiCall {
 
         var mainRetro: Retrofit? = null
         var stoneRetro: Retrofit? = null
+        var gankRetro: Retrofit? = null
         /**
          * 各类主机地址
          */
         /**main url**/
         private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
         private val stone = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
-        private val gank="http://gank.io/api/"
+        private val gank = "http://gank.io/api/"
         /**
          * 获取版本号
          */
@@ -53,22 +54,30 @@ class ApiCall {
 
         private fun retrofit(baseUrl: String, context: Context): Retrofit {
             versionCode = getVersion(context)
-            when (baseUrl) {
+            val retro: Retrofit?=
+                    when (baseUrl) {
 
-                main ->if (mainRetro==null) mainRetro = Retrofit.Builder()
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .baseUrl(baseUrl)
-                        .client(getOkHttpClient(context))
-                        .build()
-                stone -> if (stoneRetro==null)stoneRetro = Retrofit.Builder()
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .baseUrl(baseUrl)
-                        .client(getOkHttpClient(context))
-                        .build()
-            }
-            return mainRetro!!
+                        main -> if (mainRetro == null) Retrofit.Builder()
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .baseUrl(baseUrl)
+                                .client(getOkHttpClient(context))
+                                .build().also { mainRetro = it } else mainRetro
+                        stone -> if (stoneRetro == null) Retrofit.Builder()
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .baseUrl(baseUrl)
+                                .client(getOkHttpClient(context))
+                                .build().also { stoneRetro = it } else stoneRetro
+                        gank -> if (gankRetro == null) Retrofit.Builder()
+                                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .baseUrl(baseUrl)
+                                .client(getOkHttpClient(context))
+                                .build().also { gankRetro = it }else gankRetro
+                        else -> mainRetro
+                    }
+            return retro!!
         }
 
         private fun getOkHttpClient(context: Context): OkHttpClient {
@@ -92,7 +101,8 @@ class ApiCall {
                     //设置拦截器
                     .addInterceptor { chain ->
                         //添加公共headers
-                        addPublicHeader(chain)
+                       addPublicHeader(chain)
+                       // chain.proceed(chain.request())
                     }
                     .addInterceptor { chain ->
                         logInterceptor.intercept(chain)//logger
@@ -130,10 +140,11 @@ class ApiCall {
          * gank.id/api
          */
         fun gankApi(context: Context): Retrofit {
-            return retrofit(gank,context)
+            return retrofit(gank, context)
         }
+
         @Throws(Exception::class)
-//为http拦截器添加公共的参数
+        //为http拦截器添加公共的参数
         private fun addPublicHeader(chain: Interceptor.Chain): Response {
             //原req
             val oldRequest = chain.request()
