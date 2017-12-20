@@ -1,142 +1,137 @@
 package com.apm29.kotlinapp.ui
 
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
-import android.graphics.RectF
-import android.os.Bundle
-import android.support.constraint.ConstraintLayout
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.method.MovementMethod
+import android.text.style.ImageSpan
+import android.text.style.URLSpan
+import android.util.Log
 import android.view.View
-import android.widget.*
-import cn.jpush.android.api.JPushInterface
-import com.apm29.beanmodule.Init.HistoryContent
-import com.apm29.beanmodule.Init.HomeViewData
-import com.apm29.beanmodule.Init.ResultsItem
-import com.apm29.guideview.Focus
-import com.apm29.guideview.NightVeil
+import android.view.ViewGroup
+import android.widget.TextView
+import com.apm29.beanmodule.beans.ResultsItem
 import com.apm29.kotlinapp.R
-import com.apm29.kotlinapp.base.BaseActivity
-import com.apm29.kotlinapp.base.BasePresenter
+import com.apm29.kotlinapp.base.BaseListActivity
 import com.apm29.kotlinapp.base.BaseUI
-import com.apm29.kotlinapp.ui.account.LoginActivity
-import com.apm29.kotlinapp.ui.subscription.SubscriptionManagerActivity
+import com.apm29.kotlinapp.utils.Utils
+import com.apm29.kotlinapp.utils.getWindowWidth
+import com.apm29.kotlinapp.utils.showToast
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
 import com.apm29.network.api.GankAPi
-import com.apm29.network.cache.AccountCache
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_home_layout.*
+import java.net.URL
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 
-class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
-    override fun <N : Any?> onNewData(data: N) {
-        val tvHello = findViewById<TextView>(R.id.tv_hello)
-        println("JPUSH RegistrationID:"+JPushInterface.getRegistrationID(this))
-        if (data is HomeViewData) {
-            tvHello.text = data.toString()
-        }
-        if(data is List<*>){
-            tvHello.text = data.toString()
-        }
+class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, HomeActivity.HomeVH>() {
+    companion object {
+        val executors = Executors.newCachedThreadPool()
     }
 
-    override fun onError(error: String?) {
-        Toast.makeText(this, "error", Toast.LENGTH_SHORT).show()
-        val tvHello = findViewById<TextView>(R.id.tv_hello)
-        tvHello.text = error
-    }
-
-
-    override fun getPresenter(): HomePresenter = HomePresenter(this)
-
-    private var subscribe: Disposable? = null
-
-    override fun getDefaultLayout(): Int {
-        return R.layout.activity_home_layout
-    }
-
-    override fun setupViews(savedInstanceState: Bundle?) {
-        subscribe = mPresenter.getDailyContent()
-
-        val btnLogin = findViewById<Button>(R.id.btn_login)
-        btnLogin.setOnClickListener {
-            if (AccountCache.getUserInfo(this) == null)
-                LoginActivity.starter(this)
-            else {
-                Toast.makeText(this, "已经登录", Toast.LENGTH_SHORT).show()
-                PagerActivity.starter(this)
-            }
-        }
-        val btnSubscribe = findViewById<Button>(R.id.btn_subscribe_mine)
-        btnSubscribe.setOnClickListener {
-            SubscriptionManagerActivity.starter(this)
-        }
-        showGuide(btnSubscribe, btnLogin)
-        tv_hello.setOnClickListener {
-            println("NightVeil shown"+NightVeil.show("btnLogin", this))
-        }
-    }
-
-    override fun onStartPullLoad(srlRefreshLayout: SmartRefreshLayout) {
-       mPresenter.getDailyContent()
-    }
-
-    private fun showGuide(btnSubscribe: View?, btnLogin: View?) {
-        //引导图
-        //println("NightVeil："+NightVeil.removeAllController(this))
-        val controller1
-                = NightVeil.from("btnLogin",this).addFocus(Focus(btnLogin!!, null, Focus.TYPE.OVAL))
-
-        NightVeil
-                .from("btnSubscribe",this)
-                .addFocus(Focus(btnSubscribe!!, object : Focus.HitFocusListener {
-                    override fun onHit(focus: Focus): Boolean {
-                        focus.view?.performClick()
-                        controller1.show()
-                        focus.removeSelf()
-                        return false
-                    }
-                }))
-                .addFocus(Focus(
-                        RectF(400F,300F,600F,400F),
-                        radius = 20F
-                ))
-                .addFocus(Focus(R.id.iv_logo,type = Focus.TYPE.CIRCLE,padding = 20))
-                .setBackgroundColorRes(R.color.guide_bg_color)
-                .setLayout(R.layout.activity_home_guide_layout)
-                .addTransformer {
-                    val container=it.findViewById<ConstraintLayout>(R.id.cl_container)
-                    val logo = it.findViewById<ImageView>(R.id.iv_logo)
-                    val tv = it.findViewById<TextView>(R.id.tv_guide)
-                    val arrow = it.findViewById<ImageView>(R.id.arrow)
-                    val va=ValueAnimator.ofFloat(0F,200F)
-                    va.addUpdateListener {
-                        val transition = it.animatedValue as Float
-                        logo.x=300+transition
-                        logo.y=300+transition
-                        arrow.x=logo.x-logo.measuredWidth-20
-                        arrow.y=logo.y
-                        tv.x=arrow.x-tv.measuredWidth-20
-                        tv.y=logo.y+(logo.measuredHeight-tv.measuredHeight)/2
-                    }
-                    va.duration = 2000
-                    va.repeatCount=20
-                    va.repeatMode=ValueAnimator.REVERSE
-                    va.start()
+    private val imageGetter: Html.ImageGetter
+            by lazy {
+                return@lazy Html.ImageGetter {
+                    return@ImageGetter getDrawable(it)
                 }
-                .show()
+            }
+
+    private fun getDrawable(it: String): Drawable? {
+        if (it.isEmpty()) {
+            return ColorDrawable()
+        }
+        var drawable: Drawable? = null
+        var future: Callable<Drawable>
+        try {
+            future = Callable {
+                val url = URL(it)
+                Drawable.createFromStream(url.openStream(), "")  //获取网路图片
+            }
+            drawable = executors.submit(future).get()
+            drawable.setBounds(0, 0, getWindowWidth() - 200, (getWindowWidth() - 200) / drawable.intrinsicWidth * drawable
+                    .intrinsicHeight)
+        } catch (e: Exception) {
+            return ColorDrawable()
+        }
+
+        return drawable
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        subscribe?.dispose()
+    private val tagHandler: Html.TagHandler by lazy {
+        Html.TagHandler { opening, tag, output, xmlReader ->
+            Log.d("tag:", tag)
+        }
     }
 
-    class HomePresenter(ui: BaseUI) : BasePresenter(ui) {
-        fun loadNetData(): Disposable {
+    override fun bindItemView(holder: BaseVH, position: Int, itemViewType: Int, item: ResultsItem?) {
+        val getter: Html.ImageGetter = imageGetter
+        if (holder is HomeVH) {
+            holder.tvTitle?.text = item?.title
+            holder.tvContent?.text = Html.fromHtml(item?.content, getter, tagHandler)
+            holder.tvContent?.movementMethod = LinkMovementMethod.getInstance()
+            setUrlClickSpan(holder.tvContent)
+        }
+    }
+
+    override fun enableLoadMore(): Boolean {
+        return true
+    }
+    private fun setUrlClickSpan(tv: TextView?) {
+        val text = tv?.text
+        if (text is Spannable) {
+            val urlSpans = text.getSpans(0, text.length, URLSpan::class.java)//取出原有的UrlSpan
+            val imgSpans = text.getSpans(0, text.length, ImageSpan::class.java)//取出原有的UrlSpan
+            val newSpanStyle = SpannableStringBuilder(text)
+            newSpanStyle.clearSpans()
+            imgSpans.forEach {
+                Log.d("imgSpan", it::class.toString() + it.source)
+                newSpanStyle.setSpan(ImageSpan(getDrawable(it.source)), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            urlSpans.forEach {//设置
+                Log.d("urlSpan", it::class.toString() + it.url)
+                val clickSpan = ClickSpan(it.url, this)
+                newSpanStyle.setSpan(clickSpan, text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            tv.text = newSpanStyle
+        }
+    }
+
+    override fun BaseAdapter.getHolder(parent: ViewGroup?, viewType: Int, inflate: View): BaseVH {
+        return HomeVH(inflate)
+    }
+
+    override fun getResID(): Int {
+        return R.layout.item_home_history_content
+    }
+
+    override fun getPresenter(): HomePresenter {
+        return HomePresenter(this)
+    }
+
+    class ClickSpan(var string: String, var context: Context) : URLSpan(string) {
+        override fun onClick(widget: View?) {
+            showToast(string)
+        }
+    }
+
+    class HomeVH(itemView: View?) : BaseVH(itemView) {
+        var tvTitle: TextView? = itemView?.findViewById(R.id.tv_title_home_item)
+        var tvContent: TextView? = itemView?.findViewById(R.id.tv_content_home_item)
+    }
+
+    class HomePresenter(ui: BaseUI) : BaseListActivity.ListPresenter(ui) {
+        override fun loadData(): Disposable {
+            return getDailyContent()
+        }
+
+        fun loadHomeViewData(): Disposable {
             return ApiCall.mainService(ui as Context)
                     .create(API.Home::class.java)
                     .initHomeViewData()
@@ -181,24 +176,19 @@ class HomeActivity : BaseActivity<HomeActivity.HomePresenter>() {
                     .subscribe()
         }
 
-        fun getDailyContent():Disposable{
-            return  ApiCall.gankApi(ui as Context)
+        fun getDailyContent(): Disposable {
+            return ApiCall.gankApi(ui as Context)
                     .create(GankAPi::class.java)
-                    .getContent(2,1)
+                    .getContent(1, page = (ui as BaseListActivity<*, *, *>).page)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .map {
-
-                        if (!it.error){
-                            return@map it.results
-                        }else{
-                            return@map null
-                        }
-                    }
                     .subscribe(
                             {
                                 println("result:" + it)
-                                ui.onNewData(it)
+                                if (it.error)
+                                    ui.onError("请求失败")
+                                else
+                                    ui.onNewData(it.results)
                             },
                             {
                                 println("error:" + it)

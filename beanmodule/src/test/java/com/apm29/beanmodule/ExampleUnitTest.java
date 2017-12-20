@@ -1,11 +1,6 @@
 package com.apm29.beanmodule;
 
-import com.apm29.beanmodule.Init.Meta;
-
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 

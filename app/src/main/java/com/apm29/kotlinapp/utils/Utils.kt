@@ -25,7 +25,7 @@ fun toPx(dp: Int): Int =
 fun Int.px():Int =
         (MyApp.getApplication().resources.displayMetrics.density * this).toInt()
 
-fun getWindowWidth(): Int =
+fun BaseActivity<*>.getWindowWidth(): Int =
         MyApp.getApplication().resources.displayMetrics.widthPixels
 
 fun getWindowHeight():Int =

@@ -8,6 +8,6 @@ interface BaseUI {
     fun startLoading()
     fun stopLoading()
     fun onError(error: String?)
-    fun <N> onNewData(data: N)
+    fun  onNewData(data: Any?)
     fun onEmpty()
 }

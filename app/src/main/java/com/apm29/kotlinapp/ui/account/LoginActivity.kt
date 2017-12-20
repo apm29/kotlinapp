@@ -1,18 +1,15 @@
 package com.apm29.kotlinapp.ui.account
 
-import android.app.Activity
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.apm29.beanmodule.Init.LoginResult
-import com.apm29.beanmodule.Init.UserInfo
+import com.apm29.beanmodule.beans.LoginResult
+import com.apm29.beanmodule.beans.UserInfo
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter

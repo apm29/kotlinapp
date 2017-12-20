@@ -1,6 +1,6 @@
 package com.apm29.network.api
 
-import com.apm29.beanmodule.Init.*
+import com.apm29.beanmodule.beans.*
 import io.reactivex.Observable
 import retrofit2.http.*
 

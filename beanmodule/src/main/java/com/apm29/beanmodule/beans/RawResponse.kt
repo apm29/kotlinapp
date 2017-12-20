@@ -1,4 +1,4 @@
-package com.apm29.beanmodule.Init
+package com.apm29.beanmodule.beans
 
 
 /**
