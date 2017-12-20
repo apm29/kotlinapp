@@ -26,7 +26,7 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
     override fun onError(error: String?) {
     }
 
-    override fun <N> onNewData(data: N) {
+    override fun  onNewData(data: Any?) {
     }
 
     override fun getDefaultLayout(): Int {
