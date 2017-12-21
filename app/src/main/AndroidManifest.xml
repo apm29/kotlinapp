@@ -40,25 +40,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:node="replace">
-        <activity android:name=".ui.HomeActivity">
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.GankIOListActivity" />
         <activity
             android:name=".ui.account.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".ui.subscription.SubscriptionManagerActivity" />
         <activity android:name=".ui.PagerActivity" />
-        <activity android:name=".base.BaseFragmentActivity"/>
+        <activity android:name=".ui.BaseMaterialActivity" />
+        <activity android:name=".base.BaseFragmentActivity" />
 
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
             android:exported="false"
-            android:theme="@style/MyDialogStyle"/>
+            android:theme="@style/MyDialogStyle" />
 
         <!-- Required SDK核心功能 -->
         <activity

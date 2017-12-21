@@ -9,17 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.apm29.kotlinapp.R
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 
-abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter, VH : BaseListActivity.BaseVH> : BaseActivity<P>() {
+abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter> : BaseActivity<P>() {
 
-    val startIndex = 1
-    var pageSize = 10
-    var page: Int = startIndex
-    /**
-     * UI References
-     */
+    protected val startIndex = 1
+    protected var pageSize = 10
+    protected var page: Int = startIndex
+    protected var mAdapter: BaseAdapter? = null
+    protected var mData: List<ITEM_TYPE>? = ArrayList()
+    protected var mDisposables: CompositeDisposable = CompositeDisposable()
+
+    /** UI References*/
     private lateinit var mRecyclerView: RecyclerView
 
     override fun onError(error: String?) {
@@ -46,13 +49,9 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter, V
         }
     }
 
-    protected var mAdapter: BaseAdapter? = null
-    protected var mData: List<ITEM_TYPE>? = ArrayList()
-    protected var mDisLoadData: Disposable? = null
-
     override fun setupViews(savedInstanceState: Bundle?) {
         setUpList()
-        mDisLoadData = mPresenter.loadData()
+        baseRefreshLayout.autoRefresh(300)
     }
 
     final override fun getDefaultLayout(): Int {
@@ -66,14 +65,13 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter, V
         mRecyclerView.adapter = mAdapter
         baseRefreshLayout.setOnRefreshListener {
             page = 1
-            mPresenter.loadData()
+            mPresenter.loadData().also { mDisposables.add(it) }
         }
         baseRefreshLayout.setOnLoadmoreListener {
-            page++
-            mPresenter.loadData()
+            mPresenter.loadData().also { mDisposables.add(it) }
         }
         findViewById<TextView>(R.id.tv_base_empty).setOnClickListener {
-            mPresenter.loadData()
+            mPresenter.loadData().also { mDisposables.add(it) }
         }
     }
 
@@ -87,6 +85,7 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter, V
         if (data.isEmpty()) {
             onEmpty()
         }
+        page++
         if (page == startIndex)
             mAdapter?.setNewData(data)
         else{
@@ -106,8 +105,8 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter, V
 
     override fun onDestroy() {
         super.onDestroy()
-        if (mDisLoadData != null && !mDisLoadData!!.isDisposed)
-            mDisLoadData?.dispose()
+        if (!mDisposables.isDisposed)
+            mDisposables.dispose()
     }
 
 

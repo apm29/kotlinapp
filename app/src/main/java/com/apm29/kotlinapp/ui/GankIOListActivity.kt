@@ -2,13 +2,12 @@ package com.apm29.kotlinapp.ui
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.text.*
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
-import android.text.method.MovementMethod
 import android.text.style.ImageSpan
 import android.text.style.URLSpan
 import android.util.Log
@@ -19,23 +18,22 @@ import com.apm29.beanmodule.beans.ResultsItem
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseListActivity
 import com.apm29.kotlinapp.base.BaseUI
-import com.apm29.kotlinapp.utils.Utils
 import com.apm29.kotlinapp.utils.getWindowWidth
 import com.apm29.kotlinapp.utils.showToast
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
 import com.apm29.network.api.GankAPi
-import com.bumptech.glide.Glide
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.net.URL
 import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, HomeActivity.HomeVH>() {
+class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.HomePresenter>() {
     companion object {
-        val executors = Executors.newCachedThreadPool()
+        val executors: ExecutorService = Executors.newCachedThreadPool()
     }
 
     private val imageGetter: Html.ImageGetter
@@ -45,18 +43,17 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
                 }
             }
 
-    private fun getDrawable(it: String): Drawable? {
-        if (it.isEmpty()) {
+    private fun getDrawable(path: String): Drawable? {
+        if (path.isEmpty()) {
             return ColorDrawable()
         }
+        fixPath(path)
         val drawable: Drawable?
         val callable: Callable<Drawable>
         try {
             callable = Callable {
-                //val url = URL(it)
-                //Drawable.createFromStream(url.openStream(), "")  //获取网路图片
-                val bitmap: Bitmap = Glide.with(this).load(it).asBitmap().into(300, 300).get()
-                return@Callable BitmapDrawable(bitmap)
+                val url = URL(path)
+                Drawable.createFromStream(url.openStream(), "")  //获取网路图片
             }
             drawable = executors.submit(callable).get()
             drawable.setBounds(0, 0, getWindowWidth() - 200, (getWindowWidth() - 200) / drawable.intrinsicWidth * drawable
@@ -68,9 +65,20 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
         return drawable
     }
 
+    private fun fixPath(path: String) {
+        if (path.contains("imageView")) {
+            path.indexOfLast {
+                return@indexOfLast it == '?'
+            }.also {
+                path.subSequence(it, path.length)
+            }
+        }
+        path.plus("?imageView2/0/w/" + (getWindowWidth() - 300))
+    }
+
     private val tagHandler: Html.TagHandler by lazy {
         Html.TagHandler { opening, tag, output, xmlReader ->
-            Log.d("tag:", tag)
+            println("opening = [$opening], tag = [$tag], output = [$output], xmlReader = [$xmlReader]")
         }
     }
 
@@ -81,8 +89,6 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
             holder.tvContent?.text = Html.fromHtml(item?.content, getter, tagHandler)
             holder.tvContent?.movementMethod = LinkMovementMethod.getInstance()
             setUrlClickSpan(holder.tvContent)
-
-
         }
     }
 
@@ -100,6 +106,7 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
             imgSpans.forEach {
                 Log.d("imgSpan", it::class.toString() + it.source)
                 newSpanStyle.setSpan(ImageSpan(getDrawable(it.source)), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                newSpanStyle.setSpan(ClickSpan(it.source, this), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             urlSpans.forEach {
                 //设置
@@ -187,7 +194,7 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
         fun getDailyContent(): Disposable {
             return ApiCall.gankApi(ui as Context)
                     .create(GankAPi::class.java)
-                    .getContent(1, page = (ui as BaseListActivity<*, *, *>).page)
+                    .getContent(1, page = (ui as GankIOListActivity).page)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(

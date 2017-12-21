@@ -16,8 +16,10 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.utils.SystemBarTintManager
+import com.apm29.kotlinapp.utils.showToast
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 
+@SuppressLint("WrongViewCast")
 abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     var statusBarHeight = 0
     var actionBarHeight = 0
@@ -37,7 +39,11 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     protected val baseRefreshLayout: SmartRefreshLayout by lazy {
         findViewById<SmartRefreshLayout>(R.id.srl_refresh_layout)
     }
+    protected val tvLoading: ImageView? by lazy {
+        return@lazy findViewById<ImageView>(R.id.iv_base_loading)
+    }
     protected  var handler=Handler()
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
@@ -156,10 +162,10 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
             onStartPullLoad(baseRefreshLayout)
         }
     }
-
     open protected fun enableRefresh(): Boolean {
         return true
     }
+
     open protected fun enableLoadMore(): Boolean {
         return false
     }
@@ -172,13 +178,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
 
     abstract fun setupViews(savedInstanceState: Bundle?)
 
+
     abstract fun getPresenter(): T
-
-
-    private val tvLoading: ImageView? by lazy {
-        val imageView = findViewById<ImageView>(R.id.iv_base_loading)
-        return@lazy imageView
-    }
 
     override fun startLoading() {
         if (!enableRefresh()) {
@@ -231,5 +232,9 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
             baseRefreshLayout.finishRefresh(300)
             baseRefreshLayout.finishLoadmore(300)
         }
+    }
+
+    override fun onError(error: String?) {
+        showToast(error?:"加载失败")
     }
 }

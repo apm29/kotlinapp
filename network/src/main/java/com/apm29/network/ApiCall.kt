@@ -27,7 +27,7 @@ class ApiCall {
     object Config {
         var useCache: Boolean = false          //是否使用缓存
         val CACHE_SIZE: Long = 5 * 1024 * 1024    //默认缓存上限
-        val TIME_OUT: Long = 5000             //默认超时时间ms
+        val TIME_OUT: Long = 50000             //默认超时时间ms
         val DEBUG: Boolean = false
     }
 
@@ -96,6 +96,7 @@ class ApiCall {
             logInterceptor.level = HttpLoggingInterceptor.Level.BODY
             return OkHttpClient.Builder()
                     .connectTimeout(Config.TIME_OUT, TimeUnit.MILLISECONDS)
+                    .readTimeout(Config.TIME_OUT,TimeUnit.MILLISECONDS)
                     .cookieJar(if (Config.useCache) CookieJar.NO_COOKIES else cookieJar)
                     .cache(Cache(file, size))
                     //设置拦截器
@@ -156,7 +157,7 @@ class ApiCall {
                     .host(oldRequest.url().host())
                     .addQueryParameter("platform", "1")
                     .addQueryParameter("version", ApiCall.versionCode.toString())
-
+                    .addQueryParameter("timestamp",System.currentTimeMillis().toString())
             // 新的请求
             val newRequest = oldRequest.newBuilder()
                     .method(oldRequest.method(), oldRequest.body())
