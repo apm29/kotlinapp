@@ -18,12 +18,13 @@ import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.utils.SystemBarTintManager
 import com.apm29.kotlinapp.utils.showToast
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import io.reactivex.disposables.CompositeDisposable
 
-@SuppressLint("WrongViewCast")
 abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     var statusBarHeight = 0
     var actionBarHeight = 0
     open var drawStatusBar = false
+    open var mDisposables:CompositeDisposable= CompositeDisposable()
     protected val baseEmptyContainer: FrameLayout by lazy {
         findViewById<FrameLayout>(R.id.fl_empty_container)
     }
@@ -39,14 +40,16 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     protected val baseRefreshLayout: SmartRefreshLayout by lazy {
         findViewById<SmartRefreshLayout>(R.id.srl_refresh_layout)
     }
-    protected val tvLoading: ImageView? by lazy {
-        return@lazy findViewById<ImageView>(R.id.iv_base_loading)
+    protected val tvLoading: ImageView by lazy {
+        findViewById<ImageView>(R.id.iv_base_loading)
     }
     protected  var handler=Handler()
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+        if (!mDisposables.isDisposed)
+            mDisposables.dispose()
     }
 
     protected lateinit var mPresenter: T
@@ -236,5 +239,19 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
 
     override fun onError(error: String?) {
         showToast(error?:"加载失败")
+        if (enableRefresh()) {
+            handler.postDelayed({
+                baseEmptyContainer.visibility = View.GONE
+                baseLoadingContainer.visibility = View.GONE
+                baseRefreshLayout.finishRefresh(300)
+                baseRefreshLayout.finishLoadmore(300)
+            },300)
+        } else {
+            baseRefreshContainer.visibility = View.VISIBLE
+            baseEmptyContainer.visibility=View.GONE
+            baseLoadingContainer.visibility = View.GONE
+            baseRefreshLayout.finishRefresh(300)
+            baseRefreshLayout.finishLoadmore(300)
+        }
     }
 }

@@ -39,6 +39,7 @@ class ApiCall {
         var mainRetro: Retrofit? = null
         var stoneRetro: Retrofit? = null
         var gankRetro: Retrofit? = null
+        var oneRetro:Retrofit?=null
         /**
          * 各类主机地址
          */
@@ -46,6 +47,7 @@ class ApiCall {
         private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
         private val stone = if (DEBUG) "http://app-api.dinglc.com.cn/rest" else "http://app-api.dinglc.com.cn/"
         private val gank = "http://gank.io/api/"
+        private val oneList = "http://v3.wufazhuce.com:8000/api/onelist/"
         /**
          * 获取版本号
          */
@@ -75,6 +77,13 @@ class ApiCall {
                                 .baseUrl(baseUrl)
                                 .client(getOkHttpClient(context))
                                 .build().also { gankRetro = it }else gankRetro
+                        oneList->
+                            if (oneRetro == null) Retrofit.Builder()
+                                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .baseUrl(baseUrl)
+                                    .client(getOkHttpClient(context))
+                                    .build().also { oneRetro = it }else oneRetro
                         else -> mainRetro
                     }
             return retro!!
@@ -144,6 +153,13 @@ class ApiCall {
             return retrofit(gank, context)
         }
 
+        /**
+         * one api
+         */
+        fun oneApi(context: Context): Retrofit {
+            return retrofit(oneList,context)
+        }
+
         @Throws(Exception::class)
         //为http拦截器添加公共的参数
         private fun addPublicHeader(chain: Interceptor.Chain): Response {
@@ -155,8 +171,8 @@ class ApiCall {
                     .newBuilder()
                     .scheme(oldRequest.url().scheme())
                     .host(oldRequest.url().host())
-                    .addQueryParameter("platform", "1")
-                    .addQueryParameter("version", ApiCall.versionCode.toString())
+                    //.addQueryParameter("platform", "1")
+                    //.addQueryParameter("version", ApiCall.versionCode.toString())
                     .addQueryParameter("timestamp",System.currentTimeMillis().toString())
             // 新的请求
             val newRequest = oldRequest.newBuilder()

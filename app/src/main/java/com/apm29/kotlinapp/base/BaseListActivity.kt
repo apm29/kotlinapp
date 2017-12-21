@@ -20,7 +20,7 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter> :
     protected var page: Int = startIndex
     protected var mAdapter: BaseAdapter? = null
     protected var mData: List<ITEM_TYPE>? = ArrayList()
-    protected var mDisposables: CompositeDisposable = CompositeDisposable()
+    override  var mDisposables: CompositeDisposable = CompositeDisposable()
 
     /** UI References*/
     private lateinit var mRecyclerView: RecyclerView
