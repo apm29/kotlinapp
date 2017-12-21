@@ -8,6 +8,9 @@ import com.apm29.kotlinapp.R
  * fragment容器Activity,集成一些公共方法,动画等
  */
 class BaseFragmentActivity : BaseActivity<BaseFragmentActivity.FragmentPresenter>() {
+    override fun onNewData(data: Any?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onError(error: String?) {
 
@@ -20,9 +23,7 @@ class BaseFragmentActivity : BaseActivity<BaseFragmentActivity.FragmentPresenter
     override fun setupViews(savedInstanceState: Bundle?) {
     }
 
-    override fun <N : Any?> onNewData(data: N) {
 
-    }
 
     override fun getPresenter(): FragmentPresenter {
         return FragmentPresenter(this)

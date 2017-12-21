@@ -58,7 +58,7 @@ class LoginActivity : BaseActivity<LoginActivity.LoginPresenter>() {
 
     var disposableInit: Disposable? = null
     var disposableLogin: Disposable? = null
-    override fun <N : Any?> onNewData(data: N) {
+    override fun onNewData(data: Any?) {
         if (data is LoginResult) {
             if (data.accessToken != null) {
                 Toast.makeText(this, " login success ! ", Toast.LENGTH_SHORT).show()
