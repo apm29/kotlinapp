@@ -2,6 +2,8 @@ package com.apm29.kotlinapp.ui
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.text.*
@@ -23,13 +25,13 @@ import com.apm29.kotlinapp.utils.showToast
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
 import com.apm29.network.api.GankAPi
+import com.bumptech.glide.Glide
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.net.URL
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
-
 
 class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, HomeActivity.HomeVH>() {
     companion object {
@@ -47,14 +49,16 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
         if (it.isEmpty()) {
             return ColorDrawable()
         }
-        var drawable: Drawable? = null
-        var future: Callable<Drawable>
+        val drawable: Drawable?
+        val callable: Callable<Drawable>
         try {
-            future = Callable {
-                val url = URL(it)
-                Drawable.createFromStream(url.openStream(), "")  //获取网路图片
+            callable = Callable {
+                //val url = URL(it)
+                //Drawable.createFromStream(url.openStream(), "")  //获取网路图片
+                val bitmap: Bitmap = Glide.with(this).load(it).asBitmap().into(300, 300).get()
+                return@Callable BitmapDrawable(bitmap)
             }
-            drawable = executors.submit(future).get()
+            drawable = executors.submit(callable).get()
             drawable.setBounds(0, 0, getWindowWidth() - 200, (getWindowWidth() - 200) / drawable.intrinsicWidth * drawable
                     .intrinsicHeight)
         } catch (e: Exception) {
@@ -77,12 +81,15 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
             holder.tvContent?.text = Html.fromHtml(item?.content, getter, tagHandler)
             holder.tvContent?.movementMethod = LinkMovementMethod.getInstance()
             setUrlClickSpan(holder.tvContent)
+
+
         }
     }
 
     override fun enableLoadMore(): Boolean {
         return true
     }
+
     private fun setUrlClickSpan(tv: TextView?) {
         val text = tv?.text
         if (text is Spannable) {
@@ -94,7 +101,8 @@ class HomeActivity : BaseListActivity<ResultsItem, HomeActivity.HomePresenter, H
                 Log.d("imgSpan", it::class.toString() + it.source)
                 newSpanStyle.setSpan(ImageSpan(getDrawable(it.source)), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            urlSpans.forEach {//设置
+            urlSpans.forEach {
+                //设置
                 Log.d("urlSpan", it::class.toString() + it.url)
                 val clickSpan = ClickSpan(it.url, this)
                 newSpanStyle.setSpan(clickSpan, text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
