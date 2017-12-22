@@ -6,4 +6,5 @@
     <color name="colorAccent">@android:color/holo_orange_dark</color>
     <color name="guide_bg_color">#66323232</color>
     <color name="default_bg_color">#f1f1f1</color>
+    <color name="default_text_color">#333333</color>
 </resources>

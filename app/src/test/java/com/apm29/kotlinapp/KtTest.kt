@@ -1,5 +1,6 @@
 package com.apm29.kotlinapp
 
+import com.apm29.kotlinapp.utils.uuid
 import org.junit.Test
 import java.text.DecimalFormat
 
@@ -9,8 +10,6 @@ import java.text.DecimalFormat
 class KtTest{
     @Test
     fun main() {
-       val arr = arrayOfNulls<Int?>(2)
-        println("arr = ${arr[0]}+${arr[1]}")
     }
 }
 class Task {

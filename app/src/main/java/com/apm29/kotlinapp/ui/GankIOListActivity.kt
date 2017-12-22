@@ -14,7 +14,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.apm29.beanmodule.beans.ResultsItem
+import com.apm29.beanmodule.beans.gank.ResultsItem
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseListActivity
 import com.apm29.kotlinapp.base.BaseUI
@@ -22,7 +22,7 @@ import com.apm29.kotlinapp.utils.getWindowWidth
 import com.apm29.kotlinapp.utils.showToast
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
-import com.apm29.network.api.GankAPi
+import com.apm29.network.api.GankAPI
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -193,7 +193,7 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
 
         fun getDailyContent(): Disposable {
             return ApiCall.gankApi(ui as Context)
-                    .create(GankAPi::class.java)
+                    .create(GankAPI::class.java)
                     .getContent(1, page = (ui as GankIOListActivity).page)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())

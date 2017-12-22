@@ -53,8 +53,9 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".ui.subscription.SubscriptionManagerActivity" />
         <activity android:name=".ui.PagerActivity" />
-        <activity android:name=".ui.BaseMaterialActivity" />
+        <activity android:name=".ui.SampleMaterialActivity" />
         <activity android:name=".base.BaseFragmentActivity" />
+        <activity android:name="com.yanzhenjie.permission.PermissionActivity" />
 
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity

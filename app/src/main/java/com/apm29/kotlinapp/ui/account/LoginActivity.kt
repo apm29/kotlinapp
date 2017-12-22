@@ -8,8 +8,8 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.apm29.beanmodule.beans.LoginResult
-import com.apm29.beanmodule.beans.UserInfo
+import com.apm29.beanmodule.beans.main.LoginResult
+import com.apm29.beanmodule.beans.main.UserInfo
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter

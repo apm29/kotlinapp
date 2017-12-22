@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.apm29.kotlinapp.utils.UtilsKt;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,7 +22,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
+        System.out.println(UtilsKt.uuid(appContext));
         assertEquals("com.apm29.kotlinapp", appContext.getPackageName());
     }
 }
