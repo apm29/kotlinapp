@@ -1,5 +1,7 @@
 package com.apm29.kotlinapp.view.behavior
 
+import android.animation.ArgbEvaluator
+import android.animation.FloatEvaluator
 import android.content.Context
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
@@ -9,6 +11,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
+import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.utils.logD
 import com.apm29.kotlinapp.utils.px
 
@@ -62,16 +65,12 @@ class AppRelativeLayout(context: Context?, attrs: AttributeSet?) : RelativeLayou
 
         override fun onDependentViewChanged(parent: CoordinatorLayout?, child: AppRelativeLayout?, dependency: View?): Boolean {
             println("dependency?.top = ${dependency?.top}")
-//            if (dependency?.top?:0 >= 0) {
-                   // child?.layout(dependency?.left?:0,0,   dependency?.right ?: 0,  dependency?.top?:0)
                 if (child!=null){
                     child.x=0f
                     child.y=0f+(dependency?.top?: 0).toFloat()-child.measuredHeight
                 }
                 return true
-//            }
 
-//            return false
         }
 
         override fun layoutDependsOn(parent: CoordinatorLayout?, child: AppRelativeLayout?, dependency: View?): Boolean {

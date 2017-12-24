@@ -3,14 +3,12 @@ package com.apm29.kotlinapp.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import com.apm29.beanmodule.beans.one.ContentListItem
 import com.apm29.beanmodule.beans.one.DataList
@@ -33,7 +31,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_base_material.*
 
 /**
- * 带Toolbar和Menu
+ * 带Toolbar和Menu MD风格
  */
 open class SampleMaterialActivity : BaseActivity<SampleMaterialActivity.MaterialDefaultPresenter>() {
     override var drawStatusBar: Boolean = true
@@ -159,7 +157,7 @@ open class SampleMaterialActivity : BaseActivity<SampleMaterialActivity.Material
             textView?.text = data[position].forward
 
             Glide.with(textView?.context).load(data[position].imgUrl)
-                    .fitCenter().into(holder?.itemView?.findViewById<ImageView>(R.id.iv))
+                    .fitCenter().into(holder?.itemView?.findViewById(R.id.iv))
 
 
         }

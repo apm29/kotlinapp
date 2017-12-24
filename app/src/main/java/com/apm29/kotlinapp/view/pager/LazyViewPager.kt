@@ -7,7 +7,7 @@ import android.util.AttributeSet
 /**
  * Created by yingjiawei on 2017/12/12.
  */
-class LazyViewPager(context: Context?,attrs:AttributeSet?) : ViewPager(context,attrs) {
+class LazyViewPager(context: Context?,attrs:AttributeSet?) : ViewPager(context!!,attrs) {
     init {
 
     }

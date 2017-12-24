@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.pager.*
  */
 class PagerFragment : Fragment() {
     var position: Int = -1
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         println("create view" + position)
         val inflate = LayoutInflater.from(container?.context).inflate(R.layout.pager, container, false)
@@ -26,7 +26,7 @@ class PagerFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        position = arguments.getInt("contentList")
+        position = arguments?.getInt("contentList")?:-1
         super.onCreate(savedInstanceState)
         println("create " + position)
     }
