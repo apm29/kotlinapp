@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 /**
  * 带Toolbar和Menu
  */
-open class BaseMaterialActivity<P : BasePresenter> : BaseActivity<P>() {
+open class BaseMaterialActivity : BaseActivity<BaseMaterialActivity.MaterialDefaultPresenter>() {
     override var drawStatusBar: Boolean = true
 
     override fun onNewData(data: Any?) {
@@ -35,7 +35,7 @@ open class BaseMaterialActivity<P : BasePresenter> : BaseActivity<P>() {
     }
 
     override fun onStartPullLoad(srlRefreshLayout: SmartRefreshLayout) {
-        (mPresenter as MaterialDefaultPresenter).getDailyIdList().also { mDisposables.add(it) }
+        (mPresenter ).getDailyIdList().also { mDisposables.add(it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -43,7 +43,7 @@ open class BaseMaterialActivity<P : BasePresenter> : BaseActivity<P>() {
         super.onCreate(savedInstanceState, persistentState)
     }
 
-    override fun getPresenter(): P = MaterialDefaultPresenter(this) as P
+    override fun getPresenter(): MaterialDefaultPresenter = MaterialDefaultPresenter(this)
     open class MaterialDefaultPresenter(ui: BaseUI) : BasePresenter(ui) {
         fun getDailyIdList(): Disposable {
             return ApiCall.oneApi(ui as Context).create(OneAPi::class.java)
