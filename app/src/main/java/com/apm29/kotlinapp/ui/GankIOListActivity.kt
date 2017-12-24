@@ -14,7 +14,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.apm29.beanmodule.beans.ResultsItem
+import com.apm29.beanmodule.beans.gank.ResultsItem
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseListActivity
 import com.apm29.kotlinapp.base.BaseUI
@@ -22,7 +22,7 @@ import com.apm29.kotlinapp.utils.getWindowWidth
 import com.apm29.kotlinapp.utils.showToast
 import com.apm29.network.ApiCall
 import com.apm29.network.api.API
-import com.apm29.network.api.GankAPi
+import com.apm29.network.api.GankAPI
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -33,7 +33,7 @@ import java.util.concurrent.Executors
 
 class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.HomePresenter>() {
     companion object {
-        val executors: ExecutorService = Executors.newCachedThreadPool()
+        val executors: ExecutorService = Executors.newFixedThreadPool(20)
     }
 
     private val imageGetter: Html.ImageGetter
@@ -78,7 +78,7 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
 
     private val tagHandler: Html.TagHandler by lazy {
         Html.TagHandler { opening, tag, output, xmlReader ->
-            println("opening = [$opening], tag = [$tag], output = [$output], xmlReader = [$xmlReader]")
+            //println("opening = [$opening], tag = [$tag], output = [$output], xmlReader = [$xmlReader]")
         }
     }
 
@@ -104,13 +104,13 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
             val newSpanStyle = SpannableStringBuilder(text)
             newSpanStyle.clearSpans()
             imgSpans.forEach {
-                Log.d("imgSpan", it::class.toString() + it.source)
+                //Log.d("imgSpan", it::class.toString() + it.source)
                 newSpanStyle.setSpan(ImageSpan(getDrawable(it.source)), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 newSpanStyle.setSpan(ClickSpan(it.source, this), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             urlSpans.forEach {
                 //设置
-                Log.d("urlSpan", it::class.toString() + it.url)
+                //Log.d("urlSpan", it::class.toString() + it.url)
                 val clickSpan = ClickSpan(it.url, this)
                 newSpanStyle.setSpan(clickSpan, text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
@@ -193,7 +193,7 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
 
         fun getDailyContent(): Disposable {
             return ApiCall.gankApi(ui as Context)
-                    .create(GankAPi::class.java)
+                    .create(GankAPI::class.java)
                     .getContent(1, page = (ui as GankIOListActivity).page)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())

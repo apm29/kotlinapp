@@ -26,7 +26,7 @@ class PagerFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        position = arguments.getInt("data")
+        position = arguments.getInt("contentList")
         super.onCreate(savedInstanceState)
         println("create " + position)
     }

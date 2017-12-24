@@ -1,1 +1,1 @@
-include ':app', ':network', ':beanmodule', ':NightVeil', ':accountmodule', ':updatemodule', ':beebubble', ':test', ':NewXParser'
+include ':app', ':network', ':beanmodule', ':NightVeil', ':accountmodule', ':beebubble', ':test', ':NewXParser'

@@ -1,4 +1,4 @@
-package com.apm29.beanmodule.beans
+package com.apm29.beanmodule.beans.gank
 
 import com.google.gson.annotations.SerializedName
 

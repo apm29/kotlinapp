@@ -3,6 +3,7 @@ package com.apm29.network
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import com.apm29.network.api.API
 import com.apm29.network.okhttpsetup.PersistentCookieJar
 import com.apm29.network.okhttpsetup.SetCookieCache
 import com.apm29.network.okhttpsetup.SharedPrefsCookiePersistor
@@ -171,8 +172,11 @@ class ApiCall {
                     .newBuilder()
                     .scheme(oldRequest.url().scheme())
                     .host(oldRequest.url().host())
-                    //.addQueryParameter("platform", "1")
+                    .addQueryParameter("channel","wdj")
+                    .addQueryParameter("version",ApiCall.versionCode.toString())
+                    .addQueryParameter("platform", "android")
                     //.addQueryParameter("version", ApiCall.versionCode.toString())
+
                     .addQueryParameter("timestamp",System.currentTimeMillis().toString())
             // 新的请求
             val newRequest = oldRequest.newBuilder()

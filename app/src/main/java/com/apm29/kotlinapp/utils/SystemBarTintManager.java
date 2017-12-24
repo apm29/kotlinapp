@@ -35,8 +35,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 
-import java.lang.reflect.Method;
+import com.apm29.kotlinapp.BuildConfig;
 
+import java.lang.reflect.Method;
 /**
  * Class to manage status and navigation bar tint effects when using KitKat
  * translucent system UI modes.
@@ -84,6 +85,7 @@ public class SystemBarTintManager {
 	 * 
 	 * @param activity The host activity.
 	 */
+	@SuppressLint("ResourceType")
 	@TargetApi(19)
 	public SystemBarTintManager(Activity activity) {
 
@@ -448,6 +450,9 @@ public class SystemBarTintManager {
 			if (resourceId > 0) {
 				result = res.getDimensionPixelSize(resourceId);
 			}
+			if (BuildConfig.DEBUG)
+				System.out.println("statusBarHeight = " + result);
+
 			return result;
 		}
 

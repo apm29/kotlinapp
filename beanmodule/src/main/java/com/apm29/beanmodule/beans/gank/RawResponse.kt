@@ -1,4 +1,4 @@
-package com.apm29.beanmodule.beans
+package com.apm29.beanmodule.beans.gank
 
 
 /**
@@ -9,7 +9,7 @@ class RawResponse<DATA>{
     /**
      * meta
      */
-    var meta:Meta?=null
+    var meta: Meta?=null
     /**
      * data
      */

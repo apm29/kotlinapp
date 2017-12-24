@@ -2,7 +2,7 @@
 //
 //import android.content.Context
 //import android.content.Intent
-//import com.apm29.beanmodule.beans.SubscriptionInfo
+//import com.apm29.beanmodule.beans.main.SubscriptionInfo
 //import com.apm29.kotlinapp.R
 //import com.apm29.kotlinapp.base.BaseListActivity
 //import com.apm29.kotlinapp.base.BaseUI

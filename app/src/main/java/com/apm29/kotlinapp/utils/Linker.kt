@@ -2,7 +2,7 @@ package com.apm29.kotlinapp.utils
 
 import android.content.Context
 import android.content.Intent
-import com.apm29.kotlinapp.ui.BaseMaterialActivity
+import com.apm29.kotlinapp.ui.SampleMaterialActivity
 import com.apm29.kotlinapp.ui.GankIOListActivity
 import com.apm29.kotlinapp.ui.PagerActivity
 
@@ -13,7 +13,7 @@ fun toGankIO(context: Context) {
     context.startActivity(Intent(context, GankIOListActivity::class.java))
 }
 fun toMaterialBase(context: Context) {
-    context.startActivity(Intent(context, BaseMaterialActivity::class.java))
+    context.startActivity(Intent(context, SampleMaterialActivity::class.java))
 }
 fun toPager(context: Context) {
     context.startActivity(Intent(context, PagerActivity::class.java))

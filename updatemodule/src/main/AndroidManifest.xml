@@ -10,7 +10,7 @@
             android:authorities="${applicationId}.updatefileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data
+            <meta-contentList
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/update_cache_path"/>
         </provider>

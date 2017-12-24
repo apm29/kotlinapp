@@ -42,7 +42,7 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter> :
             try {
                 setListData(data = data as List<ITEM_TYPE>)
             } catch (e: Exception) {
-                onError("data cast failed, data type doesn't match" + e.message)
+                onError("contentList cast failed, contentList type doesn't match" + e.message)
             }
         } else if (data == null) {
             onEmpty()
@@ -119,7 +119,7 @@ abstract class BaseListActivity<ITEM_TYPE, P : BaseListActivity.ListPresenter> :
                                  var emptyView: TextView? = null, var emptyDesc: String = "暂无数据") : RecyclerView.Adapter<BaseVH>() {
         init {
             if(data==null)
-                throw IllegalArgumentException("data 不可为null")
+                throw IllegalArgumentException("contentList 不可为null")
         }
         override fun onBindViewHolder(holder: BaseVH, position: Int) {
             if (getItemViewType(position) == ITEM_VIEW_TYPE_EMPTY && holder is DefaultVH) {

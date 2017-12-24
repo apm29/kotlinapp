@@ -1,4 +1,4 @@
-package com.apm29.beanmodule.beans
+package com.apm29.beanmodule.beans.main
 
 import java.io.Serializable
 
@@ -20,10 +20,10 @@ data class Meta(
 )
 
 data class HomeViewData(
-        var skuNum: Int,// 17615
-        var recommendWTB: List<WTB>,
-        var isAdON: Int,// 1
-        var ads: List<Ad>
+		var skuNum: Int,// 17615
+		var recommendWTB: List<WTB>,
+		var isAdON: Int,// 1
+		var ads: List<Ad>
 )
 //WTB
 data class WTB(
@@ -51,10 +51,10 @@ data class IndustryInfo(
         var child: List<IndustryChild>
 )
 data class IndustryChild(
-        var id: Int,// 0
-        var name: String,// 纯棉纱
-        var child: List<IndustryChild>,
-        var craftType: Int// 1
+		var id: Int,// 0
+		var name: String,// 纯棉纱
+		var child: List<IndustryChild>,
+		var craftType: Int// 1
 )
 
 data class LoginResult(

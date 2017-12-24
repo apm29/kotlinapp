@@ -1,7 +1,7 @@
 package com.apm29.network.cache
 
 import android.content.Context
-import com.apm29.beanmodule.beans.UserInfo
+import com.apm29.beanmodule.beans.main.UserInfo
 
 
 /**

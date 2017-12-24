@@ -41,7 +41,7 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
             override fun getItem(position: Int): Fragment {
                 val pagerFragment = PagerFragment()
                 val bundle = Bundle()
-                bundle.putInt("data", position)
+                bundle.putInt("contentList", position)
                 pagerFragment.arguments = bundle
                 return pagerFragment
             }

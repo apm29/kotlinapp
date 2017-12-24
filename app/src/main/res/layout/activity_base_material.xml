@@ -2,7 +2,8 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Your scrolling content -->
 
 
@@ -10,34 +11,41 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.design.widget.FloatingActionButton
-            app:fabSize="mini"
-            app:borderWidth="2dp"
-            app:elevation="5dp"
-            app:backgroundTint="@color/colorPrimary"
-            app:layout_anchor="@id/app_bar"
-            app:layout_anchorGravity="right|bottom"
-            android:src="@android:drawable/ic_media_play"
-            android:layout_margin="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <android.support.v4.widget.NestedScrollView
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--app:fabSize="mini"-->
+            <!--app:borderWidth="2dp"-->
+            <!--app:elevation="5dp"-->
+            <!--app:backgroundTint="@color/colorPrimary"-->
+            <!--app:layout_anchor="@id/app_bar"-->
+            <!--app:layout_anchorGravity="right|bottom"-->
+            <!--android:src="@android:drawable/ic_media_play"-->
+            <!--android:layout_margin="12dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+        <!--<android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+            <android.support.v7.widget.RecyclerView
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
+            </android.support.v7.widget.RecyclerView>
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_desc" />
+                android:text="@string/app_desc" />-->
 
-        </android.support.v4.widget.NestedScrollView>
-
+        <!--</android.support.v4.widget.NestedScrollView>-->
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
+            android:background="#00000000"
             android:layout_height="@dimen/app_bar_height"
-            android:background="@mipmap/account_bg_d"
+            android:translationZ="8dp"
             app:contentScrim="#a15545">
 
             <android.support.design.widget.CollapsingToolbarLayout
@@ -50,8 +58,8 @@
 
                 app:layout_scrollFlags="scroll"
                 app:toolbarId="@+id/toolbar">
-
                 <android.support.v7.widget.Toolbar
+                    app:title=" "
                     android:id="@+id/tool_bar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
@@ -59,26 +67,16 @@
 
                 </android.support.v7.widget.Toolbar>
 
-                <RelativeLayout
-                    android:id="@+id/rl_collapse_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </RelativeLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <android.support.design.widget.TabLayout
+                android:paddingTop="25dp"
                 android:id="@+id/taber"
                 android:layout_width="wrap_content"
-                android:layout_height="?actionBarSize"
-                android:layout_marginTop="18dp"
+                android:layout_height="101dp"
                 android:background="#00000000"
-                android:minHeight="?actionBarSize"
+                android:minHeight="81dp"
                 app:contentScrim="@color/color_status_bar"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways">
@@ -86,25 +84,59 @@
                 <android.support.design.widget.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="1" />
+                    android:text="推荐" />
 
                 <android.support.design.widget.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="2" />
+                    android:text="发现" />
 
                 <android.support.design.widget.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="3" />
+                    android:text="历史" />
 
-                <android.support.design.widget.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="4" />
             </android.support.design.widget.TabLayout>
         </android.support.design.widget.AppBarLayout>
+        <com.apm29.kotlinapp.view.behavior.AppRelativeLayout
+            android:paddingTop="25dp"
+            android:translationZ="6dp"
+            android:background="@mipmap/xiaomeiyan"
+            android:id="@+id/rl_collapse_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height">
+            <TextView
+                android:id="@+id/tv_date"
+                tools:text="22 . Dec . 2017"
+                android:padding="6dp"
+                android:textColor="@color/default_text_color"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_weather"
+                android:layout_below="@id/tv_date"
+                android:layout_marginTop="6dp"
+                tools:text="晴 无风"
+                android:paddingLeft="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </com.apm29.kotlinapp.view.behavior.AppRelativeLayout>
+        <!--<RelativeLayout-->
+            <!--android:translationZ="20dp"-->
+            <!--app:layout_behavior=".view.behavior.HeaderBehavior"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/app_bar_height" >-->
+            <!--<ImageView-->
+                <!--android:id="@+id/btn_snack"-->
+                <!--android:text="我是带Behavior的View"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:src="@mipmap/ic_launcher"-->
+                <!--android:textColor="#ffff"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
 
+        <!--</RelativeLayout>-->
     </android.support.design.widget.CoordinatorLayout>
 
     <LinearLayout
