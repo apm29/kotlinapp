@@ -1,4 +1,4 @@
-package com.apm29.beanmodule.beans.main
+package com.apm29.beanmodule.beans.zs
 
 import java.io.Serializable
 

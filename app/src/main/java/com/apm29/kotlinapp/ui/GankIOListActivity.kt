@@ -10,7 +10,6 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.text.style.URLSpan
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -147,7 +146,7 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
         }
 
         fun loadHomeViewData(): Disposable {
-            return ApiCall.mainService(ui as Context)
+            return ApiCall.mainApi(ui as Context)
                     .create(API.Home::class.java)
                     .initHomeViewData()
                     .observeOn(AndroidSchedulers.mainThread())
@@ -183,7 +182,7 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
         }
 
         fun fetchIndustry(): Disposable {
-            return ApiCall.mainService((ui as Activity))
+            return ApiCall.mainApi((ui as Activity))
                     .create(API.Init::class.java)
                     .fetchIndustryCategory()
                     .observeOn(AndroidSchedulers.mainThread())

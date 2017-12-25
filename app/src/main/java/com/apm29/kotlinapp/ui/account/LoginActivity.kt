@@ -8,8 +8,8 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.apm29.beanmodule.beans.main.LoginResult
-import com.apm29.beanmodule.beans.main.UserInfo
+import com.apm29.beanmodule.beans.zs.LoginResult
+import com.apm29.beanmodule.beans.zs.UserInfo
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
@@ -93,7 +93,7 @@ class LoginActivity : BaseActivity<LoginActivity.LoginPresenter>() {
 
     class LoginPresenter(ui: BaseUI) : BasePresenter(ui) {
         fun login(mobile: String, password: String): Disposable? {
-            return ApiCall.mainService(ui as Context)
+            return ApiCall.mainApi(ui as Context)
                     .create(API.Login::class.java)
                     .login(mobile, password, 0)
                     .subscribeOn(Schedulers.io())
@@ -116,7 +116,7 @@ class LoginActivity : BaseActivity<LoginActivity.LoginPresenter>() {
         }
 
         fun initUserInfo(userID: Int): Disposable? {
-            return ApiCall.mainService(ui as Context)
+            return ApiCall.mainApi(ui as Context)
                     .create(API.Login::class.java)
                     .initUserInfo(userID)
                     .subscribeOn(Schedulers.io())

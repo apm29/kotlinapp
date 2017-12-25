@@ -67,6 +67,7 @@ http://kotlinlang.org/docs/tutorials/android-plugin.html
 > * getDefaultLayout 返回加入的布局文件
 > * setupViews 初始化View操作
 > * startLoading/stopLoading/onEmpty是可用被调用的方法,展示不同状态视图层
+> * override 参数 drawStatusBar showStatusBar 控制是否在状态栏绘制,是否显示状态栏
 
 
 ### 气泡seekbar，气泡随拉取速度偏移

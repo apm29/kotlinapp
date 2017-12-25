@@ -56,6 +56,8 @@
         <activity android:name=".ui.SampleMaterialActivity" />
         <activity android:name=".base.BaseFragmentActivity" />
         <activity android:name="com.yanzhenjie.permission.PermissionActivity" />
+        <activity android:name=".ui.DingHomeActivity" />
+        <activity android:name=".ui.DingSplashActivity" />
 
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity

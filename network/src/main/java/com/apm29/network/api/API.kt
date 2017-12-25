@@ -1,7 +1,7 @@
 package com.apm29.network.api
 
 import com.apm29.beanmodule.beans.gank.RawResponse
-import com.apm29.beanmodule.beans.main.*
+import com.apm29.beanmodule.beans.zs.*
 import io.reactivex.Observable
 import retrofit2.http.*
 

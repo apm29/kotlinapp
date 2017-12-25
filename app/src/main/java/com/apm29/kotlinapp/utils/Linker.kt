@@ -2,9 +2,7 @@ package com.apm29.kotlinapp.utils
 
 import android.content.Context
 import android.content.Intent
-import com.apm29.kotlinapp.ui.SampleMaterialActivity
-import com.apm29.kotlinapp.ui.GankIOListActivity
-import com.apm29.kotlinapp.ui.PagerActivity
+import com.apm29.kotlinapp.ui.*
 
 /**
  * Created by dingzhu on 2017/12/21.
@@ -17,4 +15,8 @@ fun toMaterialBase(context: Context) {
 }
 fun toPager(context: Context) {
     context.startActivity(Intent(context, PagerActivity::class.java))
+}
+
+fun toDing(context: Context) {
+    context.startActivity(Intent(context, DingSplashActivity::class.java))
 }

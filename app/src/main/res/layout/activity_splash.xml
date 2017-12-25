@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tv_one_api"
         android:textColor="#f1f1f1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,9 +32,24 @@
         android:layout_marginTop="18dp"
         android:background="@drawable/btn_round_accent_selector"
         android:gravity="center"
-        android:text="BILIBILI"
+        android:text="ONE"
         android:padding="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_gank" />
+    <TextView
+        android:id="@+id/tv_ding"
+        android:textColor="#f1f1f1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/btn_round_accent_selector"
+        android:gravity="center"
+        android:text="DING"
+        android:padding="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_one_api" />
 </android.support.constraint.ConstraintLayout>

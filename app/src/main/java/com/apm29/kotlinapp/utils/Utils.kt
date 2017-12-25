@@ -2,6 +2,7 @@ package com.apm29.kotlinapp.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.support.annotation.StringRes
 import android.telephony.TelephonyManager
 import android.util.Log
@@ -18,9 +19,15 @@ class Utils private constructor() {
         val toast: Toast by lazy {
             return@lazy Toast.makeText(getApp(), "", Toast.LENGTH_SHORT)
         }
+        val sp:SharedPreferences by lazy {
+            return@lazy getApp().getSharedPreferences("DingDing",Context.MODE_PRIVATE)
+        }
     }
 }
 
+/**
+ * topLevel functions
+ */
 val tm = getApp().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
 fun clamp(value: Int, min: Int, max: Int): Int {
@@ -94,3 +101,41 @@ fun uuid(context: Context): String {
     return deviceUuid.toString()
 }
 
+
+/**
+ * SharePreferenceUtils
+ */
+fun getInt(key: String): Int {
+    return getInt(key,0)
+}
+fun getInt(key:String,def:Int): Int {
+    return Utils.sp.getInt(key,def)
+}
+@SuppressLint("ApplySharedPref")
+fun putInt(key: String, value: Int) {
+    Utils.sp.edit().putInt(key,value).commit()
+}
+
+fun getString(key: String): String {
+    return getString(key,"")
+}
+fun getString(key:String,def:String): String {
+    return Utils.sp.getString(key,def)
+}
+@SuppressLint("ApplySharedPref")
+fun putString(key: String, value: String) {
+    Utils.sp.edit().putString(key,value).commit()
+}
+
+fun getBoolean(key: String): Boolean {
+    return getBoolean(key,false)
+}
+
+fun getBoolean(key:String,def:Boolean): Boolean {
+    return Utils.sp.getBoolean(key,def)
+}
+
+@SuppressLint("ApplySharedPref")
+fun putBoolean(key: String, value: Boolean) {
+    Utils.sp.edit().putBoolean(key,value).commit()
+}

@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
+import android.transition.Explode
+import android.transition.Slide
 import android.view.*
 import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
@@ -24,7 +26,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     var statusBarHeight = 0
     var actionBarHeight = 0
     open var drawStatusBar = false
-    open var mDisposables:CompositeDisposable= CompositeDisposable()
+    open var showStatusBar = true
+    override var mDisposables:CompositeDisposable= CompositeDisposable()
     protected val baseEmptyContainer: FrameLayout by lazy {
         findViewById<FrameLayout>(R.id.fl_empty_container)
     }
@@ -55,15 +58,17 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     protected lateinit var mPresenter: T
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (!showStatusBar)
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         super.onCreate(savedInstanceState)
         //绑定P
         mPresenter = getPresenter()
 //        //转场动画
 //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 //            window.enterTransition = Explode()
-//            window.reenterTransition = Slide(Gravity.LEFT)
-//            window.exitTransition = Slide(Gravity.LEFT)
-//            window.returnTransition = Slide(Gravity.RIGHT)
+//            window.reenterTransition = Slide(Gravity.TOP)
+//            window.exitTransition = Slide(Gravity.TOP)
+//            window.returnTransition = Slide(Gravity.BOTTOM)
 //        }
         //根布局
         super.setContentView(R.layout.activity_base_layout)
@@ -87,13 +92,71 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         initSystemBar()
     }
 
-    @SuppressLint("PrivateApi")
-            /**
+
+    /**
+     * 设置系统状态栏颜色
+     * setSystemUiVisibility(int visibility)方法可传入的实参为：
+
+    1. View.SYSTEM_UI_FLAG_VISIBLE：显示状态栏，Activity不全屏显示(恢复到有状态栏的正常情况)。
+
+    2. View.INVISIBLE：隐藏状态栏，同时Activity会伸展全屏显示。
+
+    3. View.SYSTEM_UI_FLAG_FULLSCREEN：Activity全屏显示，且状态栏被隐藏覆盖掉。
+
+    4. View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN：Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住。
+
+    5. View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION：效果同View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+    6. View.SYSTEM_UI_LAYOUT_FLAGS：效果同View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+    7. View.SYSTEM_UI_FLAG_HIDE_NAVIGATION：隐藏虚拟按键(导航栏)。有些手机会用虚拟按键来代替物理按键。
+
+    8. View.SYSTEM_UI_FLAG_LOW_PROFILE：状态栏显示处于低能显示状态(low profile模式)，状态栏上一些图标显示会被隐藏。
+     */
+    private fun initSystemBar() {
+        if (!showStatusBar){//不显示statusBar时略过设置
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true)
+        }
+        val tintManager = SystemBarTintManager(this)
+        statusBarHeight = tintManager.config.statusBarHeight
+        actionBarHeight = tintManager.config.actionBarHeight
+        tintManager.isStatusBarTintEnabled = true
+        setStatusBarDarkMode(true, this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            //window.statusBarColor = Color.parseColor("#6a2f2f2f")  //这里动态修改颜色
+            window.statusBarColor = resources.getColor(R.color.color_status_bar)
+            if (drawStatusBar)//全屏，不绘制statusBar区域
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View
+                        .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            else //不绘制statusBar区域
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            tintManager.setStatusBarTintResource(R.color.color_status_bar)
+            if (!drawStatusBar) {
+                baseContainer.setPadding(0, statusBarHeight, 0, 0)
+            }
+
+        }
+
+
+    }
+
+
+     /**
      * 为miui设置状态栏颜色
      * @param darkmode 是否黑色
      * @param activity 当前Activity
      */
-    fun setStatusBarDarkMode(darkmode: Boolean, activity: Activity) {
+     @SuppressLint("PrivateApi")
+    private fun setStatusBarDarkMode(darkmode: Boolean, activity: Activity) {
         val clazz = activity.window.javaClass
         try {
             var darkModeFlag = 0
@@ -105,43 +168,6 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-    }
-
-    /**
-     * 设置系统状态栏颜色,设置手势监测器的回调[.onLeftFling]和[.onRightFling]
-     */
-    private fun initSystemBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true)
-        }
-
-
-        val tintManager = SystemBarTintManager(this)
-        statusBarHeight = tintManager.config.statusBarHeight
-        actionBarHeight = tintManager.config.actionBarHeight
-        tintManager.setStatusBarTintEnabled(true)
-        setStatusBarDarkMode(true, this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = Color.parseColor("#6a2f2f2f")  //这里动态修改颜色
-            if (drawStatusBar)//全屏，绘制被statusbar占据的部分
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View
-                        .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            else //不绘制statusbar区域
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        } else {
-            tintManager.setStatusBarTintResource(R.color.color_status_bar)
-            if (!drawStatusBar) {
-                baseContainer.setPadding(0, statusBarHeight, 0, 0)
-            }
-
-        }
-
 
     }
 

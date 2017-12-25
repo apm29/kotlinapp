@@ -16,7 +16,7 @@ import com.yanzhenjie.permission.PermissionYes
 
 
 class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
-
+    override var drawStatusBar: Boolean=false
     override fun onError(error: String?) {
         showToast(error ?: "加载失败")
     }
@@ -27,11 +27,14 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
     override fun getDefaultLayout() = R.layout.activity_splash
 
     override fun setupViews(savedInstanceState: Bundle?) {
-        findViewById<TextView>(R.id.tv_gank).also { logD(it.toString()) }.setOnClickListener{
+        findViewById<TextView>(R.id.tv_gank).setOnClickListener{
             toGankIO(this)
         }
-        findViewById<TextView>(R.id.tv).also {logD(it.toString())}.setOnClickListener{
+        findViewById<TextView>(R.id.tv_one_api).setOnClickListener{
             toMaterialBase(this)
+        }
+        findViewById<TextView>(R.id.tv_ding).setOnClickListener{
+            toDing(this)
         }
     }
 
