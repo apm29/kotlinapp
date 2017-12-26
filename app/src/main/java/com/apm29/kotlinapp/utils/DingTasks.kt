@@ -1,6 +1,7 @@
 package com.apm29.kotlinapp.utils
 
 import android.content.Context
+import cn.jpush.android.api.JPushInterface
 import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.network.ApiCall
 import com.apm29.network.api.DingAPI
@@ -19,7 +20,7 @@ object DingTasks {
     fun queryAppConfig(context: Context, listener: BaseUI): Disposable {
         listener.startLoading()
         return ApiCall.dingApi(context)
-                .create(DingAPI::class.java).queryAppConfig()
+                .create(DingAPI::class.java).queryAppConfig(JPushInterface.getRegistrationID(context))
                 .firstOrError()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -45,7 +46,7 @@ object DingTasks {
     fun activityPopupMessage(messageId:Int,context: Context, listener: BaseUI): Disposable {
         listener.startLoading()
         return ApiCall.dingApi(context)
-                .create(DingAPI::class.java).activityPopupMessage(messageId)
+                .create(DingAPI::class.java).activityPopupMessage(messageId,JPushInterface.getRegistrationID(context))
                 .firstOrError()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
