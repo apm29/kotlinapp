@@ -32,3 +32,7 @@ fun toSudoku(context: Context, type: DingScreenLockActivity.SudokuType) {
     intent.putExtra(SCREEN_LOCK_TYPE, type)
     context.startActivity(intent)
 }
+
+fun toDetail(context: Context) {
+    context.startActivity(Intent(context, DetailActivity::class.java))
+}

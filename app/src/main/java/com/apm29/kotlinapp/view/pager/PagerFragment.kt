@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,35 +19,30 @@ import kotlinx.android.synthetic.main.pager.*
  * Created by yingjiawei on 2017/12/12.
  */
 class PagerFragment : Fragment() {
-    var position: Int = -1
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val list = inflater.inflate(R.layout.dummy_list,container,false)
+        val dummyList = list.findViewById<RecyclerView>(R.id.dummy_list)
+        dummyList.layoutManager=LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        dummyList.adapter=object : RecyclerView.Adapter<ViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
+                return ViewHolder(TextView(parent?.context).also {
+                    it.text="1234"
+                    it.textSize=80F
+                })
+            }
 
-        println("create view" + position)
-        val inflate = LayoutInflater.from(container?.context).inflate(R.layout.pager, container, false)
-        return inflate
+            override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+            }
+
+            override fun getItemCount(): Int {
+                return 28
+            }
+
+        }
+
+        return list
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        position = arguments?.getInt("contentList")?:-1
-        super.onCreate(savedInstanceState)
-        println("create " + position)
-    }
-
-    val handler: Handler = Handler()
-    override fun onResume() {
-        super.onResume()
-        tv.text = "text set by ktAndroidExt"
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser)
-            handler.postDelayed({
-                println("new " + position)
-                val textView = view?.findViewById(R.id.tv) as TextView?
-                textView?.text = getString(R.string.string_pager_data)
-            }, 1000)
-        else
-            handler.removeCallbacksAndMessages(null)
+    class ViewHolder(itemView:View): RecyclerView.ViewHolder(itemView) {
+        //
     }
 }

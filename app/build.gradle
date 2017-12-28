@@ -73,6 +73,9 @@ dependencies {
     compile 'com.contrarywind:Android-PickerView:3.2.7'
     //circle imageView
     compile 'de.hdodenhof:circleimageview:2.2.0'
+
+    //vertical view pager
+    compile 'me.kaelaela:verticalviewpager:1.0.0@aar'
 }
 repositories {
     mavenCentral()

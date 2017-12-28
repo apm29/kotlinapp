@@ -18,11 +18,17 @@ import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
 import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.utils.showToast
+import com.apm29.kotlinapp.utils.toDetail
 import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
 import kotlinx.android.synthetic.main.activity_home_layout.*
+import me.kaelaela.verticalviewpager.VerticalViewPager
+import me.kaelaela.verticalviewpager.transforms.DefaultTransformer
 
 class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
+    override fun enableRefresh(): Boolean {
+        return false
+    }
     override fun onError(error: String?) {
     }
 
@@ -51,6 +57,7 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
                 return 4
             }
         }
+        pager.setPageTransformer(false, DefaultTransformer())
         taber.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
@@ -109,7 +116,7 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
                     }
                 })
                 .show()
-
+        toDetail(this)
     }
 
     override fun getPresenter(): PagerPresenter {

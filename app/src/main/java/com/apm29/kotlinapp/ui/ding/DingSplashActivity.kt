@@ -73,9 +73,6 @@ class DingSplashActivity : BaseActivity<DingSplashActivity.Presenter>() {
     override fun setupViews(savedInstanceState: Bundle?) {
         mPresenter.queryAppConfig()
         mPresenter.getStartupPage()
-        val uri = Uri.parse("app://www.dinglc.com")
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        startActivity(intent)
     }
 
     private fun showOptionsPicker() {
