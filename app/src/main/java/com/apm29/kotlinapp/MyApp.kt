@@ -6,6 +6,10 @@ import android.content.Context
 import android.os.Bundle
 import android.support.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
+import com.apm29.beanmodule.beans.ding.UserInfo
+import com.apm29.kotlinapp.base.BaseUI
+import com.apm29.kotlinapp.base.SimpleBaseUI
+import com.apm29.kotlinapp.utils.DingTasks
 import com.apm29.kotlinapp.utils.toPx
 import com.apm29.network.cache.AccountCache
 import com.facebook.stetho.Stetho
@@ -55,8 +59,17 @@ class MyApp : MultiDexApplication() {
 
                     override fun onActivityStarted(activity: Activity?) {
                         if (count == 0) {
-                            val userInfo = AccountCache.getUserInfo(this@MyApp)
-                            AccountCache.userInfo = userInfo
+                            //ding
+                            if (activity != null)
+                                DingTasks.checkToken(activity, object : SimpleBaseUI() {
+                                    override fun onNewData(data: Any?) {
+                                        if (data is String)
+                                            DingTasks.userInfo(activity, this)
+                                        else if (data is UserInfo){
+                                            AccountCache.saveUserInfo(activity,data)
+                                        }
+                                    }
+                                })
                         }
                         count++
                     }

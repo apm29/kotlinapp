@@ -39,14 +39,17 @@ object DingTasks {
                             listener.stopLoading()
                         }
                 ).also {
-                        listener.mDisposables.add(it)
-                }
+            listener.mDisposables.add(it)
+        }
     }
 
-    fun activityPopupMessage(messageId:Int,context: Context, listener: BaseUI): Disposable {
+    /**
+     * app弹窗详情
+     */
+    fun activityPopupMessage(messageId: Int, context: Context, listener: BaseUI): Disposable {
         listener.startLoading()
         return ApiCall.dingApi(context)
-                .create(DingAPI::class.java).activityPopupMessage(messageId,JPushInterface.getRegistrationID(context))
+                .create(DingAPI::class.java).activityPopupMessage(messageId, JPushInterface.getRegistrationID(context))
                 .firstOrError()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -63,6 +66,78 @@ object DingTasks {
                             listener.onError(it.message)
                             listener.stopLoading()
                         }
-                ).also {listener.mDisposables.add(it)}
+                ).also { listener.mDisposables.add(it) }
+    }
+
+    /**
+     * 启动页详情
+     */
+    fun getStartupPage(context: Context, listener: BaseUI): Disposable {
+        listener.startLoading()
+        return ApiCall.dingApi(context)
+                .create(DingAPI::class.java).getStartupPage(JPushInterface.getRegistrationID(context))
+                .firstOrError()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        {
+                            if (it.success) {
+                                listener.onNewData(it.result)
+                            } else {
+                                listener.onError(it.errorMsg)
+                            }
+                            listener.stopLoading()
+                        },
+                        {
+                            listener.onError(it.message)
+                            listener.stopLoading()
+                        }
+                ).also { listener.mDisposables.add(it) }
+    }
+
+    /**
+     * 检查token
+     */
+    fun checkToken(context: Context, listener: BaseUI): Disposable {
+        return ApiCall.dingApi(context)
+                .create(DingAPI::class.java).checkToken()
+                .firstOrError()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        { it ->
+                            if (it.success) {
+                                showToast(it.result)
+                                listener.onNewData(it.result)
+                                AccountCache.saveToken(context, it.result)
+                            } else {
+                            }
+                        },
+                        {
+                            showToast(it.message?:"连接失败")
+                        }
+                )
+    }
+
+    fun userInfo(context: Context, listener: BaseUI): Disposable {
+        return ApiCall.dingApi(context)
+                .create(DingAPI::class.java).userInfo(JPushInterface.getRegistrationID(context))
+                .firstOrError()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        {
+                            if (it.success) {
+                                listener.onNewData(it.result)
+                            } else {
+                                listener.onError(it.errorMsg)
+                            }
+                            listener.stopLoading()
+                        },
+                        {
+                            listener.onError(it.message)
+                            listener.stopLoading()
+                        }
+                ).also { listener.mDisposables.add(it) }
     }
 }

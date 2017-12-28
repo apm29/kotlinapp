@@ -8,7 +8,9 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.widget.Toast
 import com.apm29.kotlinapp.MyApp
+import java.security.MessageDigest
 import java.util.*
+import kotlin.experimental.and
 
 /**
  * top level函数
@@ -139,3 +141,38 @@ fun getBoolean(key:String,def:Boolean): Boolean {
 fun putBoolean(key: String, value: Boolean) {
     Utils.sp.edit().putBoolean(key,value).commit()
 }
+
+
+/**
+ * MD5
+ */
+private val mHexStr = "0123456789ABCDEF"
+fun md5(value: String): String {
+    try {
+        val md = MessageDigest.getInstance("MD5")
+        return bytesToHexString(md.digest(value.toByteArray(charset("UTF-8"))))
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return value
+    }
+
+}
+
+/**
+ * @param bytes
+ * @return 将二进制转换为十六进制字符输出
+ */
+private fun bytesToHexString(bytes: ByteArray): String {
+    val result = StringBuilder()
+    val count = bytes.size
+    for (i in 0 until count) {
+        i shr 4
+        // 字节高4位
+        val int: Int = ((bytes[i] and 0xF0.toByte()).toInt() shr 4)
+        result.append(mHexStr[int].toString())
+        // 字节低4位
+        result.append(mHexStr[(bytes[i] and 0x0F) .toInt()].toString())
+    }
+    return result.toString()
+}
+

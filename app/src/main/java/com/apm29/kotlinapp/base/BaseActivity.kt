@@ -3,14 +3,11 @@ package com.apm29.kotlinapp.base
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-import android.transition.Explode
-import android.transition.Slide
 import android.view.*
 import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
@@ -43,7 +40,7 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     protected val baseRefreshLayout: SmartRefreshLayout by lazy {
         findViewById<SmartRefreshLayout>(R.id.srl_refresh_layout)
     }
-    protected val tvLoading: ImageView by lazy {
+    protected val ivLoading: ImageView by lazy {
         findViewById<ImageView>(R.id.iv_base_loading)
     }
     protected  var handler=Handler()
@@ -63,13 +60,13 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         super.onCreate(savedInstanceState)
         //绑定P
         mPresenter = getPresenter()
-//        //转场动画
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//            window.enterTransition = Explode()
-//            window.reenterTransition = Slide(Gravity.TOP)
-//            window.exitTransition = Slide(Gravity.TOP)
-//            window.returnTransition = Slide(Gravity.BOTTOM)
-//        }
+        ////转场动画
+        //if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+        //    window.enterTransition = Explode()
+        //    window.reenterTransition = Slide(Gravity.TOP)
+        //    window.exitTransition = Slide(Gravity.TOP)
+        //    window.returnTransition = Slide(Gravity.BOTTOM)
+        //}
         //根布局
         super.setContentView(R.layout.activity_base_layout)
         //加入当前base布局
@@ -114,8 +111,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     8. View.SYSTEM_UI_FLAG_LOW_PROFILE：状态栏显示处于低能显示状态(low profile模式)，状态栏上一些图标显示会被隐藏。
      */
     private fun initSystemBar() {
-        if (!showStatusBar){//不显示statusBar时略过设置
-            return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.navigationBarColor = resources.getColor(R.color.color_status_bar)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true)
@@ -123,6 +120,9 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         val tintManager = SystemBarTintManager(this)
         statusBarHeight = tintManager.config.statusBarHeight
         actionBarHeight = tintManager.config.actionBarHeight
+        if (!showStatusBar){//不显示statusBar时略过设置
+            return
+        }
         tintManager.isStatusBarTintEnabled = true
         setStatusBarDarkMode(true, this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -133,7 +133,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             //window.statusBarColor = Color.parseColor("#6a2f2f2f")  //这里动态修改颜色
             window.statusBarColor = resources.getColor(R.color.color_status_bar)
-            if (drawStatusBar)//全屏，不绘制statusBar区域
+
+            if (drawStatusBar)
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View
                         .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             else //不绘制statusBar区域
@@ -221,7 +222,7 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
             )
             rotateAnimation.duration = 300
             rotateAnimation.repeatCount = RotateAnimation.INFINITE
-            tvLoading?.startAnimation(rotateAnimation)
+            ivLoading?.startAnimation(rotateAnimation)
         }else{
             baseRefreshContainer.visibility = View.VISIBLE
             baseEmptyContainer.visibility=View.GONE

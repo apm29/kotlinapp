@@ -3,7 +3,7 @@ package com.apm29.network.cache
 import android.content.Context
 import android.text.TextUtils
 import com.apm29.beanmodule.beans.ding.AppConfig
-import com.apm29.beanmodule.beans.zs.UserInfo
+import com.apm29.beanmodule.beans.ding.UserInfo
 
 
 /**
@@ -17,6 +17,10 @@ class AccountCache {
         private val TOKEN = "TOKEN"
         var appConfig: AppConfig? = null
         private val APP_CONFIG = "APP_CONFIG"
+
+        fun isLogin(): Boolean {
+            return !TextUtils.isEmpty(token)
+        }
 
         fun saveUserInfo(context: Context, userInfo: UserInfo?) {
             if (userInfo != null) {

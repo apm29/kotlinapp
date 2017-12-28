@@ -1,9 +1,12 @@
-package com.apm29.kotlinapp.ui
+package com.apm29.kotlinapp.ui.ding
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import com.apm29.beanmodule.beans.ding.ActivityPopupDetail
 import com.apm29.beanmodule.beans.ding.AppConfig
+import com.apm29.beanmodule.beans.ding.StartupPage
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
@@ -14,31 +17,65 @@ import com.bumptech.glide.Glide
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_ding_splash.*
 import java.util.*
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 
 
 class DingSplashActivity : BaseActivity<DingSplashActivity.Presenter>() {
     override var showStatusBar: Boolean = false
+    override fun enableRefresh() = false
     override fun onNewData(data: Any?) {
-        if (data is AppConfig){ //appConfig
-            if (data.activityPopupSwitch!=0 && data.activityPopup!=null){//有弹窗
-                mPresenter.activityPopupMessage(data.activityPopup?.id?:0)
+        if (data is AppConfig) { //appConfig
+            if (data.activityPopupSwitch != 0 && data.activityPopup != null) {//有弹窗
+                mPresenter.activityPopupMessage(data.activityPopup?.id ?: 0)
             }
-        }
-        else if (data is ActivityPopupDetail){
+        } else if (data is ActivityPopupDetail) {
             //Glide.with(this).load(BASE_IMG_URL+data.image).into(iv_ding)
+        } else if (data is StartupPage) {
+            val now = System.currentTimeMillis()
+            if (data.endTime > now && now > data.startTime)
+                Glide.with(this).load(BASE_IMG_URL + data.image).into(iv_ding)
+            enterNextPage()
         }
+    }
+
+    override fun onError(error: String?) {
+        super.onError(error)
+        enterNextPage()
+    }
+
+    private fun enterNextPage() {
+        handler.postDelayed({
+            if (getBoolean(IS_FIRST_INSTALL_APP,true)){//第一次打开app
+                //进入新手引导
+                toSudoku(this,DingScreenLockActivity.SudokuType.FIRST_SET_PASS)
+            }else{
+                if (TextUtils.isEmpty(getString(SCREEN_LOCK_PASS,""))){//未设置密码
+                    //进入主页
+                    toSudoku(this,DingScreenLockActivity.SudokuType.FIRST_SET_PASS)
+                }else{
+                    //进入锁屏界面
+                    toSudoku(this,DingScreenLockActivity.SudokuType.ENTER_MAIN)
+                }
+            }
+            finish()
+        },2000)
     }
 
     override fun startLoading() {
         //do nothing
     }
+
     override fun getDefaultLayout(): Int {
         return R.layout.activity_ding_splash
     }
 
     override fun setupViews(savedInstanceState: Bundle?) {
-        mPresenter.queryAppConfig().also { mDisposables.add(it) }
-        showTimePicker()
+        mPresenter.queryAppConfig()
+        mPresenter.getStartupPage()
+        val uri = Uri.parse("app://www.dinglc.com")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
     }
 
     private fun showOptionsPicker() {
@@ -66,11 +103,19 @@ class DingSplashActivity : BaseActivity<DingSplashActivity.Presenter>() {
 
     class Presenter(ui: DingSplashActivity) : BasePresenter(ui) {
         fun queryAppConfig(): Disposable {
-            return DingTasks.queryAppConfig(ui as Context,ui)
+            return DingTasks.queryAppConfig(ui as Context, ui)
         }
 
         fun activityPopupMessage(id: Int): Disposable {
-            return DingTasks.activityPopupMessage(id,ui as Context,ui)
+            return DingTasks.activityPopupMessage(id, ui as Context, ui)
+        }
+
+        fun getStartupPage(): Disposable {
+            return DingTasks.getStartupPage(ui as Context, ui)
+        }
+
+        fun checkToken(): Disposable {
+            return DingTasks.checkToken(ui as Context, ui)
         }
     }
 }

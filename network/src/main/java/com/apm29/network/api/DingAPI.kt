@@ -1,8 +1,6 @@
 package com.apm29.network.api
 
-import com.apm29.beanmodule.beans.ding.ActivityPopupDetail
-import com.apm29.beanmodule.beans.ding.BaseResponse
-import com.apm29.beanmodule.beans.ding.AppConfig
+import com.apm29.beanmodule.beans.ding.*
 import io.reactivex.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -40,4 +38,22 @@ interface DingAPI{
             @Field("messageId") messageId:Int,
             @Field("registrationId") registrationId:String = ""
     ): Observable<BaseResponse<ActivityPopupDetail>>
+
+    @FormUrlEncoded
+    @POST("message/getStartupPage.json")
+    fun getStartupPage(
+            @Field("registrationId")registrationID: String? =""
+    ): Observable<BaseResponse<StartupPage>>
+
+    @FormUrlEncoded
+    @POST("user/checkToken.json")
+    fun checkToken(
+            @Field("registrationId")registrationID: String? =""
+    ): Observable<BaseResponse<String>>
+
+    @FormUrlEncoded
+    @POST("user/userInfo.json")
+    fun userInfo(
+            @Field("registrationId")registrationID: String?
+    ): Observable<BaseResponse<UserInfo>>
 }

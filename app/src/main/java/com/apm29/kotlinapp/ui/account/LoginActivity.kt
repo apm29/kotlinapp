@@ -67,7 +67,7 @@ class LoginActivity : BaseActivity<LoginActivity.LoginPresenter>() {
                 onError(data.meta.desc)
             }
         } else if (data is UserInfo) {
-            AccountCache.saveUserInfo(this, data)
+            //AccountCache.saveUserInfo(this, data)
             Toast.makeText(this, " init user info success ! ", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -123,7 +123,7 @@ class LoginActivity : BaseActivity<LoginActivity.LoginPresenter>() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             {
-                                AccountCache.saveUserInfo(ui as Context, it.data)
+                                //AccountCache.saveUserInfo(ui as Context, it.data)
                                 ui.onNewData(it.data)
                             },
                             {

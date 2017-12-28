@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.apm29.kotlinapp.ui.DingSplashActivity">
+    tools:context="com.apm29.kotlinapp.ui.ding.DingSplashActivity">
     <ImageView
+        android:scaleType="fitXY"
         android:id="@+id/iv_ding"
         android:src="@mipmap/start_page"
         android:layout_width="match_parent"

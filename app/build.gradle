@@ -71,6 +71,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.0.2'
     //picker
     compile 'com.contrarywind:Android-PickerView:3.2.7'
+    //circle imageView
+    compile 'de.hdodenhof:circleimageview:2.2.0'
 }
 repositories {
     mavenCentral()

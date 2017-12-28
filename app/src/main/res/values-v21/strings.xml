@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MaterialDesign</string>
+    <string name="app_name">KotlinApp</string>
     <string name="title_activity_login">Sign in app</string>
 
     <!-- Strings related to login -->

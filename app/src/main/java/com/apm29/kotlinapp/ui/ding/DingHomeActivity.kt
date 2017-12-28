@@ -1,4 +1,4 @@
-package com.apm29.kotlinapp.ui
+package com.apm29.kotlinapp.ui.ding
 
 import android.os.Bundle
 import com.apm29.kotlinapp.R
