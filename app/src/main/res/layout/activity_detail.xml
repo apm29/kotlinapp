@@ -8,9 +8,9 @@
 
 
     <android.support.v4.widget.NestedScrollView
-        app:layout_behavior="com.apm29.kotlinapp.view.behavior.DragBehaviorTop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.apm29.kotlinapp.view.behavior.DragBehavior">
 
         <TextView
             android:layout_width="match_parent"
@@ -18,11 +18,16 @@
             android:text="@string/large_text" />
     </android.support.v4.widget.NestedScrollView>
 
+    <ImageView
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        />
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
 
         <TextView
             android:layout_width="match_parent"

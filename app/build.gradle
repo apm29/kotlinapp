@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 26
     defaultConfig {
         applicationId "com.apm29.kotlinapp"
         minSdkVersion 19
@@ -74,8 +74,7 @@ dependencies {
     //circle imageView
     compile 'de.hdodenhof:circleimageview:2.2.0'
 
-    //vertical view pager
-    compile 'me.kaelaela:verticalviewpager:1.0.0@aar'
+
 }
 repositories {
     mavenCentral()
