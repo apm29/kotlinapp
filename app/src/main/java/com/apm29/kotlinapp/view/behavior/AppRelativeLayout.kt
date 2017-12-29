@@ -37,7 +37,7 @@ class AppRelativeLayout(context: Context?, attrs: AttributeSet?) : RelativeLayou
 
         override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout, child: AppRelativeLayout, target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
             super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
-//            child.layout(target.left?:0,0,   target?.right ?: 0,  target?.top?:0)
+//            child.layout(target.left?:0,0,   target?.right ?: 0,  target?.topView?:0)
             logD("onNestedPreScroll")
         }
 
@@ -64,7 +64,7 @@ class AppRelativeLayout(context: Context?, attrs: AttributeSet?) : RelativeLayou
         }
 
         override fun onDependentViewChanged(parent: CoordinatorLayout?, child: AppRelativeLayout?, dependency: View?): Boolean {
-            println("dependency?.top = ${dependency?.top}")
+            println("dependency?.topView = ${dependency?.top}")
                 if (child!=null){
                     child.x=0f
                     child.y=0f+(dependency?.top?: 0).toFloat()-child.measuredHeight
@@ -114,7 +114,7 @@ class AppRelativeLayout(context: Context?, attrs: AttributeSet?) : RelativeLayou
             //range += ViewCompat.getMinimumHeight(child)
             // Only enter by the amount of the collapsed height
             //range += childHeight - ViewCompat.getMinimumHeight(child)
-            // Else use the full height (minus the top inset)
+            // Else use the full height (minus the topView inset)
             range += childHeight
         }
         return Math.max(0, range)

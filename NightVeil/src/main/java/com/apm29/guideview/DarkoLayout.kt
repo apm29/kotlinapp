@@ -26,7 +26,7 @@ class DarkoLayout(private var controller:NightVeil.Controller, context: Context?
         this.mPaint.maskFilter = BlurMaskFilter(10.0f, BlurMaskFilter.Blur.INNER)
         this.setLayerType(1, null as Paint?)
         isClickable=true
-        this.setOnTouchListener { v, ev ->
+        this.setOnTouchListener { _, ev ->
             println("NightVeil "+"ev = ${ev.x}")
             println("NightVeil "+"ev = ${ev.y}")
             if (ev.action==MotionEvent.ACTION_UP) {

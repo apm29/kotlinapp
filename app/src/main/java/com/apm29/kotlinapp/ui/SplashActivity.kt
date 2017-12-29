@@ -10,6 +10,7 @@ import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
 import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.utils.*
+import com.tencent.bugly.crashreport.CrashReport
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.PermissionNo
 import com.yanzhenjie.permission.PermissionYes

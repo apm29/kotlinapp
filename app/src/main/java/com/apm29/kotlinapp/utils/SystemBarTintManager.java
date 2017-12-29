@@ -471,11 +471,11 @@ public class SystemBarTintManager {
 		}
 
 		/**
-		 * Should a navigation bar appear at the bottom of the screen in the current
+		 * Should a navigation bar appear at the bottomView of the screen in the current
 		 * device configuration? A navigation bar may appear on the right side of
 		 * the screen in certain configurations.
 		 * 
-		 * @return True if navigation should appear at the bottom of the screen, False otherwise.
+		 * @return True if navigation should appear at the bottomView of the screen, False otherwise.
 		 */
 		public boolean isNavigationAtBottom() {
 			return (mSmallestWidthDp >= 600 || mInPortrait);
@@ -529,7 +529,7 @@ public class SystemBarTintManager {
 		}
 
 		/**
-		 * Get the layout inset for any system UI that appears at the top of the screen.
+		 * Get the layout inset for any system UI that appears at the topView of the screen.
 		 * 
 		 * @param withActionBar True to include the height of the action bar, False otherwise.
 		 * @return The layout inset (in pixels).
@@ -539,7 +539,7 @@ public class SystemBarTintManager {
 		}
 
 		/**
-		 * Get the layout inset for any system UI that appears at the bottom of the screen.
+		 * Get the layout inset for any system UI that appears at the bottomView of the screen.
 		 * 
 		 * @return The layout inset (in pixels).
 		 */

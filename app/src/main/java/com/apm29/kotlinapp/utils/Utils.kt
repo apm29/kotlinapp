@@ -13,7 +13,7 @@ import java.util.*
 import kotlin.experimental.and
 
 /**
- * top level函数
+ * topView level函数
  * Created by dingzhu on 2017/12/15.
  */
 class Utils private constructor() {

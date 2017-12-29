@@ -7,28 +7,36 @@
     tools:context="com.apm29.kotlinapp.ui.DetailActivity">
 
 
-    <android.support.v4.widget.NestedScrollView
-        app:layout_behavior="com.apm29.kotlinapp.view.behavior.DragBehaviorTop"
+    <com.apm29.kotlinapp.view.pager.DragLayout
+        android:id="@+id/drag_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.apm29.kotlinapp.view.behavior.CustomScrollViewTop
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/large_text" />
-    </android.support.v4.widget.NestedScrollView>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/large_text" />
+        </com.apm29.kotlinapp.view.behavior.CustomScrollViewTop>
 
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
+        <com.apm29.kotlinapp.view.behavior.CustomScrollViewBottom
+            android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="123"
-            android:textColor="@color/colorAccent" />
-    </android.support.v4.widget.NestedScrollView>
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/large_text"
+                android:textColor="@color/colorAccent" />
+        </com.apm29.kotlinapp.view.behavior.CustomScrollViewBottom>
+    </com.apm29.kotlinapp.view.pager.DragLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

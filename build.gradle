@@ -8,6 +8,8 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         /*classpath'com.neenbedankt.gradle.plugins:android-apt:1.8'*/
+
+        classpath 'com.tencent.bugly:symtabfileuploader:latest.release' //bugly符号表上传插件
     }
 }
 allprojects {

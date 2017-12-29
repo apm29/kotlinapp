@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * 这是一个viewGroup容器，实现上下两个frameLayout拖动切换
+ * 这是一个viewGroup容器，实现上下两个Layout拖动切换
  *
  * @author sistone.Zhang
  */
@@ -24,12 +24,13 @@ public class DragLayout extends ViewGroup {
     private GestureDetectorCompat gestureDetector;
 
     /* 上下两个frameLayout，在Activity中注入fragment */
-    private View frameView1, frameView2;
+    private View layoutTop, layoutBottom;
     private int viewHeight;
     private static final int VEL_THRESHOLD = 100; // 滑动速度的阈值，超过这个绝对值认为是上下
     private static final int DISTANCE_THRESHOLD = 100; // 单位是像素，当上下滑动速度不够时，通过这个阈值来判定是应该粘到顶部还是底部
     private int downTop1; // 手指按下的时候，frameView1的getTop值
     private ShowNextPageNotifier nextPageListener; // 手指松开是否加载下一页的notifier
+    private ShowPrePageNotifier prePageListener;//上一页面
 
     public DragLayout(Context context) {
         this(context, null);
@@ -52,8 +53,8 @@ public class DragLayout extends ViewGroup {
     protected void onFinishInflate() {
         super.onFinishInflate();
         // 跟findviewbyId一样，初始化上下两个view
-        frameView1 = getChildAt(0);
-        frameView2 = getChildAt(1);
+        layoutTop = getChildAt(0);
+        layoutBottom = getChildAt(1);
     }
 
     class YScrollDetector extends SimpleOnGestureListener {
@@ -82,7 +83,7 @@ public class DragLayout extends ViewGroup {
         public void onViewPositionChanged(View changedView, int left, int top,
                                           int dx, int dy) {
             int childIndex = 1;
-            if (changedView == frameView2) {
+            if (changedView == layoutBottom) {
                 childIndex = 2;
             }
 
@@ -111,13 +112,13 @@ public class DragLayout extends ViewGroup {
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
             int finalTop = top;
-            if (child == frameView1) {
+            if (child == layoutTop) {
                 // 拖动的时第一个view
                 if (top > 0) {
                     // 不让第一个view往下拖，因为顶部会白板
                     finalTop = 0;
                 }
-            } else if (child == frameView2) {
+            } else if (child == layoutBottom) {
                 // 拖动的时第二个view
                 if (top < 0) {
                     // 不让第二个view网上拖，因为底部会白板
@@ -140,13 +141,13 @@ public class DragLayout extends ViewGroup {
      */
     private void onViewPosChanged(int viewIndex, int posTop) {
         if (viewIndex == 1) {
-            int offsetTopBottom = viewHeight + frameView1.getTop()
-                    - frameView2.getTop();
-            frameView2.offsetTopAndBottom(offsetTopBottom);
+            int offsetTopBottom = viewHeight + layoutTop.getTop()
+                    - layoutBottom.getTop();
+            layoutBottom.offsetTopAndBottom(offsetTopBottom);
         } else if (viewIndex == 2) {
-            int offsetTopBottom = frameView2.getTop() - viewHeight
-                    - frameView1.getTop();
-            frameView1.offsetTopAndBottom(offsetTopBottom);
+            int offsetTopBottom = layoutBottom.getTop() - viewHeight
+                    - layoutTop.getTop();
+            layoutTop.offsetTopAndBottom(offsetTopBottom);
         }
 
         // 有的时候会默认白板，这个很恶心。后面有时间再优化
@@ -155,10 +156,10 @@ public class DragLayout extends ViewGroup {
 
     private void animTopOrBottom(View releasedChild, float yvel) {
         int finalTop = 0; // 默认是粘到最顶端
-        if (releasedChild == frameView1) {
+        if (releasedChild == layoutTop) {
             // 拖动第一个view松手
             if (yvel < -VEL_THRESHOLD
-                    || (downTop1 == 0 && frameView1.getTop() < -DISTANCE_THRESHOLD)) {
+                    || (downTop1 == 0 && layoutTop.getTop() < -DISTANCE_THRESHOLD)) {
                 // 向上的速度足够大，就滑动到顶端
                 // 向上滑动的距离超过某个阈值，就滑动到顶端
                 finalTop = -viewHeight;
@@ -174,6 +175,10 @@ public class DragLayout extends ViewGroup {
                     || (downTop1 == -viewHeight && releasedChild.getTop() > DISTANCE_THRESHOLD)) {
                 // 保持原地不动
                 finalTop = viewHeight;
+
+                if (prePageListener!=null){
+                    prePageListener.onDragPre();
+                }
             }
         }
 
@@ -186,7 +191,7 @@ public class DragLayout extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
 
-        if (frameView1.getBottom() > 0 && frameView1.getTop() < 0) {
+        if (layoutTop.getBottom() > 0 && layoutTop.getTop() < 0) {
             // view粘到顶部或底部，正在动画中的时候，不处理touch事件
             return false;
         }
@@ -202,7 +207,7 @@ public class DragLayout extends ViewGroup {
         if (action == MotionEvent.ACTION_DOWN) {
             // action_down时就让mDragHelper开始工作，否则有时候导致异常 他大爷的
             mDragHelper.processTouchEvent(ev);
-            downTop1 = frameView1.getTop();
+            downTop1 = layoutTop.getTop();
         }
 
         return shouldIntercept && yScroll;
@@ -220,18 +225,18 @@ public class DragLayout extends ViewGroup {
         // 只在初始化的时候调用
         // 一些参数作为全局变量保存起来
 
-        if (frameView1.getTop() == 0) {
+        if (layoutTop.getTop() == 0) {
             // 只在初始化的时候调用
             // 一些参数作为全局变量保存起来
-            frameView1.layout(l, 0, r, b - t);
-            frameView2.layout(l, 0, r, b - t);
+            layoutTop.layout(l, 0, r, b - t);
+            layoutBottom.layout(l, 0, r, b - t);
 
-            viewHeight = frameView1.getMeasuredHeight();
-            frameView2.offsetTopAndBottom(viewHeight);
+            viewHeight = layoutTop.getMeasuredHeight();
+            layoutBottom.offsetTopAndBottom(viewHeight);
         } else {
             // 如果已被初始化，这次onLayout只需要将之前的状态存入即可
-            frameView1.layout(l, frameView1.getTop(), r, frameView1.getBottom());
-            frameView2.layout(l, frameView2.getTop(), r, frameView2.getBottom());
+            layoutTop.layout(l, layoutTop.getTop(), r, layoutTop.getBottom());
+            layoutBottom.layout(l, layoutBottom.getTop(), r, layoutBottom.getBottom());
         }
     }
 
@@ -272,11 +277,19 @@ public class DragLayout extends ViewGroup {
         return result | (childMeasuredState & MEASURED_STATE_MASK);
     }
 
-    public void setNextPageListener(ShowNextPageNotifier nextPageListener) {
+    public DragLayout setNextPageListener(ShowNextPageNotifier nextPageListener) {
         this.nextPageListener = nextPageListener;
+        return this;
+    }
+    public DragLayout setPrePageListener(ShowPrePageNotifier prePageListener) {
+        this.prePageListener = prePageListener;
+        return this;
     }
 
     public interface ShowNextPageNotifier {
         public void onDragNext();
+    }
+    public interface ShowPrePageNotifier {
+        public void onDragPre();
     }
 }
