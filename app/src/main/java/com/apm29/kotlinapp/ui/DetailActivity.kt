@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.apm29.kotlinapp.R
 import com.apm29.kotlinapp.base.BaseActivity
 import com.apm29.kotlinapp.base.BasePresenter
+import com.apm29.kotlinapp.utils.toDingDetail
 import com.apm29.kotlinapp.view.pager.DragLayout
 
 class DetailActivity : BaseActivity<BasePresenter>() {
@@ -26,6 +27,7 @@ class DetailActivity : BaseActivity<BasePresenter>() {
                 }.setNextPageListener {
                     baseRefreshLayout.isEnableRefresh = false
                 }
+        toDingDetail(this)
     }
 
     override fun getPresenter(): BasePresenter {

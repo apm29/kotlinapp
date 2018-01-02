@@ -36,3 +36,7 @@ fun toSudoku(context: Context, type: DingScreenLockActivity.SudokuType) {
 fun toDetail(context: Context) {
     context.startActivity(Intent(context, DetailActivity::class.java))
 }
+
+fun toDingDetail(context: Context) {
+    context.startActivity(Intent(context, DingDetailActivity::class.java))
+}

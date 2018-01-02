@@ -60,6 +60,7 @@
         <activity android:name=".ui.ding.DingSplashActivity" />
         <activity android:name=".ui.ding.DingScreenLockActivity" />
         <activity android:name=".ui.DetailActivity" />
+        <activity android:name=".ui.DingDetailActivity" />
 
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity
