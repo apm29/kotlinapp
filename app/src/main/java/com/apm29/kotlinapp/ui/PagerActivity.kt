@@ -3,13 +3,11 @@ package com.apm29.kotlinapp.ui
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.RectF
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.view.ViewGroup
 import com.apm29.guideview.Focus
 import com.apm29.guideview.NightVeil
@@ -21,9 +19,6 @@ import com.apm29.kotlinapp.utils.showToast
 import com.apm29.kotlinapp.utils.toDetail
 import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
-import kotlinx.android.synthetic.main.activity_home_layout.*
-import me.kaelaela.verticalviewpager.VerticalViewPager
-import me.kaelaela.verticalviewpager.transforms.DefaultTransformer
 
 class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
     override fun enableRefresh(): Boolean {
@@ -57,7 +52,6 @@ class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
                 return 4
             }
         }
-        pager.setPageTransformer(false, DefaultTransformer())
         taber.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
