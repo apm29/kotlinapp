@@ -51,7 +51,10 @@ public class XWebView extends WebView {
 
 
     public XWebView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        mContext = context;
+        m_bClearHistory = true;
+        init();
     }
 
 
@@ -108,6 +111,8 @@ public class XWebView extends WebView {
 
         setWebViewClient(new XWebViewClient(this));
         setWebChromeClient(new XWebChromeClient(this));
+
+        getSettings().setUseWideViewPort(true);
     }
 
 
