@@ -29,7 +29,7 @@ class DingScreenLockActivity : BaseActivity<DingScreenLockActivity.SudokuPresent
     lateinit var lockType: SudokuType
     lateinit var lockPass: String
 
-    override fun enableRefresh() = false
+    override val enableRefresh get() = false
     override var showStatusBar = false
     override fun onNewData(data: Any?) {
     }

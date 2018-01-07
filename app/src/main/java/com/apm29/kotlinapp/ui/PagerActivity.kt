@@ -21,9 +21,10 @@ import com.apm29.kotlinapp.view.pager.LazyViewPager
 import com.apm29.kotlinapp.view.pager.PagerFragment
 
 class PagerActivity : BaseActivity<PagerActivity.PagerPresenter>() {
-    override fun enableRefresh(): Boolean {
-        return false
-    }
+    override val enableRefresh: Boolean
+        get() {
+            return false
+        }
     override fun onError(error: String?) {
     }
 

@@ -41,9 +41,10 @@ open class SampleMaterialActivity : BaseActivity<SampleMaterialActivity.Material
         return@lazy findViewById<RecyclerView>(R.id.recycler_view)
     }
 
-    override fun enableLoadMore(): Boolean {
-        return true
-    }
+    override val enableLoadMore: Boolean
+        get() {
+            return true
+        }
 
     override fun onNewData(data: Any?) {
         if (data != null && data is DataList && data.res == 0) {

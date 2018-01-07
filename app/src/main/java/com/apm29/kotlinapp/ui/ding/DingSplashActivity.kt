@@ -23,7 +23,7 @@ import android.net.Uri
 
 class DingSplashActivity : BaseActivity<DingSplashActivity.Presenter>() {
     override var showStatusBar: Boolean = false
-    override fun enableRefresh() = false
+    override val enableRefresh get() = false
     override fun onNewData(data: Any?) {
         if (data is AppConfig) { //appConfig
             if (data.activityPopupSwitch != 0 && data.activityPopup != null) {//有弹窗

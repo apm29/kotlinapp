@@ -9,9 +9,10 @@ import com.apm29.kotlinapp.utils.toDingDetail
 import com.apm29.kotlinapp.view.pager.DragLayout
 
 class DetailActivity : BaseActivity<BasePresenter>() {
-    override fun enableRefresh(): Boolean {
-        return true
-    }
+    override val enableRefresh: Boolean
+        get() {
+            return true
+        }
 
     override fun onNewData(data: Any?) {
     }

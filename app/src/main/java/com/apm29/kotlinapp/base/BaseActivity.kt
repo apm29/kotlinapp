@@ -24,7 +24,10 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     var actionBarHeight = 0
     open var drawStatusBar = false
     open var showStatusBar = true
-    override var mDisposables:CompositeDisposable= CompositeDisposable()
+    open protected val enableRefresh: Boolean = true
+    open protected val enableLoadMore: Boolean = false
+
+    override var mDisposables: CompositeDisposable = CompositeDisposable()
     protected val baseEmptyContainer: FrameLayout by lazy {
         findViewById<FrameLayout>(R.id.fl_empty_container)
     }
@@ -43,7 +46,8 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     protected val ivLoading: ImageView by lazy {
         findViewById<ImageView>(R.id.iv_base_loading)
     }
-    protected  var handler=Handler()
+
+    protected var handler = Handler()
 
     override fun onDestroy() {
         super.onDestroy()
@@ -84,6 +88,7 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         super.setContentView(baseContainer)
     }
 
+
     open protected fun setupActionBar(savedInstanceState: Bundle?) {
         supportActionBar?.hide()
         initSystemBar()
@@ -120,7 +125,7 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
         val tintManager = SystemBarTintManager(this)
         statusBarHeight = tintManager.config.statusBarHeight
         actionBarHeight = tintManager.config.actionBarHeight
-        if (!showStatusBar){//不显示statusBar时略过设置
+        if (!showStatusBar) {//不显示statusBar时略过设置
             return
         }
         tintManager.isStatusBarTintEnabled = true
@@ -150,13 +155,12 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
 
     }
 
-
-     /**
+    /**
      * 为miui设置状态栏颜色
      * @param darkmode 是否黑色
      * @param activity 当前Activity
      */
-     @SuppressLint("PrivateApi")
+    @SuppressLint("PrivateApi")
     private fun setStatusBarDarkMode(darkmode: Boolean, activity: Activity) {
         val clazz = activity.window.javaClass
         try {
@@ -186,18 +190,11 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     }
 
     open protected fun setupRefresh(savedInstanceState: Bundle?) {
-        baseRefreshLayout.isEnableRefresh = enableRefresh()
-        baseRefreshLayout.isEnableLoadmore = enableLoadMore()
+        baseRefreshLayout.isEnableRefresh = enableRefresh
+        baseRefreshLayout.isEnableLoadmore = enableLoadMore
         baseRefreshLayout.setOnRefreshListener {
             onStartPullLoad(baseRefreshLayout)
         }
-    }
-    open protected fun enableRefresh(): Boolean {
-        return true
-    }
-
-    open protected fun enableLoadMore(): Boolean {
-        return false
     }
 
     open protected fun onStartPullLoad(srlRefreshLayout: SmartRefreshLayout) {
@@ -212,7 +209,7 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     abstract fun getPresenter(): T
 
     override fun startLoading() {
-        if (!enableRefresh()) {
+        if (!enableRefresh) {
             baseEmptyContainer.visibility = View.GONE
             baseLoadingContainer.visibility = View.VISIBLE
             val rotateAnimation = RotateAnimation(
@@ -223,25 +220,25 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
             rotateAnimation.duration = 300
             rotateAnimation.repeatCount = RotateAnimation.INFINITE
             ivLoading?.startAnimation(rotateAnimation)
-        }else{
+        } else {
             baseRefreshContainer.visibility = View.VISIBLE
-            baseEmptyContainer.visibility=View.GONE
+            baseEmptyContainer.visibility = View.GONE
             baseLoadingContainer.visibility = View.GONE
             baseRefreshLayout.autoRefresh(300)
         }
     }
 
     override fun stopLoading() {
-        if (enableRefresh()) {
+        if (enableRefresh) {
             handler.postDelayed({
                 baseEmptyContainer.visibility = View.GONE
                 baseLoadingContainer.visibility = View.GONE
                 baseRefreshLayout.finishRefresh(300)
                 baseRefreshLayout.finishLoadmore(300)
-            },300)
+            }, 300)
         } else {
             baseRefreshContainer.visibility = View.VISIBLE
-            baseEmptyContainer.visibility=View.GONE
+            baseEmptyContainer.visibility = View.GONE
             baseLoadingContainer.visibility = View.GONE
             baseRefreshLayout.finishRefresh(300)
             baseRefreshLayout.finishLoadmore(300)
@@ -249,15 +246,15 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     }
 
     override fun onEmpty() {
-        if (!enableRefresh()) {
+        if (!enableRefresh) {
             baseEmptyContainer.visibility = View.VISIBLE
             baseLoadingContainer.visibility = View.GONE
             baseRefreshLayout.visibility = View.GONE
             baseRefreshLayout.finishRefresh(300)
             baseRefreshLayout.finishLoadmore(300)
-        }else{
+        } else {
             baseRefreshContainer.visibility = View.VISIBLE
-            baseEmptyContainer.visibility=View.GONE
+            baseEmptyContainer.visibility = View.GONE
             baseLoadingContainer.visibility = View.GONE
             baseRefreshLayout.finishRefresh(300)
             baseRefreshLayout.finishLoadmore(300)
@@ -265,17 +262,17 @@ abstract class BaseActivity<T : BasePresenter> : AppCompatActivity(), BaseUI {
     }
 
     override fun onError(error: String?) {
-        showToast(error?:"加载失败")
-        if (enableRefresh()) {
+        showToast(error ?: "加载失败")
+        if (enableRefresh) {
             handler.postDelayed({
                 baseEmptyContainer.visibility = View.GONE
                 baseLoadingContainer.visibility = View.GONE
                 baseRefreshLayout.finishRefresh(300)
                 baseRefreshLayout.finishLoadmore(300)
-            },300)
+            }, 300)
         } else {
             baseRefreshContainer.visibility = View.VISIBLE
-            baseEmptyContainer.visibility=View.GONE
+            baseEmptyContainer.visibility = View.GONE
             baseLoadingContainer.visibility = View.GONE
             baseRefreshLayout.finishRefresh(300)
             baseRefreshLayout.finishLoadmore(300)

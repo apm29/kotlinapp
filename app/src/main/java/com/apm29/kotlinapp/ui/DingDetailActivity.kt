@@ -22,9 +22,10 @@ import com.apm29.kotlinapp.view.pager.PagerFragment
 import me.kaelaela.verticalviewpager.transforms.DefaultTransformer
 
 class DingDetailActivity : BaseActivity<BasePresenter>() {
-    override fun enableRefresh(): Boolean {
-        return false
-    }
+    override val enableRefresh: Boolean
+        get() {
+            return false
+        }
 
     override fun onNewData(data: Any?) {
     }

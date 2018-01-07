@@ -40,3 +40,7 @@ fun toDetail(context: Context) {
 fun toDingDetail(context: Context) {
     context.startActivity(Intent(context, DingDetailActivity::class.java))
 }
+
+fun toDollars(context: Context) {
+    context.startActivity(Intent(context,DollarsActivity::class.java))
+}

@@ -37,7 +37,10 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
         findViewById<TextView>(R.id.tv_ding).setOnClickListener{
             toDing(this)
         }
-        toDetail(this)
+        //toDetail(this)
+        findViewById<TextView>(R.id.tv_dollars).setOnClickListener {
+            toDollars(this)
+        }
     }
 
     override fun getPresenter(): SplashPresenter = SplashPresenter(this)

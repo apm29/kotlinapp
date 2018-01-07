@@ -91,9 +91,10 @@ class GankIOListActivity : BaseListActivity<ResultsItem, GankIOListActivity.Home
         }
     }
 
-    override fun enableLoadMore(): Boolean {
-        return true
-    }
+    override val enableLoadMore: Boolean
+        get() {
+            return true
+        }
 
     private fun setUrlClickSpan(tv: TextView?) {
         val text = tv?.text
