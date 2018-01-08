@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
@@ -31,6 +32,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
+
+import com.apm29.kotlinapp.utils.Utils;
+import com.apm29.kotlinapp.utils.UtilsKt;
 
 
 /**
@@ -113,6 +117,14 @@ public class XWebView extends WebView {
         setWebChromeClient(new XWebChromeClient(this));
 
         getSettings().setUseWideViewPort(true);
+        addJavascriptInterface(new Visualizer(),"visualizer");
+
+    }
+    class Visualizer{
+        @JavascriptInterface
+        public  void resume(){
+            UtilsKt.showToast("resume");
+        }
     }
 
 
