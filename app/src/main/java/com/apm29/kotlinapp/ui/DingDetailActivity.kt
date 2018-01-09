@@ -35,11 +35,12 @@ class DingDetailActivity : BaseActivity<BasePresenter>() {
     }
 
     override fun setupViews(savedInstanceState: Bundle?) {
-        findViewById<AutoDragLayout>(R.id.drag_layout).setNextPageListener(object : AutoDragLayout.ShowNextPageNotifier {
+        findViewById<AutoDragLayout>(R.id.drag_layout).nextPageListener=(object : AutoDragLayout.ShowNextPageNotifier {
             override fun onDragNext() {
                 baseRefreshLayout.isEnableRefresh=false
             }
-        }).setPrePageListener(object :AutoDragLayout.ShowPrePageNotifier{
+        })
+        findViewById<AutoDragLayout>(R.id.drag_layout).prePageListener=(object :AutoDragLayout.ShowPrePageNotifier{
             override fun onDragPre() {
                 baseRefreshLayout.isEnableRefresh=true
             }

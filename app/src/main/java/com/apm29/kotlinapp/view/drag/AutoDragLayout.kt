@@ -3,6 +3,7 @@ package com.apm29.kotlinapp.view.drag
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v4.view.GestureDetectorCompat
+import android.support.v4.view.ScrollingView
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.ViewDragHelper
@@ -11,9 +12,12 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import com.apm29.kotlinapp.utils.Utils
+import com.apm29.kotlinapp.utils.getWindowWidth
 
 /**
- * Created by dingzhu on 2017/12/29.
+ * 自动分隔滑动
+ * Created by apm29 on 2017/12/29.
  */
 class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(context, attributes) {
 
@@ -21,11 +25,26 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
     var gestureDetector: GestureDetectorCompat
     /**滑动状态*/
     var state = State.IDLE
+    /**页面状态 第一页/第二页*/
     var page = Page.FIRST
     /**速度阈值*/
-    var velocityThreshold: Int = 100
+    private val velocityThreshold: Int = 100
     /**距离阈值*/
-    var distanceThreshold: Int = 100
+    private val distanceThreshold: Int = 100
+
+    /**阻力系数*/
+    private val resistanceCoefficient = 3
+    /**两个子View*/
+    lateinit var topView: View
+    lateinit var bottomView: View
+    /**view的高度*/
+    var topHeight: Int = 0
+    var bottomHeight: Int = 0
+    /**是否向下滑动*/
+    var scrollDown = true
+    var scrollHorizontal =true
+
+    private var flingDetector: GestureDetectorCompat
 
     init {
         dragHelper = ViewDragHelper.create(this, object : ViewDragHelper.Callback() {
@@ -41,8 +60,8 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
                 } else if (child == bottomView) {
                     if (top < 0) return 0
                 }
-                //滑动阻力加大
-                return child.top + (top - child.top) / 3
+                //滑动阻力加大 resistanceCoefficient阻力系数,越大越难拉
+                return child.top + (top - child.top) / resistanceCoefficient
             }
 
             override fun getViewVerticalDragRange(child: View): Int {
@@ -59,13 +78,46 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
         })
         gestureDetector = GestureDetectorCompat(this.context, object : GestureDetector.SimpleOnGestureListener() {
             override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+                println("distanceX = $distanceX")
                 scrollDown = distanceY > 0
-                return Math.abs(distanceY) > Math.abs(distanceX)
+                scrollHorizontal = Math.abs(distanceX) > Math.abs(distanceY)
+                return Math.abs(distanceX) < Math.abs(distanceY)
+            }
+
+        })
+        flingDetector = GestureDetectorCompat(this.context, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                //左右滑动
+                if (Math.abs(velocityX) > Math.abs(velocityY)) {
+                    if (velocityX < 0)
+                        onRightFling()
+                    else
+                        onLeftFling()
+                }
+                return super.onFling(e1, e2, velocityX, velocityY)
             }
         })
+
+    }
+    var onScrollHorizontalOverListener: OnScrollHorizontalOverListener?=null
+
+    interface OnScrollHorizontalOverListener{
+        fun left()
+        fun right()
+    }
+    private fun onLeftFling() {
+        onScrollHorizontalOverListener?.left()
     }
 
-    var scrollDown = false
+    private fun onRightFling() {
+        onScrollHorizontalOverListener?.right()
+    }
+
+    private val SCREEN_WIDTH = getWindowWidth()
+    private val WIDTH = SCREEN_WIDTH / 4
+    fun scrollToBottom() {
+        smoothScrollTopBottom(topView, (-(velocityThreshold+1)).toFloat())
+    }
 
     /**
      * 滑动到最顶端或最低端
@@ -80,7 +132,7 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
             }
 
         } else if (releasedChild == bottomView) {
-            if (yvel > velocityThreshold || releasedChild.top > distanceThreshold) {
+            if (yvel > velocityThreshold * 5 || releasedChild.top > distanceThreshold) {
                 scrollTop = topHeight//滑到上一页
                 page = Page.FIRST
                 prePageListener?.onDragPre()
@@ -114,28 +166,26 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
 
     var nextPageListener: ShowNextPageNotifier? = null
     var prePageListener: ShowPrePageNotifier? = null
-    fun setNextPageListener(nextPageListener: ShowNextPageNotifier): AutoDragLayout {
-        this.nextPageListener = nextPageListener
-        return this
-    }
 
-    fun setPrePageListener(prePageListener: ShowPrePageNotifier): AutoDragLayout {
-        this.prePageListener = prePageListener
-        return this
-    }
-
+    //    fun setNextPageListener(nextPageListener: ShowNextPageNotifier): AutoDragLayout {
+//        this.nextPageListener = nextPageListener
+//        return this
+//    }
+//
+//    fun setPrePageListener(prePageListener: ShowPrePageNotifier): AutoDragLayout {
+//        this.prePageListener = prePageListener
+//        return this
+//    }
     interface ShowNextPageNotifier {
         fun onDragNext()
+
     }
 
     interface ShowPrePageNotifier {
         fun onDragPre()
+
     }
 
-    lateinit var topView: View
-    lateinit var bottomView: View
-    var topHeight: Int = 0
-    var bottomHeight: Int = 0
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         topView = getChildAt(0)
         bottomView = getChildAt(1)
@@ -151,34 +201,42 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
         }
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        flingDetector.onTouchEvent(ev)
+        return super.dispatchTouchEvent(ev)
+    }
+    var requestNotIntercept = false//不拦截
+    var isFirstMoveEvent=true
     @SuppressLint("RestrictedApi")
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         val verticalScroll = gestureDetector.onTouchEvent(ev)
-        var interceptTouchEvent = false
+        var interceptTouchEvent = ev.action == MotionEvent.ACTION_DOWN
         dragHelper.processTouchEvent(ev)
         //自动滑动的时候返回
-        if (state == State.AUTO_SCROLL)
+        if (state == State.AUTO_SCROLL || requestNotIntercept)
             return false
         //处理滑动拦截,拦截后会交给dragHelper,做出滑动阻尼效果
-        if (page == Page.FIRST && topView is NestedScrollView) {
-            val scroll = topView as NestedScrollView
-            val atBottom = topView.scrollY + topHeight == scroll.computeVerticalScrollRange()
-            interceptTouchEvent = atBottom && scrollDown//在底端时拦截
-        } else if (page == Page.SECOND && bottomView is NestedScrollView) {
-            val scroll = bottomView as NestedScrollView
-            val atTop = scroll.scrollY == 0
-            interceptTouchEvent = atTop && !scrollDown//在底端时拦截
+        if (page == Page.FIRST && topView is ScrollingView) {
+            val atBottom = topView.scrollY + topHeight == (topView as NestedScrollView).computeVerticalScrollRange()
+            interceptTouchEvent = atBottom && scrollDown//在底端上滑时拦截
+        } else if (page == Page.SECOND) {
+            val atTop = bottomView.scrollY == 0
+            interceptTouchEvent = atTop && !scrollDown//在顶端下滑时拦截
+            println("interceptTouchEvent = ${interceptTouchEvent}")
         }
-        //其他的layout没有阻尼效果,需要自己加,通过滑动速度来下拉上滑的
+        if (interceptTouchEvent) state = State.DRAG//边界滑动处理
+        //其他的layout没有阻尼效果,需要自己加,只能通过滑动速度来下拉上滑的
+
 
         //误差修正
-        if (page == Page.FIRST) {
-            topView.layout(0, 0, topView.right, topHeight)
-            bottomView.layout(0, topHeight, bottomView.right, topHeight + bottomHeight)
-        } else if (page == Page.SECOND) {
-            bottomView.layout(0, 0, bottomView.right, bottomHeight)
-            topView.layout(0, -topHeight, topView.right, 0)
-        }
+        if (state != State.DRAG)
+            if (page == Page.FIRST) {
+                topView.layout(0, 0, topView.right, topHeight)
+                bottomView.layout(0, topHeight, bottomView.right, topHeight + bottomHeight)
+            } else if (page == Page.SECOND) {
+                bottomView.layout(0, 0, bottomView.right, bottomHeight)
+                topView.layout(0, -topHeight, topView.right, 0)
+            }
         return interceptTouchEvent && verticalScroll
     }
 
@@ -188,7 +246,7 @@ class AutoDragLayout(context: Context, attributes: AttributeSet) : ViewGroup(con
     }
 
     enum class State {
-        DRAG, SCROLL_TOP, SCROLL_BOTTOM, AUTO_SCROLL, IDLE
+        DRAG, AUTO_SCROLL, IDLE
     }
 
     enum class Page {
