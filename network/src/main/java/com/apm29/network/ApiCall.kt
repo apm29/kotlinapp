@@ -237,7 +237,7 @@ class ApiCall {
             // 新的请求
             val newRequest = oldRequest.newBuilder()
                     .post(newRequestBody.build())
-                    .method(oldRequest.method(), oldRequest.body())
+                    .method(oldRequest.method(), newRequestBody.build())
                     .url(url.build())
                     .build()
             return chain.proceed(newRequest)

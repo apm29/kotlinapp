@@ -100,5 +100,11 @@ object DingTasks {
         return defaultTask(ApiCall.dingApi(context)
                 .create(DingAPI::class.java).userInfo(JPushInterface.getRegistrationID(context)),listener)
     }
+    fun queryInProgressProjects(context: Context,listener: BaseUI):Disposable{
+        return defaultTask(
+                ApiCall.dingApi(context).create(DingAPI::class.java).queryProgressProjects(JPushInterface.getRegistrationID(context)),
+                listener
+        )
+    }
 
 }

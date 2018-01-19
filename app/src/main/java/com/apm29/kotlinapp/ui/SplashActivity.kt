@@ -7,9 +7,8 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.MotionEvent
-import android.view.View
-import android.widget.HeaderViewListAdapter
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.apm29.beanmodule.beans.ding.ProjectBean
@@ -21,8 +20,6 @@ import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.ui.adapter.HeaderRVAdapter
 import com.apm29.kotlinapp.utils.*
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.PermissionNo
 import com.yanzhenjie.permission.PermissionYes
@@ -35,8 +32,34 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
         showToast(error ?: "加载失败")
     }
     override fun onNewData(data: Any?) {
-    }
+        if (data is ArrayList<*>){
+            val arrayList = data as ArrayList<ProjectCategory>
+            val titles= Array<String>(arrayList.size,{
+                return@Array arrayList[it].categoryName
+            })
+            val emptyList = emptyList<ProjectBean>()
+            val mainData = Array<List<ProjectBean>>(arrayList.size,{
+                return@Array arrayList[it].spList ?: emptyList
+            })
+            adapter = object : HeaderRVAdapter<ProjectBean>(
+                    titles,mainData
+            ) {
+                override fun getHeaderHolder(parent: ViewGroup?): BaseHolder {
+                    val view = LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1, parent, false)
+                    view.layoutParams=RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,RecyclerView.LayoutParams.WRAP_CONTENT)
+                    return DefaultHeaderHolder(view)
+                }
 
+                override fun getItemHolder(parent: ViewGroup?): BaseHolder {
+                    return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1,parent,false))
+                }
+
+            }
+            recyclerView.adapter=adapter
+        }
+    }
+    lateinit var recyclerView:RecyclerView
+    lateinit var adapter:HeaderRVAdapter<ProjectBean>
     override fun getDefaultLayout() = R.layout.activity_splash
 
     private val imgUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1515994821421&di=58a28998e0ecd9f.gif"
@@ -59,11 +82,21 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
         val iv = findViewById<ImageView>(R.id.iv_glide)
         Glide.with(this).load(imgUrl).override(300, 300).into(iv)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        recyclerView.adapter = HeaderRVAdapter<String>(arrayOf("ASD", "QWE"),
-                arrayOf(arrayListOf("1","1","1","1","1","1","1"), arrayListOf("2","2","2","2","1","1","1","1","1","1")))
+        recyclerView.adapter = object :HeaderRVAdapter<String>(
+                arrayOf("ASD", "QWE"),
+                arrayOf(arrayListOf("1","2","3","4","5","6","7"), arrayListOf("A","B","C","D","E","F","G","H","I","J"))
+        ){
+            override fun getHeaderHolder(parent:ViewGroup): BaseHolder {
+                return DefaultHeaderHolder(LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1,parent,false))
+            }
+
+            override fun getItemHolder(parent:ViewGroup): BaseHolder {
+                return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1,parent,false))
+            }
+        }
     }
 
 
@@ -73,6 +106,7 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         mPresenter.getPermissions(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE)
+        mPresenter.getProgressing()
     }
 
     // 成功回调的方法，用注解即可，这里的300就是请求时的requestCode。
@@ -100,6 +134,8 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
                     .callback(ui)
                     .start()
         }
-
+        fun getProgressing(){
+            DingTasks.queryInProgressProjects( ui as Context,ui)
+        }
     }
 }

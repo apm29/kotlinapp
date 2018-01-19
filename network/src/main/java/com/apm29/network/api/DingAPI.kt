@@ -54,6 +54,12 @@ interface DingAPI{
     @FormUrlEncoded
     @POST("user/userInfo.json")
     fun userInfo(
-            @Field("registrationId")registrationID: String?
+            @Field("registrationId")registrationID: String? = ""
     ): Observable<BaseResponse<UserInfo>>
+
+    @FormUrlEncoded
+    @POST("project/queryInProgressProjectV3.json")
+    fun queryProgressProjects(
+            @Field("registrationId")registrationID: String? = ""
+    ): Observable<BaseResponse<ArrayList<ProjectCategory>>>
 }
