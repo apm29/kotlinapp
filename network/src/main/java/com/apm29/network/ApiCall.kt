@@ -52,8 +52,8 @@ class ApiCall {
          * 各类主机地址
          */
         /**main url**/
-        private val main = if (DEBUG) "http://test.api.zhaosha.com/v3/" else "https://api.zhaosha.com/v3/"
-        private val ding =  "http://app-api.dinglc.com.cn/rest/"
+        private val main = "https://api.zhaosha.com/v3/"
+        private val ding =  "http://app-api.dinglc.com.cn:9999/rest/"
         private val gank = "http://gank.io/api/"
         private val oneList = "http://v3.wufazhuce.com:8000/api/onelist/"
         /**
@@ -224,11 +224,13 @@ class ApiCall {
             //加入新的公共post参数
             newRequestBody
                     .add("isEnc","N")
-                    .add("versionCode", ApiCall.versionCode.toString())
+                    .add("versionCode", ApiCall.versionCode.toString()+3)
                     .add("token", AccountCache.getToken(getApp()?:null))
                     .add("deviceType","2")
                     .add("timestamp",System.currentTimeMillis().toString())
                     .add("deviceSerialId",NetworkUtils.getAndroidId(Config.APP))
+                    .add("supperUserId","")
+                    .add("phoneSystemVersion",Build.VERSION.RELEASE + "")
                     .add("versionName",ApiCall.versionName)
                     .add("appType","1001")
                     .add("channel","default")
