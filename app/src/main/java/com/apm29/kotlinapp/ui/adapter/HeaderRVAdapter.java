@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.apm29.beanmodule.beans.ding.ProjectBean;
+import com.apm29.kotlinapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +141,7 @@ public abstract class HeaderRVAdapter<T> extends RecyclerView.Adapter<HeaderRVAd
 
         public DefaultHeaderHolder(View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(android.R.id.text1);
+            tvTitle = itemView.findViewById(R.id.text1);
         }
 
 
@@ -156,7 +157,7 @@ public abstract class HeaderRVAdapter<T> extends RecyclerView.Adapter<HeaderRVAd
 
         public DefaultItemHolder(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView;
+            tvTitle = itemView.findViewById(R.id.text1);
         }
 
 

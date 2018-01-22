@@ -45,13 +45,12 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
                     titles,mainData
             ) {
                 override fun getHeaderHolder(parent: ViewGroup?): BaseHolder {
-                    val view = LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1, parent, false)
-                    view.layoutParams=RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,RecyclerView.LayoutParams.WRAP_CONTENT)
+                    val view = LayoutInflater.from(this@SplashActivity).inflate(R.layout.list_item_1, parent, false)
                     return DefaultHeaderHolder(view)
                 }
 
                 override fun getItemHolder(parent: ViewGroup?): BaseHolder {
-                    return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1,parent,false))
+                    return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(R.layout.list_item_1,parent,false))
                 }
 
             }
@@ -85,18 +84,7 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        recyclerView.adapter = object :HeaderRVAdapter<String>(
-                arrayOf("ASD", "QWE"),
-                arrayOf(arrayListOf("1","2","3","4","5","6","7"), arrayListOf("A","B","C","D","E","F","G","H","I","J"))
-        ){
-            override fun getHeaderHolder(parent:ViewGroup): BaseHolder {
-                return DefaultHeaderHolder(LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1,parent,false))
-            }
 
-            override fun getItemHolder(parent:ViewGroup): BaseHolder {
-                return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(android.R.layout.simple_list_item_1,parent,false))
-            }
-        }
     }
 
 

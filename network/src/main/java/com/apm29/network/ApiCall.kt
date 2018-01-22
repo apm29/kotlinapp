@@ -195,7 +195,7 @@ class ApiCall {
                     }
             val requestBody = oldRequest.body()
 
-            var newRequestBody =FormBody.Builder()
+            val newRequestBody =FormBody.Builder()
             if (requestBody is FormBody){
                 var i=0
                 while (i<requestBody.size()){//加入原有post参数
@@ -225,7 +225,7 @@ class ApiCall {
             newRequestBody
                     .add("isEnc","N")
                     .add("versionCode", ApiCall.versionCode.toString()+3)
-                    .add("token", AccountCache.getToken(getApp()?:null))
+                    .add("token", AccountCache.getToken(getApp()))
                     .add("deviceType","2")
                     .add("timestamp",System.currentTimeMillis().toString())
                     .add("deviceSerialId",NetworkUtils.getAndroidId(Config.APP))
@@ -239,7 +239,7 @@ class ApiCall {
             // 新的请求
             val newRequest = oldRequest.newBuilder()
                     .post(newRequestBody.build())
-                    .method(oldRequest.method(), newRequestBody.build())
+                    .method(oldRequest.method(), if(oldRequest.method()=="GET")null else newRequestBody.build())
                     .url(url.build())
                     .build()
             return chain.proceed(newRequest)
