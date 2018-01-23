@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import com.apm29.beanmodule.beans.ding.ProjectBean
 import com.apm29.beanmodule.beans.ding.ProjectCategory
@@ -19,7 +18,6 @@ import com.apm29.kotlinapp.base.BasePresenter
 import com.apm29.kotlinapp.base.BaseUI
 import com.apm29.kotlinapp.ui.adapter.HeaderRVAdapter
 import com.apm29.kotlinapp.utils.*
-import com.bumptech.glide.Glide
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.PermissionNo
 import com.yanzhenjie.permission.PermissionYes
@@ -31,18 +29,18 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
     override fun onError(error: String?) {
         showToast(error ?: "加载失败")
     }
+
     override fun onNewData(data: Any?) {
-        if (data is ArrayList<*>){
+        if (data is ArrayList<*>) {
             val arrayList = data as ArrayList<ProjectCategory>
-            val titles= Array<String>(arrayList.size,{
+            val titles = Array(arrayList.size, {
                 return@Array arrayList[it].categoryName
             })
-            val emptyList = emptyList<ProjectBean>()
-            val mainData = Array<List<ProjectBean>>(arrayList.size,{
-                return@Array arrayList[it].spList ?: emptyList
+            val mainData = Array(arrayList.size, {
+                return@Array arrayList[it].spList ?: kotlin.collections.emptyList()
             })
             adapter = object : HeaderRVAdapter<ProjectBean>(
-                    titles,mainData
+                    titles, mainData
             ) {
                 override fun getHeaderHolder(parent: ViewGroup?): BaseHolder {
                     val view = LayoutInflater.from(this@SplashActivity).inflate(R.layout.list_item_1, parent, false)
@@ -50,18 +48,17 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
                 }
 
                 override fun getItemHolder(parent: ViewGroup?): BaseHolder {
-                    return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(R.layout.list_item_1,parent,false))
+                    return DefaultItemHolder(LayoutInflater.from(this@SplashActivity).inflate(R.layout.list_item_1, parent, false))
                 }
 
             }
-            recyclerView.adapter=adapter
+            recyclerView.adapter = adapter
         }
     }
-    lateinit var recyclerView:RecyclerView
-    lateinit var adapter:HeaderRVAdapter<ProjectBean>
-    override fun getDefaultLayout() = R.layout.activity_splash
 
-    private val imgUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1515994821421&di=58a28998e0ecd9f.gif"
+    lateinit var recyclerView: RecyclerView
+    lateinit var adapter: HeaderRVAdapter<ProjectBean>
+    override fun getDefaultLayout() = R.layout.activity_splash
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setupViews(savedInstanceState: Bundle?) {
@@ -78,13 +75,8 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
         findViewById<TextView>(R.id.tv_dollars).setOnClickListener {
             toDollars(this)
         }
-        val iv = findViewById<ImageView>(R.id.iv_glide)
-        Glide.with(this).load(imgUrl).override(300, 300).into(iv)
-
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-
     }
 
 
@@ -101,13 +93,13 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
     @PermissionYes(PERMISSION_REQUEST_CODE)
     private fun getPermissionYes(grantedPermissions: List<String>) {
         // 申请权限成功。
-        println("grantedPermissions = [${grantedPermissions}]")
+        println("grantedPermissions = [$grantedPermissions]")
     }
 
     @PermissionNo(PERMISSION_REQUEST_CODE)
     private fun getPermissionNo(deniedPermissions: List<String>) {
         //申请权限失败。
-        println("deniedPermissions = [${deniedPermissions}]")
+        println("deniedPermissions = [$deniedPermissions]")
     }
 
     class SplashPresenter(ui: BaseUI) : BasePresenter(ui) {
@@ -122,8 +114,9 @@ class SplashActivity : BaseActivity<SplashActivity.SplashPresenter>() {
                     .callback(ui)
                     .start()
         }
-        fun getProgressing(){
-            DingTasks.queryInProgressProjects( ui as Context,ui)
+
+        fun getProgressing() {
+            DingTasks.queryInProgressProjects(ui as Context, ui)
         }
     }
 }

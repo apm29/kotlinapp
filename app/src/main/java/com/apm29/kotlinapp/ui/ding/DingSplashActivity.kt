@@ -45,6 +45,7 @@ class DingSplashActivity : BaseActivity<DingSplashActivity.Presenter>() {
     }
 
     private fun enterNextPage() {
+        handler.removeCallbacksAndMessages(null)
         handler.postDelayed({
             if (getBoolean(IS_FIRST_INSTALL_APP,true)){//第一次打开app
                 //进入新手引导
